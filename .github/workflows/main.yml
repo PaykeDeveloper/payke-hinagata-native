@@ -9,6 +9,9 @@ on:
   release:
     types:
       - published
+env:
+  java_version: '12.x'
+  flutter_version: '2.0.2'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -17,10 +20,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '12.x'
+          java-version: ${{ env.java_version }}
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.0.2'
+          flutter-version: ${{ env.flutter_version }}
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter format . --set-exit-if-changed
@@ -28,16 +31,16 @@ jobs:
   deploy-staging:
     needs: test
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: '12.x'
+          java-version: ${{ env.java_version }}
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.0.2'
+          flutter-version: ${{ env.flutter_version }}
       - run: flutter pub get
       - run: flutter build apk
       - run: flutter build ios --release --no-codesign
