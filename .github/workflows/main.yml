@@ -21,10 +21,6 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: ${{ env.java_version }}
-      - uses: actions/cache@v2
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.flutter_version }}
@@ -42,10 +38,6 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: ${{ env.java_version }}
-      - uses: actions/cache@v2
-        with:
-          path: /opt/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: ${{ env.flutter_version }}
