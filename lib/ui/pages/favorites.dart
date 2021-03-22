@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hinagata/providers/favorites.dart';
+import 'package:native_app/providers/favorites.dart';
 import 'package:provider/provider.dart';
 
 class FavoritesPage extends StatelessWidget {

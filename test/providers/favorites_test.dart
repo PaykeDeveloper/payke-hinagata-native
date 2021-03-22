@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hinagata/providers/favorites.dart';
+import 'package:native_app/providers/favorites.dart';
 
 void main() {
   group('App Provider Tests', () {

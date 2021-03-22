@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hinagata/providers/favorites.dart';
-import 'package:hinagata/ui/pages/favorites.dart';
+import 'package:native_app/providers/favorites.dart';
+import 'package:native_app/ui/pages/favorites.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {

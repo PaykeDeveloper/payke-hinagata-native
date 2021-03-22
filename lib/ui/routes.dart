@@ -1,5 +1,5 @@
-import 'package:hinagata/ui/pages/favorites.dart';
-import 'package:hinagata/ui/pages/home.dart';
+import 'package:native_app/ui/pages/favorites.dart';
+import 'package:native_app/ui/pages/home.dart';
 
 final routes = {
   HomePage.routeName: (context) => HomePage(),
