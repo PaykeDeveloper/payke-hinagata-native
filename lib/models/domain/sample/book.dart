@@ -1,0 +1,19 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'book.freezed.dart';
+
+part 'book.g.dart';
+
+@freezed
+abstract class Book with _$Book {
+  const factory Book({
+    required int id,
+    required String title,
+    required String author,
+    @JsonKey(name: 'release_date') required DateTime releaseDate,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+  }) = _Book;
+
+  factory Book.fromJson(Map<String, dynamic> json) => _$BookFromJson(json);
+}
