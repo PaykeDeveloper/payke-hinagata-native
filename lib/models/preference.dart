@@ -10,7 +10,7 @@ class _PreferenceProperty<T> {
 
   final String _key;
 
-  Future<bool> setValue(T value) async {
+  Future<bool> set(T value) async {
     final pref = await SharedPreferences.getInstance();
     switch (T) {
       case bool:
@@ -51,7 +51,7 @@ class _PreferenceProperty<T> {
     return pref.remove(_key);
   }
 
-  Future<T?> getValue({T? defaultValue}) async {
+  Future<T?> get({T? defaultValue}) async {
     final pref = await SharedPreferences.getInstance();
     if (!pref.containsKey(_key)) {
       return defaultValue;
