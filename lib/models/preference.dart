@@ -2,11 +2,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class Preference {
-  static final token = PreferenceProperty<String>('token');
+  static final token = _PreferenceProperty<String>('token');
 }
 
-class PreferenceProperty<T> {
-  PreferenceProperty(this._key);
+class _PreferenceProperty<T> {
+  _PreferenceProperty(this._key);
 
   final String _key;
 
