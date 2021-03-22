@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hinagata/providers/providers.dart';
-import 'package:hinagata/ui/routes.dart';
+import 'package:native_app/providers/providers.dart';
+import 'package:native_app/ui/routes.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {

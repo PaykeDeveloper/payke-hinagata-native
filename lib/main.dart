@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hinagata/app.dart';
+import 'package:native_app/app.dart';
 
 void main() {
   debugPaintSizeEnabled =

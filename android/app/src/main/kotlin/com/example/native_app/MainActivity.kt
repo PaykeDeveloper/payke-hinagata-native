@@ -1,4 +1,4 @@
-package com.example.hinagata
+package com.example.native_app
 
 import io.flutter.embedding.android.FlutterActivity
 
