@@ -8,20 +8,20 @@ void main() {
 
     test('値が設定できる。', () async {
       SharedPreferences.setMockInitialValues({});
-      final result = await token.setValue('test');
+      final result = await token.set('test');
       expect(result, true);
     });
 
     test('値未設定の場合、デフォルト値が取得できる。', () async {
       SharedPreferences.setMockInitialValues({});
-      final beforeSave = await token.getValue();
+      final beforeSave = await token.get();
       expect(beforeSave, null);
     });
 
     test('値設定済みの場合、値が取得できる。', () async {
       const expected = 'test';
       SharedPreferences.setMockInitialValues({"token": expected});
-      final result = await token.getValue();
+      final result = await token.get();
       expect(result, expected);
     });
 
