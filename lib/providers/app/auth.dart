@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:native_app/base/api.dart';
 import 'package:native_app/base/preference.dart';
+import 'package:native_app/models/app/login_input.dart';
 import 'package:native_app/models/app/token.dart';
 
-class TokenProvider with ChangeNotifier {
-  TokenProvider() {
+class AuthProvider with ChangeNotifier {
+  AuthProvider() {
     _load();
   }
 
@@ -22,8 +24,10 @@ class TokenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> set(Token token) async {
-    final result = Preference.token.set(token.value);
+  Future<bool> login(LoginInput input) async {
+    final response = await post('/api/v1/login', input.toJson());
+    final value = response.data['token'] as String;
+    final result = Preference.token.set(value);
     _load();
     return result;
   }
