@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/providers/app/auth.dart';
 import 'package:native_app/providers/providers.dart';
+import 'package:native_app/ui/pages/common/home.dart';
+import 'package:native_app/ui/pages/common/loading.dart';
+import 'package:native_app/ui/pages/common/login.dart';
 import 'package:native_app/ui/routes.dart';
 import 'package:provider/provider.dart';
 
@@ -14,8 +18,18 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        home: Consumer<AuthProvider>(
+          builder: (context, value, child) {
+            if (!value.loaded) {
+              return LoadingPage();
+            }
+            if (value.token == null) {
+              return LoginPage();
+            }
+            return HomePage();
+          },
+        ),
         routes: routes,
-        initialRoute: initialRoute,
       ),
     );
   }

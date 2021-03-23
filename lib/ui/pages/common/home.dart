@@ -4,7 +4,7 @@ import 'package:native_app/ui/pages/favorites.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  static String routeName = '/';
+  static String routeName = '/home';
 
   @override
   Widget build(BuildContext context) {

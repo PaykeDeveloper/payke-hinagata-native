@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:native_app/providers/favorites.dart';
-import 'package:native_app/ui/pages/home.dart';
+import 'package:native_app/ui/pages/common/home.dart';
 import 'package:provider/provider.dart';
 
 Widget createHomeScreen() => ChangeNotifierProvider<Favorites>(
