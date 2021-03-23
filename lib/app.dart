@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/providers/app/auth.dart';
+import 'package:native_app/providers/app/token.dart';
 import 'package:native_app/providers/providers.dart';
 import 'package:native_app/ui/pages/common/home.dart';
 import 'package:native_app/ui/pages/common/loading.dart';
@@ -18,7 +18,7 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: Consumer<AuthProvider>(
+        home: Consumer<TokenProvider>(
           builder: (context, value, child) {
             if (!value.loaded) {
               return LoadingPage();
