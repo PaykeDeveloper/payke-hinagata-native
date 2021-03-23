@@ -5,7 +5,7 @@ part 'book.freezed.dart';
 part 'book.g.dart';
 
 @freezed
-abstract class Book with _$Book {
+class Book with _$Book {
   const factory Book({
     required int id,
     required String title,
