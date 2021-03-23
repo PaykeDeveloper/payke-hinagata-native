@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:native_app/models/preference.dart';
+import 'package:native_app/base/preference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

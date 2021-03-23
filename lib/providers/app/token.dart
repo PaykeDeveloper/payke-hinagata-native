@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:native_app/models/preference.dart';
+import 'package:native_app/base/preference.dart';
+import 'package:native_app/models/app/token.dart';
 
 class TokenProvider with ChangeNotifier {
   TokenProvider() {
@@ -10,18 +11,19 @@ class TokenProvider with ChangeNotifier {
 
   bool get loaded => _loaded;
 
-  String? _token;
+  Token? _token;
 
-  String? get token => _token;
+  Token? get token => _token;
 
   Future _load() async {
-    _token = await Preference.token.get();
+    final value = await Preference.token.get();
+    _token = value != null ? Token(value) : null;
     _loaded = true;
     notifyListeners();
   }
 
-  Future<bool> set(String token) async {
-    final result = Preference.token.set(token);
+  Future<bool> set(Token token) async {
+    final result = Preference.token.set(token.value);
     _load();
     return result;
   }

@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:native_app/app.dart';
+import 'package:native_app/base/constants.dart';
 
 void main() {
-  debugPaintSizeEnabled =
-      bool.fromEnvironment(Platform.environment['DEBUG_PAINT_SIZE'] ?? '');
+  debugPaintSizeEnabled = debugPrintSize;
   runApp(App());
 }
