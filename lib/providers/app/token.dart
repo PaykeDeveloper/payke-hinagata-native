@@ -27,4 +27,8 @@ class TokenProvider with ChangeNotifier {
     _load();
     return result;
   }
+
+  Future<bool?> remove() async {
+    return Preference.token.remove();
+  }
 }
