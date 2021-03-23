@@ -58,7 +58,11 @@ Dio _getDio() {
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );
-  return Dio(options);
+  final dio = Dio(options);
+  if (!productMode) {
+    dio.interceptors.add(LogInterceptor(responseBody: true));
+  }
+  return dio;
 }
 
 Future<Options> _getOptions() async {
