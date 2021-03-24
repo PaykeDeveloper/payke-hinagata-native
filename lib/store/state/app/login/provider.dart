@@ -14,14 +14,15 @@ class LoginProvider extends StateNotifier<EntityState<Login>>
 
   Future login(LoginInput input) async {
     state = state.copyWith(status: StateStatus.started);
-    final client = read<ApiClientProvider>();
-    final result = await client.postObject(
+    final provider = read<ApiClientProvider>();
+    final result = await provider.postObject(
         decode: (json) => LoginOutput.fromJson(json),
         path: 'api/v1/login',
         data: input);
     if (result is Success<LoginOutput>) {
       state = state.copyWith(status: StateStatus.done, error: null);
       await read<TokenProvider>().set(result.data.token);
+      provider.update(read);
     } else if (result is Failure<LoginOutput>) {
       state = state.copyWith(status: StateStatus.failed, error: result.error);
     }
