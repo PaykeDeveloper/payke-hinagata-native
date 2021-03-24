@@ -51,11 +51,11 @@ ApiException getApiError(Exception error) {
         }
         break;
       case DioErrorType.DEFAULT:
+        if (error.error is SocketException) {
+          return const ApiException.noInternetConnection();
+        }
         break;
     }
-  }
-  if (error is SocketException) {
-    return const ApiException.noInternetConnection();
   }
   return const ApiException.unexpectedError();
 }
