@@ -1,34 +1,26 @@
-import 'package:flutter/foundation.dart';
 import 'package:native_app/base/preference.dart';
 import 'package:native_app/models/app/token.dart';
+import 'package:state_notifier/state_notifier.dart';
 
-class TokenProvider with ChangeNotifier {
-  TokenProvider() {
-    _load();
+class TokenProvider extends StateNotifier<Token?> {
+  TokenProvider() : super(null) {
+    _fetch();
   }
 
-  bool _loaded = false;
-
-  bool get loaded => _loaded;
-
-  Token? _token;
-
-  Token? get token => _token;
-
-  Future _load() async {
-    final value = await Preference.token.get();
-    _token = value != null ? Token(value) : null;
-    _loaded = true;
-    notifyListeners();
-  }
+  Token? get token => state;
 
   Future<bool> set(Token token) async {
     final result = await Preference.token.set(token.value);
-    _load();
+    _fetch();
     return result;
   }
 
   Future<bool?> remove() async {
     return Preference.token.remove();
+  }
+
+  Future _fetch() async {
+    final value = await Preference.token.get();
+    state = value != null ? Token(value) : null;
   }
 }

@@ -1,25 +1,19 @@
-import 'package:flutter/foundation.dart';
 import 'package:native_app/models/app/login_input.dart';
 import 'package:native_app/models/app/login_output.dart';
 import 'package:native_app/providers/app/api_client.dart';
+import 'package:state_notifier/state_notifier.dart';
 
-class LoginProvider with ChangeNotifier {
-  LoginProvider(this._apiClientProvider);
-
-  final ApiClientProvider? _apiClientProvider;
-
-  bool _loading = false;
-
-  bool get loading => _loading;
+class LoginProvider extends StateNotifier<bool> with LocatorMixin {
+  LoginProvider() : super(false);
 
   Future<LoginOutput?> login(LoginInput input) async {
-    _loading = true;
-    final result = await _apiClientProvider?.client.postObject(
+    state = true;
+    final client = read<ApiClientProvider>().state;
+    final result = await client.postObject(
         decode: (json) => LoginOutput.fromJson(json),
         path: 'api/v1/login',
         data: input);
-    _loading = false;
-    notifyListeners();
-    return result?.getDataOrNull();
+    state = false;
+    return result.getDataOrNull();
   }
 }
