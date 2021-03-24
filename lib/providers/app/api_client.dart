@@ -8,6 +8,7 @@ class ApiClientProvider extends StateNotifier<ApiClient> with LocatorMixin {
 
   @override
   void update(T Function<T>() watch) {
+    super.update(watch);
     final token = watch<TokenProvider>().token;
     state.token = token;
     final language = watch<LanguageProvider>().language;

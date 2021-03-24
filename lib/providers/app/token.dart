@@ -10,9 +10,10 @@ class TokenProvider extends StateNotifier<ProviderState<Token?>>
   Token? get token => state.data;
 
   @override
-  Future initState() async {
+  void initState() {
+    super.initState();
     state = state.copyWith(status: StateStatus.started);
-    await _fetch();
+    _fetch();
   }
 
   Future _fetch() async {
