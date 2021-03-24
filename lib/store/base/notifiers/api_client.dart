@@ -4,8 +4,8 @@ import 'package:native_app/store/base/models/language.dart';
 import 'package:native_app/store/base/models/token.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-class ApiClientProvider extends StateNotifier<ApiClient> with LocatorMixin {
-  ApiClientProvider() : super(ApiClient());
+class ApiClientNotifier extends StateNotifier<ApiClient> with LocatorMixin {
+  ApiClientNotifier() : super(ApiClient());
 
   @override
   void update(T Function<T>() watch) {

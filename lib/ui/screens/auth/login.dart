@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/state/app/login/provider.dart';
+import 'package:native_app/store/state/app/login/notifier.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:provider/provider.dart';
 
@@ -30,8 +30,8 @@ class _LoginFormState extends State<LoginForm> {
       _formKey.currentState?.save();
       final email = _emailController.text;
       final password = _passwordController.text;
-      final loginProvider = context.read<LoginProvider>();
-      await loginProvider.login(LoginInput(email: email, password: password));
+      final notifier = context.read<LoginNotifier>();
+      await notifier.login(LoginInput(email: email, password: password));
     }
   }
 
