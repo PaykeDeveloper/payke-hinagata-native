@@ -22,7 +22,6 @@ class LoginProvider extends StateNotifier<EntityState<Login>>
     if (result is Success<LoginOutput>) {
       state = state.copyWith(status: StateStatus.done, error: null);
       await read<TokenProvider>().set(result.data.token);
-      provider.update(read);
     } else if (result is Failure<LoginOutput>) {
       state = state.copyWith(status: StateStatus.failed, error: result.error);
     }
