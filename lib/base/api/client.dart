@@ -19,6 +19,8 @@ class ApiClient {
 
   Token? _token;
 
+  Token? get token => _token;
+
   // ignore: avoid_setters_without_getters
   set token(Token? token) {
     _token = token;

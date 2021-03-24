@@ -3,13 +3,17 @@ import 'package:native_app/models/app/provider_state.dart';
 import 'package:native_app/models/app/token.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-class TokenProvider extends StateNotifier<ProviderState<Token?>> {
-  TokenProvider() : super(const ProviderState(null)) {
-    state = state.copyWith(status: StateStatus.started);
-    _fetch();
-  }
+class TokenProvider extends StateNotifier<ProviderState<Token?>>
+    with LocatorMixin {
+  TokenProvider() : super(const ProviderState(null));
 
   Token? get token => state.data;
+
+  @override
+  Future initState() async {
+    state = state.copyWith(status: StateStatus.started);
+    await _fetch();
+  }
 
   Future _fetch() async {
     final value = await Preference.token.get();
