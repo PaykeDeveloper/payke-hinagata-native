@@ -1,18 +1,16 @@
-import 'package:flutter/foundation.dart';
 import 'package:native_app/base/api/client.dart';
 import 'package:native_app/providers/app/language.dart';
 import 'package:native_app/providers/app/token.dart';
+import 'package:state_notifier/state_notifier.dart';
 
-final _client = ApiClient();
+class ApiClientProvider extends StateNotifier<ApiClient> with LocatorMixin {
+  ApiClientProvider() : super(ApiClient());
 
-class ApiClientProvider with ChangeNotifier {
-  ApiClientProvider(
-    TokenProvider? tokenProvider,
-    LanguageProvider? languageProvider,
-  ) {
-    _client.token = tokenProvider?.token;
-    _client.language = languageProvider?.language;
+  @override
+  void update(T Function<T>() watch) {
+    final token = watch<TokenProvider>().token;
+    state.token = token;
+    final language = watch<LanguageProvider>().language;
+    state.language = language;
   }
-
-  ApiClient get client => _client;
 }

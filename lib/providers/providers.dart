@@ -1,21 +1,19 @@
-import 'package:native_app/providers/app/api_client.dart';
-import 'package:native_app/providers/app/language.dart';
-import 'package:native_app/providers/app/login.dart';
-import 'package:native_app/providers/app/token.dart';
-import 'package:provider/provider.dart';
-
-final providers = [
-  ChangeNotifierProvider<TokenProvider>(create: (context) => TokenProvider()),
-  ChangeNotifierProvider<LanguageProvider>(
-      create: (context) => LanguageProvider()),
-  ChangeNotifierProxyProvider2<TokenProvider, LanguageProvider,
-      ApiClientProvider>(
-    create: (context) => ApiClientProvider(null, null),
-    update: (context, tokenProvider, languageProvider, previous) =>
-        ApiClientProvider(tokenProvider, languageProvider),
-  ),
-  ChangeNotifierProxyProvider<ApiClientProvider, LoginProvider>(
-    create: (context) => LoginProvider(null),
-    update: (context, value, previous) => LoginProvider(value),
-  )
-];
+// import 'package:flutter_state_notifier/flutter_state_notifier.dart';
+// import 'package:native_app/base/api/client.dart';
+// import 'package:native_app/models/app/language.dart';
+// import 'package:native_app/models/app/token.dart';
+// import 'package:native_app/providers/app/api_client.dart';
+// import 'package:native_app/providers/app/language.dart';
+// import 'package:native_app/providers/app/login.dart';
+// import 'package:native_app/providers/app/token.dart';
+//
+// final providers = [
+//   StateNotifierProvider<TokenProvider, Token?>(
+//       create: (context) => TokenProvider()),
+//   StateNotifierProvider<LanguageProvider, Language?>(
+//       create: (context) => LanguageProvider()),
+//   StateNotifierProvider<ApiClientProvider, ApiClient>(
+//       create: (context) => ApiClientProvider()),
+//   // StateNotifierProvider<LoginProvider, bool>(
+//   //     create: (context) => LoginProvider()),
+// ];
