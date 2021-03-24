@@ -14,9 +14,9 @@ void main() {
       const data =
           LoginInput(email: 'user01@example.com', password: 'payke123');
       final client = ApiClient();
-      final loginResult = await client.post(
-        decode: (json) => LoginOutput.fromJson(json as Map<String, dynamic>),
-        path: '/api/v1/login',
+      final loginResult = await client.postObject(
+        decode: (json) => LoginOutput.fromJson(json),
+        path: 'api/v1/login',
         data: data,
       );
       // result.when(
@@ -36,17 +36,15 @@ void main() {
       final token = loginResult.getDataOrNull()?.token.value ?? '';
       SharedPreferences.setMockInitialValues({'token': token});
 
-      final booksResult = await client.get(
-        decode: (list) => (list as List<dynamic>)
-            .map((json) => Book.fromJson(json as Map<String, dynamic>))
-            .toList(),
-        path: '/api/v1/books',
+      final booksResult = await client.getList(
+        decode: (json) => Book.fromJson(json),
+        path: 'api/v1/books',
       );
       expect(booksResult is Success<List<Book>>, true);
 
       final logoutResult = await client.post(
         decode: (json) => json,
-        path: '/api/v1/logout',
+        path: 'api/v1/logout',
       );
       expect(logoutResult is Success, true);
     });
