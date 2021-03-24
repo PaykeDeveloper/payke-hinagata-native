@@ -3,9 +3,9 @@ import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/token.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-class TokenProvider extends StateNotifier<EntityState<Token?>>
+class TokenNotifier extends StateNotifier<EntityState<Token?>>
     with LocatorMixin {
-  TokenProvider() : super(const EntityState(null));
+  TokenNotifier() : super(const EntityState(null));
 
   @override
   void initState() {
