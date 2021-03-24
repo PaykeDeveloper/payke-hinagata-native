@@ -3,13 +3,17 @@ import 'package:native_app/models/app/language.dart';
 import 'package:native_app/models/app/provider_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-class LanguageProvider extends StateNotifier<ProviderState<Language?>> {
-  LanguageProvider() : super(const ProviderState(null)) {
-    state = state.copyWith(status: StateStatus.started);
-    _fetch();
-  }
+class LanguageProvider extends StateNotifier<ProviderState<Language?>>
+    with LocatorMixin {
+  LanguageProvider() : super(const ProviderState(null));
 
   Language? get language => state.data;
+
+  @override
+  Future initState() async {
+    state = state.copyWith(status: StateStatus.started);
+    await _fetch();
+  }
 
   Future _fetch() async {
     final value = await Preference.language.get();
