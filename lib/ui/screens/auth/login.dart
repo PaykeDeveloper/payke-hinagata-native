@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/state/app/login/notifier.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
+import 'package:native_app/store/state/app/login/notifier.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
