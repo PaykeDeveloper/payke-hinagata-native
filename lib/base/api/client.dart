@@ -23,6 +23,28 @@ class ApiClient {
     return _call(request: _get(path: path), decode: decode);
   }
 
+  Future<ApiResult<Result>> getObject<Result>({
+    required Result Function(Map<String, dynamic>) decode,
+    required String path,
+  }) async {
+    return get(
+      decode: (json) => decode(json as Map<String, dynamic>),
+      path: path,
+    );
+  }
+
+  Future<ApiResult<List<Result>>> getList<Result>({
+    required Result Function(Map<String, dynamic>) decode,
+    required String path,
+  }) async {
+    return get(
+      decode: (list) => (list as List<dynamic>)
+          .map((json) => decode(json as Map<String, dynamic>))
+          .toList(),
+      path: path,
+    );
+  }
+
   Future<ApiResult<Result>> post<Result, Data extends ToJson>({
     required Result Function(dynamic) decode,
     required String path,
@@ -39,6 +61,20 @@ class ApiClient {
     );
   }
 
+  Future<ApiResult<Result>> postObject<Result, Data extends ToJson>({
+    required Result Function(Map<String, dynamic>) decode,
+    required String path,
+    Data? data,
+    bool useFormData = false,
+  }) async {
+    return post(
+      decode: (json) => decode(json as Map<String, dynamic>),
+      path: path,
+      data: data,
+      useFormData: useFormData,
+    );
+  }
+
   Future<ApiResult<Result>> put<Result, Data extends ToJson>({
     required Result Function(dynamic) decode,
     required String path,
@@ -52,6 +88,20 @@ class ApiClient {
         useFormData: useFormData,
       ),
       decode: decode,
+    );
+  }
+
+  Future<ApiResult<Result>> putObject<Result, Data extends ToJson>({
+    required Result Function(Map<String, dynamic>) decode,
+    required String path,
+    Data? data,
+    bool useFormData = false,
+  }) async {
+    return put(
+      decode: (json) => decode(json as Map<String, dynamic>),
+      path: path,
+      data: data,
+      useFormData: useFormData,
     );
   }
 
@@ -89,7 +139,7 @@ class ApiClient {
   Future<Response<Result>> _post<Result>({
     required String path,
     required Map<String, dynamic> data,
-    bool useFormData = false,
+    required bool useFormData,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
@@ -106,7 +156,7 @@ class ApiClient {
   Future<Response<Result>> _put<Result>({
     required String path,
     required Map<String, dynamic> data,
-    bool useFormData = false,
+    required bool useFormData,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
@@ -137,8 +187,8 @@ class ApiClient {
   static Dio _getDio() {
     final options = BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
+      connectTimeout: 10000,
+      receiveTimeout: 10000,
     );
     final dio = Dio(options);
     if (!productMode) {
