@@ -17,22 +17,22 @@ class ApiClient {
   CancelToken get cancelToken => _cancelToken;
 
   Future<ApiResult<Result>> get<Result>({
-    required Result Function(Map<String, dynamic>) decode,
+    required Result Function(dynamic) decode,
     required String path,
   }) async {
     return _call(request: _get(path: path), decode: decode);
   }
 
   Future<ApiResult<Result>> post<Result, Data extends ToJson>({
-    required Result Function(Map<String, dynamic>) decode,
+    required Result Function(dynamic) decode,
     required String path,
-    required Data data,
+    Data? data,
     bool useFormData = false,
   }) async {
     return _call(
       request: _post(
         path: path,
-        data: data.toJson(),
+        data: data?.toJson() ?? {},
         useFormData: useFormData,
       ),
       decode: decode,
@@ -40,15 +40,15 @@ class ApiClient {
   }
 
   Future<ApiResult<Result>> put<Result, Data extends ToJson>({
-    required Result Function(Map<String, dynamic>) decode,
+    required Result Function(dynamic) decode,
     required String path,
-    required Data data,
+    Data? data,
     bool useFormData = false,
   }) async {
     return _call(
       request: _put(
         path: path,
-        data: data.toJson(),
+        data: data?.toJson() ?? {},
         useFormData: useFormData,
       ),
       decode: decode,
@@ -56,7 +56,7 @@ class ApiClient {
   }
 
   Future<ApiResult<Result>> delete<Result, Data extends ToJson>({
-    required Result Function(Map<String, dynamic>) decode,
+    required Result Function(dynamic) decode,
     required String path,
   }) async {
     return _call(request: _delete(path: path), decode: decode);
@@ -64,11 +64,10 @@ class ApiClient {
 
   Future<ApiResult<T>> _call<T>(
       {required Future<Response<dynamic>> request,
-      required T Function(Map<String, dynamic>) decode}) async {
+      required T Function(dynamic) decode}) async {
     try {
-      final result = await request;
-      final data = result.data is Map ? result.data : {};
-      return ApiResult.success(decode(data as Map<String, dynamic>));
+      final data = await request.then((result) => result.data);
+      return ApiResult.success(decode(data));
     } on Exception catch (error) {
       return ApiResult.failure(getApiError(error));
     }

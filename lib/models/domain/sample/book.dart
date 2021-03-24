@@ -9,8 +9,8 @@ class Book with _$Book {
   const factory Book({
     required int id,
     required String title,
-    required String author,
-    @JsonKey(name: 'release_date') required DateTime releaseDate,
+    String? author,
+    @JsonKey(name: 'release_date') DateTime? releaseDate,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _Book;
