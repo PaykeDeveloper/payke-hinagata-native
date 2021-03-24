@@ -1,27 +1,25 @@
 import 'package:native_app/base/preference.dart';
 import 'package:native_app/models/app/language.dart';
+import 'package:native_app/models/app/provider_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-class LanguageProvider extends StateNotifier<Language?> {
-  LanguageProvider() : super(null) {
+class LanguageProvider extends StateNotifier<ProviderState<Language?>> {
+  LanguageProvider() : super(const ProviderState(null)) {
+    state = state.copyWith(status: StateStatus.started);
     _fetch();
   }
 
-  Language? get language => state;
+  Language? get language => state.data;
+
+  Future _fetch() async {
+    final value = await Preference.language.get();
+    final language = value != null ? LanguageExt.fromIso639_1(value) : null;
+    state = state.copyWith(data: language, status: StateStatus.done);
+  }
 
   Future<bool> set(Language language) async {
     final result = await Preference.language.set(language.iso639_1);
     _fetch();
     return result;
-  }
-
-  Future<bool?> remove() async {
-    return Preference.language.remove();
-  }
-
-  Future _fetch() async {
-    final value = await Preference.language.get();
-    final language = value != null ? LanguageExt.fromIso639_1(value) : null;
-    state = language;
   }
 }
