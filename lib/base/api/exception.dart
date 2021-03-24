@@ -8,12 +8,13 @@ import 'package:native_app/base/api/error_result.dart';
 part 'exception.freezed.dart';
 
 @freezed
-abstract class ApiException with _$ApiException {
+class ApiException with _$ApiException {
   const factory ApiException.sendTimeout() = SendTimeout;
 
   const factory ApiException.requestCancelled() = RequestCancelled;
 
-  const factory ApiException.unauthorisedRequest() = UnauthorisedRequest;
+  const factory ApiException.unauthorisedRequest(ErrorResult result) =
+      UnauthorisedRequest;
 
   const factory ApiException.badRequest(ErrorResult result) = BadRequest;
 
@@ -39,13 +40,16 @@ ApiException getApiError(Exception error) {
         return const ApiException.requestCancelled();
       case DioErrorType.RESPONSE:
         final statusCode = error.response.statusCode;
-        if (404 == statusCode) {
+        if (statusCode == HttpStatus.unauthorized) {
+          final Map<String, dynamic> json =
+              error.response.data as Map<String, dynamic>;
+          return ApiException.unauthorisedRequest(ErrorResult.fromJson(json));
+        } else if (statusCode == HttpStatus.notFound) {
           return const ApiException.notFound();
         } else if (400 <= statusCode && statusCode < 500) {
-          final Map<String, dynamic> data = error.response.data is Map
-              ? error.response.data as Map<String, dynamic>
-              : {};
-          return ApiException.badRequest(ErrorResult.fromJson(data));
+          final Map<String, dynamic> json =
+              error.response.data as Map<String, dynamic>;
+          return ApiException.badRequest(ErrorResult.fromJson(json));
         } else if (500 <= statusCode) {
           return const ApiException.serviceUnavailable();
         }

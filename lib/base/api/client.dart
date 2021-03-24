@@ -2,7 +2,8 @@
 import 'package:dio/dio.dart';
 import 'package:native_app/base/api/exception.dart';
 import 'package:native_app/base/constants.dart';
-import 'package:native_app/base/preference.dart';
+import 'package:native_app/models/app/language.dart';
+import 'package:native_app/models/app/token.dart';
 
 import 'result.dart';
 
@@ -15,6 +16,20 @@ class ApiClient {
   final _cancelToken = CancelToken();
 
   CancelToken get cancelToken => _cancelToken;
+
+  Token? _token;
+
+  // ignore: avoid_setters_without_getters
+  set token(Token? token) {
+    _token = token;
+  }
+
+  Language? _language;
+
+  // ignore: avoid_setters_without_getters
+  set language(Language? language) {
+    _language = language;
+  }
 
   Future<ApiResult<Result>> get<Result>({
     required Result Function(dynamic) decode,
@@ -45,16 +60,16 @@ class ApiClient {
     );
   }
 
-  Future<ApiResult<Result>> post<Result, Data extends ToJson>({
+  Future<ApiResult<Result>> post<Result>({
     required Result Function(dynamic) decode,
     required String path,
-    Data? data,
+    Map<String, dynamic>? data,
     bool useFormData = false,
   }) async {
     return _call(
       request: _post(
         path: path,
-        data: data?.toJson() ?? {},
+        data: data ?? {},
         useFormData: useFormData,
       ),
       decode: decode,
@@ -70,7 +85,7 @@ class ApiClient {
     return post(
       decode: (json) => decode(json as Map<String, dynamic>),
       path: path,
-      data: data,
+      data: data?.toJson(),
       useFormData: useFormData,
     );
   }
@@ -78,13 +93,13 @@ class ApiClient {
   Future<ApiResult<Result>> put<Result, Data extends ToJson>({
     required Result Function(dynamic) decode,
     required String path,
-    Data? data,
+    Map<String, dynamic>? data,
     bool useFormData = false,
   }) async {
     return _call(
       request: _put(
         path: path,
-        data: data?.toJson() ?? {},
+        data: data ?? {},
         useFormData: useFormData,
       ),
       decode: decode,
@@ -100,12 +115,12 @@ class ApiClient {
     return put(
       decode: (json) => decode(json as Map<String, dynamic>),
       path: path,
-      data: data,
+      data: data?.toJson(),
       useFormData: useFormData,
     );
   }
 
-  Future<ApiResult<Result>> delete<Result, Data extends ToJson>({
+  Future<ApiResult<Result>> delete<Result>({
     required Result Function(dynamic) decode,
     required String path,
   }) async {
@@ -202,14 +217,14 @@ class ApiClient {
       'Accept': 'application/json',
     };
 
-    final token = await Preference.token.get();
+    final token = _token;
     if (token != null) {
-      headers['Authorization'] = 'Bearer $token';
+      headers['Authorization'] = 'Bearer ${token.value}';
     }
 
-    final language = await Preference.language.get();
+    final language = _language;
     if (language != null) {
-      headers['Accept-Language'] = language;
+      headers['Accept-Language'] = language.iso639_1;
     }
 
     return Options(headers: headers);

@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   group('ApiClient Tests', () {
     test('ログイン、データ取得、ログアウトを一通り通す。', () async {
-      SharedPreferences.setMockInitialValues({});
       const data =
           LoginInput(email: 'user01@example.com', password: 'payke123');
       final client = ApiClient();
@@ -33,8 +32,8 @@ void main() {
         return;
       }
 
-      final token = loginResult.getDataOrNull()?.token.value ?? '';
-      SharedPreferences.setMockInitialValues({'token': token});
+      final token = loginResult.getDataOrNull()?.token;
+      client.token = token;
 
       final booksResult = await client.getList(
         decode: (json) => Book.fromJson(json),
