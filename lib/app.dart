@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/models/app/provider_state.dart';
-import 'package:native_app/models/app/token.dart';
-import 'package:native_app/providers/providers.dart';
-import 'package:native_app/ui/pages/common/home.dart';
-import 'package:native_app/ui/pages/common/loading.dart';
-import 'package:native_app/ui/pages/common/login.dart';
+import 'package:native_app/store/base/models/entity_state.dart';
+import 'package:native_app/store/base/models/token.dart';
+import 'package:native_app/store/providers.dart';
 import 'package:native_app/ui/routes.dart';
+import 'package:native_app/ui/screens/auth/login.dart';
+import 'package:native_app/ui/screens/common/home.dart';
+import 'package:native_app/ui/screens/common/loading.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
@@ -19,7 +19,7 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: Consumer<ProviderState<Token?>>(
+        home: Consumer<EntityState<Token?>>(
           builder: (context, value, child) {
             if (value.status != StateStatus.done) {
               return LoadingPage();

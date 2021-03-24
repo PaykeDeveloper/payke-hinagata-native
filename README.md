@@ -16,6 +16,14 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
+
+### freezedの生成ファイル作成は
 ```shell script
-% flutter pub run build_runner build
+% flutter pub run build_runner build --delete-conflicting-outputs
 ```
+
+### 何故かビルドエラーになる時は
+```shell script
+% flutter clean
+```
+
