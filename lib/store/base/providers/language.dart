@@ -7,8 +7,6 @@ class LanguageProvider extends StateNotifier<EntityState<Language?>>
     with LocatorMixin {
   LanguageProvider() : super(const EntityState(null));
 
-  Language? get language => state.data;
-
   @override
   void initState() {
     super.initState();

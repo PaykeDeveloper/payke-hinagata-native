@@ -7,8 +7,6 @@ class TokenProvider extends StateNotifier<EntityState<Token?>>
     with LocatorMixin {
   TokenProvider() : super(const EntityState(null));
 
-  Token? get token => state.data;
-
   @override
   void initState() {
     super.initState();
