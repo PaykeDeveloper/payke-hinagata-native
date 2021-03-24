@@ -1,6 +1,6 @@
+import 'package:native_app/store/base/models/api_client.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/state_result.dart';
-import 'package:native_app/store/base/providers/api_client.dart';
 import 'package:native_app/store/base/providers/token.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/models/login_output.dart';
@@ -14,8 +14,8 @@ class LoginProvider extends StateNotifier<EntityState<Login>>
 
   Future login(LoginInput input) async {
     state = state.copyWith(status: StateStatus.started);
-    final provider = read<ApiClientProvider>();
-    final result = await provider.postObject(
+    final client = read<ApiClient>();
+    final result = await client.postObject(
         decode: (json) => LoginOutput.fromJson(json),
         path: 'api/v1/login',
         data: input);

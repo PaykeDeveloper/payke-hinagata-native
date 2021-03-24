@@ -1,5 +1,5 @@
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
-import 'package:native_app/base/api_client.dart';
+import 'package:native_app/store/base/models/api_client.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/language.dart';
 import 'package:native_app/store/base/models/token.dart';
