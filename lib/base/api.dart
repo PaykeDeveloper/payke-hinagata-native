@@ -5,51 +5,33 @@ import 'package:native_app/base/preference.dart';
 
 final dio = _getDio();
 
-Future<Response> get<T>(String path) async {
+Future<Response> get(String path) async {
   final options = await _getOptions();
-  try {
-    final response = await dio.get(path, options: options);
-    return response;
-  } on DioError catch (e) {
-    return e.response;
-  }
+  final response = await dio.get(path, options: options);
+  return response;
 }
 
-Future<Response> post<T>(String path, Map<String, dynamic> data,
+Future<Response> post(String path, Map<String, dynamic> data,
     {bool useFormData = false}) async {
   final options = await _getOptions();
   final convertedData = useFormData ? FormData.fromMap(data) : data;
-  try {
-    final response =
-        await dio.post(path, data: convertedData, options: options);
-    return response;
-  } on DioError catch (e) {
-    return e.response;
-  }
+  final response = await dio.post(path, data: convertedData, options: options);
+  return response;
 }
 
-Future<Response> put<T>(String path, Map<String, dynamic> data,
+Future<Response> put(String path, Map<String, dynamic> data,
     {bool useFormData = false}) async {
   final options = await _getOptions();
   options.headers['X-HTTP-Method-Override'] = 'PATCH';
   final convertedData = useFormData ? FormData.fromMap(data) : data;
-  try {
-    final response =
-        await dio.post(path, data: convertedData, options: options);
-    return response;
-  } on DioError catch (e) {
-    return e.response;
-  }
+  final response = await dio.post(path, data: convertedData, options: options);
+  return response;
 }
 
-Future<Response> delete<T>(String path) async {
+Future<Response> delete(String path) async {
   final options = await _getOptions();
-  try {
-    final response = await dio.delete(path, options: options);
-    return response;
-  } on DioError catch (e) {
-    return e.response;
-  }
+  final response = await dio.delete(path, options: options);
+  return response;
 }
 
 Dio _getDio() {
