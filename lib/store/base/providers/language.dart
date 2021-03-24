@@ -24,7 +24,7 @@ class LanguageProvider extends StateNotifier<EntityState<Language?>>
 
   Future<bool> set(Language language) async {
     final result = await Preference.language.set(language.iso639_1);
-    _fetch();
+    state = state.copyWith(data: language, status: StateStatus.done);
     return result;
   }
 }
