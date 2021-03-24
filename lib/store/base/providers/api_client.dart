@@ -1,26 +1,13 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:dio/dio.dart';
 import 'package:native_app/base/api_client.dart';
-import 'package:native_app/store/base/models/state_result.dart';
-import 'package:native_app/store/base/models/language.dart';
 import 'package:native_app/store/base/models/serializable.dart';
 import 'package:native_app/store/base/models/state_error.dart';
+import 'package:native_app/store/base/models/state_result.dart';
 import 'package:state_notifier/state_notifier.dart';
-
-import 'language.dart';
-import 'token.dart';
 
 class ApiClientProvider extends StateNotifier<ApiClient> with LocatorMixin {
   ApiClientProvider() : super(ApiClient());
-
-  @override
-  void update(T Function<T>() watch) {
-    super.update(watch);
-    final token = watch<TokenProvider>().token;
-    state.token = token?.value;
-    final language = watch<LanguageProvider>().language;
-    state.language = language?.iso639_1;
-  }
 
   Future<StateResult<Result>> get<Result>({
     required Result Function(dynamic) decode,

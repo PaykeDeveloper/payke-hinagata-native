@@ -24,7 +24,7 @@ class TokenProvider extends StateNotifier<EntityState<Token?>>
 
   Future<bool> set(Token token) async {
     final result = await Preference.token.set(token.value);
-    _fetch();
+    state = state.copyWith(data: token, status: StateStatus.done);
     return result;
   }
 }

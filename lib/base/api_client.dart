@@ -2,27 +2,13 @@
 import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
+import 'preference.dart';
+
 class ApiClient {
   final _dio = _getDio();
   final _cancelToken = CancelToken();
 
   CancelToken get cancelToken => _cancelToken;
-
-  String? _token;
-
-  String? get token => _token;
-
-  // ignore: avoid_setters_without_getters
-  set token(String? token) {
-    _token = token;
-  }
-
-  String? _language;
-
-  // ignore: avoid_setters_without_getters
-  set language(String? language) {
-    _language = language;
-  }
 
   Future<Response<Result>> get<Result>({
     required String path,
@@ -103,12 +89,12 @@ class ApiClient {
       'Accept': 'application/json',
     };
 
-    final token = _token;
+    final token = await Preference.token.get();
     if (token != null) {
       headers['Authorization'] = 'Bearer $token';
     }
 
-    final language = _language;
+    final language = await Preference.language.get();
     if (language != null) {
       headers['Accept-Language'] = language;
     }
