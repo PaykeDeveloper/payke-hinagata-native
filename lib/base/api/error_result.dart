@@ -8,7 +8,7 @@ part 'error_result.g.dart';
 class ErrorResult with _$ErrorResult {
   const factory ErrorResult({
     required String message,
-    required Map<String, List<String>> errors,
+    Map<String, List<String>>? errors,
   }) = _ErrorResult;
 
   factory ErrorResult.fromJson(Map<String, dynamic> json) =>

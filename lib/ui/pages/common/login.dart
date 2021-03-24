@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/models/app/login_input.dart';
 import 'package:native_app/providers/app/login.dart';
+import 'package:native_app/providers/app/token.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -25,13 +26,19 @@ class _LoginFormState extends State<LoginForm> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  void _onSubmit() {
+  Future _onSubmit() async {
     if (_formKey.currentState?.validate() == true) {
       _formKey.currentState?.save();
       final email = _emailController.text;
       final password = _passwordController.text;
-      final provider = context.read<LoginProvider>();
-      provider.login(LoginInput(email: email, password: password));
+      final loginProvider = context.read<LoginProvider>();
+      final output = await loginProvider
+          .login(LoginInput(email: email, password: password));
+      final token = output?.token;
+      if (token != null) {
+        final tokenProvider = context.read<TokenProvider>();
+        await tokenProvider.set(token);
+      }
     }
   }
 
