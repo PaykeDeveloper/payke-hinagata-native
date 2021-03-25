@@ -1,7 +1,7 @@
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/api_client/models/api_client.dart';
-import 'package:native_app/store/state/app/api_client/notifier.dart';
+import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
+import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/language/models/language.dart';
 import 'package:native_app/store/state/app/language/notifier.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
@@ -15,8 +15,8 @@ List<SingleChildWidget> getProviders() {
         create: (context) => TokenNotifier()),
     StateNotifierProvider<LanguageNotifier, StoreState<Language?>>(
         create: (context) => LanguageNotifier()),
-    StateNotifierProvider<ApiClientNotifier, ApiClient>(
-        create: (context) => ApiClientNotifier()),
+    StateNotifierProvider<BackendClientNotifier, BackendClient>(
+        create: (context) => BackendClientNotifier()),
     StateNotifierProvider<LoginNotifier, StoreState<Login>>(
         create: (context) => LoginNotifier()),
   ];

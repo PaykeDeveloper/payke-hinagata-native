@@ -3,10 +3,10 @@ import 'package:native_app/store/state/app/language/models/language.dart';
 import 'package:native_app/store/state/app/token/models/token.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-import 'models/api_client.dart';
+import 'models/backend_client.dart';
 
-class ApiClientNotifier extends StateNotifier<ApiClient> with LocatorMixin {
-  ApiClientNotifier() : super(ApiClient());
+class BackendClientNotifier extends StateNotifier<BackendClient> with LocatorMixin {
+  BackendClientNotifier() : super(BackendClient());
 
   @override
   void update(Locator watch) {

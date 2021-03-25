@@ -1,30 +1,31 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:dio/dio.dart';
-import 'package:native_app/base/api.dart';
+import 'package:native_app/base/api_client.dart';
+import 'package:native_app/base/constants.dart';
 import 'package:native_app/store/base/models/serializable.dart';
 import 'package:native_app/store/base/models/state_error.dart';
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/state/app/language/models/language.dart';
 import 'package:native_app/store/state/app/token/models/token.dart';
 
-class ApiClient {
-  final _api = Api();
+class BackendClient {
+  final _client = ApiClient(backendBaseUrl);
 
-  bool get authenticated => _api.token != null;
+  bool get authenticated => _client.token != null;
 
   void setToken(Token? token) {
-    _api.token = token?.value;
+    _client.token = token?.value;
   }
 
   void setLanguage(Language? language) {
-    _api.language = language?.iso639_1;
+    _client.language = language?.iso639_1;
   }
 
   Future<StateResult<Result>> get<Result>({
     required Result Function(dynamic) decode,
     required String path,
   }) async {
-    return _call(request: _api.get(path: path), decode: decode);
+    return _call(request: _client.get(path: path), decode: decode);
   }
 
   Future<StateResult<Result>> getObject<Result>({
@@ -56,7 +57,7 @@ class ApiClient {
     bool useFormData = false,
   }) async {
     return _call(
-      request: _api.post(
+      request: _client.post(
         path: path,
         data: data ?? {},
         useFormData: useFormData,
@@ -86,7 +87,7 @@ class ApiClient {
     bool useFormData = false,
   }) async {
     return _call(
-      request: _api.patch(
+      request: _client.patch(
         path: path,
         data: data ?? {},
         useFormData: useFormData,
@@ -113,7 +114,7 @@ class ApiClient {
     required Result Function(dynamic) decode,
     required String path,
   }) async {
-    return _call(request: _api.delete(path: path), decode: decode);
+    return _call(request: _client.delete(path: path), decode: decode);
   }
 
   Future<StateResult<T>> _call<T>(

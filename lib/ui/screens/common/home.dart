@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/state/app/api_client/models/api_client.dart';
+import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
             // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             //     content: Text('Client')));
           },
-          child: Text('Auth: ${context.watch<ApiClient>().authenticated}'),
+          child: Text('Auth: ${context.watch<BackendClient>().authenticated}'),
         ),
       ),
     );

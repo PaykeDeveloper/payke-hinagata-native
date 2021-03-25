@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:native_app/store/base/models/state_error.dart';
 import 'package:native_app/store/base/models/state_result.dart';
-import 'package:native_app/store/state/app/api_client/models/api_client.dart';
+import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/models/login_output.dart';
 import 'package:native_app/store/state/domain/sample/models/book.dart';
@@ -11,7 +11,7 @@ void main() {
     test('ログイン、データ取得、ログアウトを一通り通す。', () async {
       const data =
           LoginInput(email: 'user01@example.com', password: 'payke123');
-      final client = ApiClient();
+      final client = BackendClient();
       final loginResult = await client.postObject(
         decode: (json) => LoginOutput.fromJson(json),
         path: 'api/v1/login',
