@@ -16,6 +16,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      BACKEND_ORIGIN: https://example.com
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
@@ -28,7 +30,7 @@ jobs:
       - run: flutter pub run build_runner build --delete-conflicting-outputs
       - run: flutter analyze
       - run: flutter format . --set-exit-if-changed
-      - run: flutter test
+      - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN
   deploy-staging:
     needs: test
     if: github.ref == 'refs/heads/main'
