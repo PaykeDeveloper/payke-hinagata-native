@@ -2,16 +2,17 @@ import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/base/models/url_generator.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-abstract class EntityNotifier<Entity, EntityUrl extends UrlGenerator,
+abstract class EntityNotifier<Entity, EntityUrl,
         CreateInput extends JsonGenerator, UpdateInput extends JsonGenerator>
     extends StateNotifier<EntityState<Entity, EntityUrl>> with LocatorMixin {
   EntityNotifier(EntityState<Entity, EntityUrl> state) : super(state);
 
   final _activeMinutes = 10;
+
+  String _getEntityUrl(EntityUrl url);
 
   Future fetchEntity({
     required Entity Function(Map<String, dynamic>) decode,
@@ -23,7 +24,7 @@ abstract class EntityNotifier<Entity, EntityUrl extends UrlGenerator,
     );
     final result = await read<BackendClient>().getObject(
       decode: decode,
-      path: url.toUrl(),
+      path: _getEntityUrl(url),
     );
     if (result is Success<Entity>) {
       state = state.copyWith(

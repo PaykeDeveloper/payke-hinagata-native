@@ -4,7 +4,7 @@ import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/models/login_output.dart';
-import 'package:native_app/store/state/domain/sample/models/book.dart';
+import 'package:native_app/store/state/domain/sample/books/models/book.dart';
 
 void main() {
   group('ApiClient Tests', () {

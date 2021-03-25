@@ -2,17 +2,11 @@ import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/base/models/url_generator.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-abstract class EntitiesNotifier<
-        Entity,
-        EntityUrl extends UrlGenerator,
-        EntitiesEntity,
-        EntitiesUrl extends UrlGenerator,
-        CreateInput extends JsonGenerator,
-        UpdateInput extends JsonGenerator>
+abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
+        CreateInput extends JsonGenerator, UpdateInput extends JsonGenerator>
     extends StateNotifier<
         EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>>
     with LocatorMixin {
@@ -21,6 +15,10 @@ abstract class EntitiesNotifier<
       : super(state);
 
   final _activeMinutes = 10;
+
+  String getEntitiesUrl(EntitiesUrl url);
+
+  String getEntityUrl(EntityUrl url);
 
   Future fetchEntities({
     required EntitiesEntity Function(Map<String, dynamic>) decode,
@@ -32,7 +30,7 @@ abstract class EntitiesNotifier<
     );
     final result = await read<BackendClient>().getList(
       decode: decode,
-      path: url.toUrl(),
+      path: getEntitiesUrl(url),
     );
     if (result is Success<List<EntitiesEntity>>) {
       state = state.copyWith(
@@ -62,7 +60,7 @@ abstract class EntitiesNotifier<
     );
     final result = await read<BackendClient>().getObject(
       decode: decode,
-      path: url.toUrl(),
+      path: getEntityUrl(url),
     );
     if (result is Success<Entity>) {
       state = state.copyWith(
