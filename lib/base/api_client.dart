@@ -2,8 +2,12 @@
 import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
-class Api {
-  final _dio = _getDio();
+class ApiClient {
+  ApiClient(String baseUrl) {
+    _dio = _getDio(baseUrl);
+  }
+
+  late final Dio _dio;
   final _cancelToken = CancelToken();
 
   CancelToken get cancelToken => _cancelToken;
@@ -73,7 +77,7 @@ class Api {
     return response;
   }
 
-  static Dio _getDio() {
+  static Dio _getDio(String baseUrl) {
     final options = BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: 10000,

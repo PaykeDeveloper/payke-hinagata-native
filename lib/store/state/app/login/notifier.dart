@@ -1,6 +1,6 @@
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/api_client/models/api_client.dart';
+import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:native_app/store/state/app/token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
@@ -14,7 +14,7 @@ class LoginNotifier extends StateNotifier<StoreState<Login>> with LocatorMixin {
 
   Future login(LoginInput input) async {
     state = state.copyWith(status: StateStatus.started);
-    final client = read<ApiClient>();
+    final client = read<BackendClient>();
     final result = await client.postObject(
         decode: (json) => LoginOutput.fromJson(json),
         path: 'api/v1/login',
