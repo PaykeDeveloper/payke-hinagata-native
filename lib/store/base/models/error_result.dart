@@ -7,7 +7,7 @@ part 'error_result.g.dart';
 @freezed
 class ErrorResult with _$ErrorResult {
   const factory ErrorResult({
-    required String message,
+    String? message,
     Map<String, List<String>>? errors,
   }) = _ErrorResult;
 
