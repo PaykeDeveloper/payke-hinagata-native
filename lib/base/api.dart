@@ -42,7 +42,7 @@ class Api {
     return response;
   }
 
-  Future<Response<Result>> put<Result>({
+  Future<Response<Result>> patch<Result>({
     required String path,
     required Map<String, dynamic> data,
     required bool useFormData,

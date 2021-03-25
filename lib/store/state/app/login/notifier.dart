@@ -1,5 +1,5 @@
-import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/api_client/models/api_client.dart';
 import 'package:native_app/store/state/app/token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
@@ -9,9 +9,8 @@ import 'models/login_output.dart';
 
 class Login {}
 
-class LoginNotifier extends StateNotifier<EntityState<Login>>
-    with LocatorMixin {
-  LoginNotifier() : super(EntityState(Login()));
+class LoginNotifier extends StateNotifier<StoreState<Login>> with LocatorMixin {
+  LoginNotifier() : super(StoreState(Login()));
 
   Future login(LoginInput input) async {
     state = state.copyWith(status: StateStatus.started);

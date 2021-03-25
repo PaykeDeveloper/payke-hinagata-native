@@ -79,14 +79,14 @@ class ApiClient {
     );
   }
 
-  Future<StateResult<Result>> put<Result, Data extends Serializable>({
+  Future<StateResult<Result>> patch<Result, Data extends Serializable>({
     required Result Function(dynamic) decode,
     required String path,
     Map<String, dynamic>? data,
     bool useFormData = false,
   }) async {
     return _call(
-      request: _api.put(
+      request: _api.patch(
         path: path,
         data: data ?? {},
         useFormData: useFormData,
@@ -95,13 +95,13 @@ class ApiClient {
     );
   }
 
-  Future<StateResult<Result>> putObject<Result, Data extends Serializable>({
+  Future<StateResult<Result>> patchObject<Result, Data extends Serializable>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
     Data? data,
     bool useFormData = false,
   }) async {
-    return put(
+    return patch(
       decode: (json) => decode(json as Map<String, dynamic>),
       path: path,
       data: data?.toJson(),

@@ -1,5 +1,5 @@
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
-import 'package:native_app/store/base/models/entity_state.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/api_client/models/api_client.dart';
 import 'package:native_app/store/state/app/api_client/notifier.dart';
 import 'package:native_app/store/state/app/language/models/language.dart';
@@ -11,13 +11,13 @@ import 'package:provider/single_child_widget.dart';
 
 List<SingleChildWidget> getProviders() {
   return [
-    StateNotifierProvider<TokenNotifier, EntityState<Token?>>(
+    StateNotifierProvider<TokenNotifier, StoreState<Token?>>(
         create: (context) => TokenNotifier()),
-    StateNotifierProvider<LanguageNotifier, EntityState<Language?>>(
+    StateNotifierProvider<LanguageNotifier, StoreState<Language?>>(
         create: (context) => LanguageNotifier()),
     StateNotifierProvider<ApiClientNotifier, ApiClient>(
         create: (context) => ApiClientNotifier()),
-    StateNotifierProvider<LoginNotifier, EntityState<Login>>(
+    StateNotifierProvider<LoginNotifier, StoreState<Login>>(
         create: (context) => LoginNotifier()),
   ];
 }
