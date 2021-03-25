@@ -26,7 +26,8 @@ void main() {
       // }
       if (loginResult is Failure<LoginOutput>) {
         final actual = loginResult.error is BadRequest ||
-            loginResult.error is NoInternetConnection;
+            loginResult.error is NoInternetConnection ||
+            loginResult.error is NotFound;
         expect(actual, true);
         return;
       }
