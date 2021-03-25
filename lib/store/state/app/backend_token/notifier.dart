@@ -2,11 +2,11 @@ import 'package:native_app/base/preference.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-import 'models/token.dart';
+import 'models/backend_token.dart';
 
-class TokenNotifier extends StateNotifier<StoreState<Token?>>
+class BackendTokenNotifier extends StateNotifier<StoreState<BackendToken?>>
     with LocatorMixin {
-  TokenNotifier() : super(const StoreState(null));
+  BackendTokenNotifier() : super(const StoreState(null));
 
   @override
   void initState() {
@@ -16,13 +16,13 @@ class TokenNotifier extends StateNotifier<StoreState<Token?>>
   }
 
   Future _fetch() async {
-    final value = await Preference.token.get();
-    final token = value != null ? Token(value) : null;
+    final value = await Preference.backendToken.get();
+    final token = value != null ? BackendToken(value) : null;
     state = state.copyWith(data: token, status: StateStatus.done);
   }
 
-  Future<bool> set(Token token) async {
-    final result = await Preference.token.set(token.value);
+  Future<bool> setToken(BackendToken token) async {
+    final result = await Preference.backendToken.set(token.value);
     state = state.copyWith(data: token, status: StateStatus.done);
     return result;
   }

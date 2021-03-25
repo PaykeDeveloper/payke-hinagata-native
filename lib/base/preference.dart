@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class Preference {
-  static final token = _PreferenceProperty<String>('token');
+  static final backendToken = _PreferenceProperty<String>('backendToken');
   static final language = _PreferenceProperty<String>('language');
 }
 
