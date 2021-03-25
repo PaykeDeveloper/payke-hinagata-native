@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('Preference Tests', () {
-    final token = Preference.token;
+    final token = Preference.backendToken;
 
     test('値が設定できる。', () async {
       SharedPreferences.setMockInitialValues({});
@@ -20,13 +20,13 @@ void main() {
 
     test('値設定済みの場合、値が取得できる。', () async {
       const expected = 'test';
-      SharedPreferences.setMockInitialValues({"token": expected});
+      SharedPreferences.setMockInitialValues({"backendToken": expected});
       final result = await token.get();
       expect(result, expected);
     });
 
     test('値を削除できる。', () async {
-      SharedPreferences.setMockInitialValues({"token": "test"});
+      SharedPreferences.setMockInitialValues({"backendToken": "test"});
       final result = await token.remove();
       expect(result, true);
     });

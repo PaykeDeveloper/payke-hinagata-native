@@ -21,7 +21,7 @@ class LanguageNotifier extends StateNotifier<StoreState<Language?>>
     state = state.copyWith(data: language, status: StateStatus.done);
   }
 
-  Future<bool> set(Language language) async {
+  Future<bool> setLanguage(Language language) async {
     final result = await Preference.language.set(language.iso639_1);
     state = state.copyWith(data: language, status: StateStatus.done);
     return result;

@@ -5,15 +5,15 @@ import 'package:native_app/base/constants.dart';
 import 'package:native_app/store/base/models/serializable.dart';
 import 'package:native_app/store/base/models/state_error.dart';
 import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/language/models/language.dart';
-import 'package:native_app/store/state/app/token/models/token.dart';
 
 class BackendClient {
   final _client = ApiClient(backendBaseUrl);
 
   bool get authenticated => _client.token != null;
 
-  void setToken(Token? token) {
+  void setToken(BackendToken? token) {
     _client.token = token?.value;
   }
 

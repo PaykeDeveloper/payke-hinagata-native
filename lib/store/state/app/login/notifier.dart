@@ -1,7 +1,7 @@
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
-import 'package:native_app/store/state/app/token/notifier.dart';
+import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import 'models/login_input.dart';
@@ -21,7 +21,7 @@ class LoginNotifier extends StateNotifier<StoreState<Login>> with LocatorMixin {
         data: input);
     if (result is Success<LoginOutput>) {
       state = state.copyWith(status: StateStatus.done, error: null);
-      await read<TokenNotifier>().set(result.data.token);
+      await read<BackendTokenNotifier>().setToken(result.data.token);
     } else if (result is Failure<LoginOutput>) {
       state = state.copyWith(status: StateStatus.failed, error: result.error);
     }
