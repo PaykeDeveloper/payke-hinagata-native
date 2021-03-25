@@ -79,8 +79,8 @@ class ApiClient {
   static Dio _getDio(String baseUrl) {
     final options = BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: 10000,
-      receiveTimeout: 10000,
+      connectTimeout: 30000,
+      receiveTimeout: 30000,
     );
     final dio = Dio(options);
     if (!productMode) {
