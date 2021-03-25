@@ -1,3 +1,3 @@
-abstract class Serializable {
+abstract class JsonGenerator {
   Map<String, dynamic> toJson();
 }
