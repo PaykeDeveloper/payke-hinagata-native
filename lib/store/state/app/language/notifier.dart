@@ -1,12 +1,12 @@
 import 'package:native_app/base/preference.dart';
-import 'package:native_app/store/base/models/entity_state.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import 'models/language.dart';
 
-class LanguageNotifier extends StateNotifier<EntityState<Language?>>
+class LanguageNotifier extends StateNotifier<StoreState<Language?>>
     with LocatorMixin {
-  LanguageNotifier() : super(const EntityState(null));
+  LanguageNotifier() : super(const StoreState(null));
 
   @override
   void initState() {

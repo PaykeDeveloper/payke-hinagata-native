@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/entity_state.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/providers.dart';
 import 'package:native_app/store/state/app/token/models/token.dart';
 import 'package:native_app/ui/routes.dart';
@@ -19,7 +19,7 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: Consumer<EntityState<Token?>>(
+        home: Consumer<StoreState<Token?>>(
           builder: (context, value, child) {
             if (value.status != StateStatus.done) {
               return LoadingPage();
