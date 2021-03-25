@@ -33,7 +33,7 @@ dependencies:
   state_notifier: ^0.7.0
   flutter_state_notifier: ^0.7.0
   shared_preferences: ^2.0.5
-  dio: ^3.0.10
+  dio: ^4.0.0-prev3
   json_serializable: ^4.1.0
   freezed_annotation:
 

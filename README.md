@@ -16,6 +16,15 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
+### アプリケーションの実行は
+```shell script
+% flutter run --dart-define=DEBUG_PAINT_SIZE=false --dart-define=BACKEND_ORIGIN=https://api.payke-hinagata.tk
+```
+
+### テストの実行は
+```shell script
+% flutter test --dart-define=DEBUG_PAINT_SIZE=false --dart-define=BACKEND_ORIGIN=https://api.payke-hinagata.tk
+```
 
 ### freezedの生成ファイル作成は
 ```shell script
@@ -23,7 +32,9 @@ samples, guidance on mobile development, and a full API reference.
 ```
 
 ### 何故かビルドエラーになる時は
+Dart Analysisの再実行
+![再実行](https://user-images.githubusercontent.com/22732544/103027860-69783180-4535-11eb-98b0-b9631f59a531.png)
+もしくは、
 ```shell script
 % flutter clean
 ```
-

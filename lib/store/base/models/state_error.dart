@@ -1,6 +1,5 @@
 import 'dart:io';
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -33,29 +32,30 @@ class StateError with _$StateError {
 StateError getStateError(Exception error) {
   if (error is DioError) {
     switch (error.type) {
-      case DioErrorType.CONNECT_TIMEOUT:
-      case DioErrorType.SEND_TIMEOUT:
-      case DioErrorType.RECEIVE_TIMEOUT:
+      case DioErrorType.connectTimeout:
+      case DioErrorType.sendTimeout:
+      case DioErrorType.receiveTimeout:
         return const StateError.sendTimeout();
-      case DioErrorType.CANCEL:
+      case DioErrorType.cancel:
         return const StateError.requestCancelled();
-      case DioErrorType.RESPONSE:
-        final statusCode = error.response.statusCode;
-        if (statusCode == HttpStatus.unauthorized) {
-          final Map<String, dynamic> json =
-              error.response.data as Map<String, dynamic>;
-          return StateError.unauthorisedRequest(ErrorResult.fromJson(json));
+      case DioErrorType.response:
+        final statusCode = error.response?.statusCode;
+        if (statusCode == null) {
+          break;
+        } else if (statusCode == HttpStatus.unauthorized) {
+          final json = error.response?.data as Map<String, dynamic>?;
+          return StateError.unauthorisedRequest(
+              ErrorResult.fromJson(json ?? {}));
         } else if (statusCode == HttpStatus.notFound) {
           return const StateError.notFound();
         } else if (400 <= statusCode && statusCode < 500) {
-          final Map<String, dynamic> json =
-              error.response.data as Map<String, dynamic>;
-          return StateError.badRequest(ErrorResult.fromJson(json));
+          final json = error.response?.data as Map<String, dynamic>?;
+          return StateError.badRequest(ErrorResult.fromJson(json ?? {}));
         } else if (500 <= statusCode) {
           return const StateError.serviceUnavailable();
         }
         break;
-      case DioErrorType.DEFAULT:
+      case DioErrorType.other:
         if (error.error is SocketException) {
           return const StateError.noInternetConnection();
         }

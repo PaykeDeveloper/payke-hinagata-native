@@ -1,4 +1,3 @@
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
@@ -53,7 +52,7 @@ class ApiClient {
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
-    options.headers['X-HTTP-Method-Override'] = 'PATCH';
+    options.headers?['X-HTTP-Method-Override'] = 'PATCH';
     final convertedData = useFormData ? FormData.fromMap(data) : data;
     final response = await _dio.post<Result>(
       path,
