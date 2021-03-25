@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.hinagata">
+    package="com.example.native_app">
    <application
-        android:label="hinagata"
+        android:label="native_app"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

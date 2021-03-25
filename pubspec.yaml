@@ -1,4 +1,4 @@
-name: hinagata
+name: native_app
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -29,11 +29,22 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+  provider: ^5.0.0
+  state_notifier: ^0.7.0
+  flutter_state_notifier: ^0.7.0
+  shared_preferences: ^2.0.5
+  dio: ^4.0.0-prev3
+  json_serializable: ^4.1.0
+  freezed_annotation:
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   lint: ^1.0.0
+  build_runner:
+  freezed:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

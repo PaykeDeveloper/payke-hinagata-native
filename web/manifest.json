@@ -1,6 +1,6 @@
 {
-    "name": "hinagata",
-    "short_name": "hinagata",
+    "name": "native_app",
+    "short_name": "native_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
