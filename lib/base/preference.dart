@@ -2,15 +2,33 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class Preference {
-  static final backendToken = _PreferenceProperty<String>('backendToken');
-  static final language = _PreferenceProperty<String>('language');
+  static final backendToken = PreferenceProperty<String>('backendToken');
+  static final language = PreferenceProperty<String>('language');
 }
 
-class _PreferenceProperty<T> {
-  _PreferenceProperty(this._key);
+abstract class _Property<T> {
+  _Property(this._key);
 
   final String _key;
 
+  Future<bool> set(T value);
+
+  Future<bool?> remove() async {
+    final pref = await SharedPreferences.getInstance();
+    if (!pref.containsKey(_key)) {
+      return null;
+    }
+
+    return pref.remove(_key);
+  }
+
+  Future<T?> get({T? defaultValue});
+}
+
+class PreferenceProperty<T> extends _Property<T> {
+  PreferenceProperty(String key) : super(key);
+
+  @override
   Future<bool> set(T value) async {
     final pref = await SharedPreferences.getInstance();
     switch (T) {
@@ -34,24 +52,11 @@ class _PreferenceProperty<T> {
           return pref.setString(_key, value);
         }
         break;
-      case List:
-        if (value is List<String>) {
-          return pref.setStringList(_key, value);
-        }
-        break;
     }
     throw AssertionError();
   }
 
-  Future<bool?> remove() async {
-    final pref = await SharedPreferences.getInstance();
-    if (!pref.containsKey(_key)) {
-      return null;
-    }
-
-    return pref.remove(_key);
-  }
-
+  @override
   Future<T?> get({T? defaultValue}) async {
     final pref = await SharedPreferences.getInstance();
     if (!pref.containsKey(_key)) {
@@ -67,9 +72,26 @@ class _PreferenceProperty<T> {
         return pref.getDouble(_key) as T?;
       case String:
         return pref.getString(_key) as T?;
-      case List:
-        return pref.getStringList(_key) as T?;
     }
     throw AssertionError();
+  }
+}
+
+class PreferenceListProperty extends _Property<List<String>> {
+  PreferenceListProperty(String key) : super(key);
+
+  @override
+  Future<List<String>?> get({List<String>? defaultValue}) async {
+    final pref = await SharedPreferences.getInstance();
+    if (!pref.containsKey(_key)) {
+      return defaultValue;
+    }
+    return pref.getStringList(_key);
+  }
+
+  @override
+  Future<bool> set(List<String> value) async {
+    final pref = await SharedPreferences.getInstance();
+    return pref.setStringList(_key, value);
   }
 }
