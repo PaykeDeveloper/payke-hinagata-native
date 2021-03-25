@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:native_app/base/api_client.dart';
 import 'package:native_app/base/constants.dart';
-import 'package:native_app/store/base/models/serializable.dart';
+import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/state_error.dart';
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
@@ -65,7 +65,7 @@ class BackendClient {
     );
   }
 
-  Future<StateResult<Result>> postObject<Result, Data extends Serializable>({
+  Future<StateResult<Result>> postObject<Result, Data extends JsonGenerator>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
     Data? data,
@@ -79,7 +79,7 @@ class BackendClient {
     );
   }
 
-  Future<StateResult<Result>> patch<Result, Data extends Serializable>({
+  Future<StateResult<Result>> patch<Result, Data extends JsonGenerator>({
     required Result Function(dynamic) decode,
     required String path,
     Map<String, dynamic>? data,
@@ -95,7 +95,7 @@ class BackendClient {
     );
   }
 
-  Future<StateResult<Result>> patchObject<Result, Data extends Serializable>({
+  Future<StateResult<Result>> patchObject<Result, Data extends JsonGenerator>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
     Data? data,
