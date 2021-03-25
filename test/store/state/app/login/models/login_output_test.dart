@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:native_app/store/base/models/token.dart';
 import 'package:native_app/store/state/app/login/models/login_output.dart';
+import 'package:native_app/store/state/app/token/models/token.dart';
 
 void main() {
   group('LoginOutput Tests', () {

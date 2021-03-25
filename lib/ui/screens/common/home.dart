@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/api_client.dart';
+import 'package:native_app/store/state/app/api_client/models/api_client.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {

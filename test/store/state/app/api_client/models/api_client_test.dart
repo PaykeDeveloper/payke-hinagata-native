@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:native_app/store/base/models/api_client.dart';
 import 'package:native_app/store/base/models/state_error.dart';
 import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/state/app/api_client/models/api_client.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/models/login_output.dart';
 import 'package:native_app/store/state/domain/sample/models/book.dart';

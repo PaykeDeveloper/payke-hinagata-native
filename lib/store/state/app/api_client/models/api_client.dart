@@ -1,12 +1,11 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:dio/dio.dart';
 import 'package:native_app/base/api.dart';
-
-import 'language.dart';
-import 'serializable.dart';
-import 'state_error.dart';
-import 'state_result.dart';
-import 'token.dart';
+import 'package:native_app/store/base/models/serializable.dart';
+import 'package:native_app/store/base/models/state_error.dart';
+import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/state/app/language/models/language.dart';
+import 'package:native_app/store/state/app/token/models/token.dart';
 
 class ApiClient {
   final _api = Api();

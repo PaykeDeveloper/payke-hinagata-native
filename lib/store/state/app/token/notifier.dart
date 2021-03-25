@@ -1,7 +1,8 @@
 import 'package:native_app/base/preference.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
-import 'package:native_app/store/base/models/token.dart';
 import 'package:state_notifier/state_notifier.dart';
+
+import 'models/token.dart';
 
 class TokenNotifier extends StateNotifier<EntityState<Token?>>
     with LocatorMixin {
