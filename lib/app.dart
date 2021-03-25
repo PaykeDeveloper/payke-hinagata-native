@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
-import 'package:native_app/store/base/models/token.dart';
 import 'package:native_app/store/providers.dart';
+import 'package:native_app/store/state/app/token/models/token.dart';
 import 'package:native_app/ui/routes.dart';
 import 'package:native_app/ui/screens/auth/login.dart';
 import 'package:native_app/ui/screens/common/home.dart';

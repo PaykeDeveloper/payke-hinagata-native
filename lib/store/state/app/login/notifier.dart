@@ -1,10 +1,11 @@
-import 'package:native_app/store/base/models/api_client.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/state_result.dart';
-import 'package:native_app/store/base/notifiers/token.dart';
-import 'package:native_app/store/state/app/login/models/login_input.dart';
-import 'package:native_app/store/state/app/login/models/login_output.dart';
+import 'package:native_app/store/state/app/api_client/models/api_client.dart';
+import 'package:native_app/store/state/app/token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
+
+import 'models/login_input.dart';
+import 'models/login_output.dart';
 
 class Login {}
 

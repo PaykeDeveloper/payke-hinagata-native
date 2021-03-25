@@ -1,12 +1,12 @@
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
-import 'package:native_app/store/base/models/api_client.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
-import 'package:native_app/store/base/models/language.dart';
-import 'package:native_app/store/base/models/token.dart';
-import 'package:native_app/store/base/notifiers/api_client.dart';
-import 'package:native_app/store/base/notifiers/language.dart';
-import 'package:native_app/store/base/notifiers/token.dart';
+import 'package:native_app/store/state/app/api_client/models/api_client.dart';
+import 'package:native_app/store/state/app/api_client/notifier.dart';
+import 'package:native_app/store/state/app/language/models/language.dart';
+import 'package:native_app/store/state/app/language/notifier.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
+import 'package:native_app/store/state/app/token/models/token.dart';
+import 'package:native_app/store/state/app/token/notifier.dart';
 import 'package:provider/single_child_widget.dart';
 
 List<SingleChildWidget> getProviders() {

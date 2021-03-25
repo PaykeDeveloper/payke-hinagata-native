@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:native_app/store/base/models/token.dart';
+import 'package:native_app/store/state/app/token/models/token.dart';
 
 part 'login_output.freezed.dart';
 

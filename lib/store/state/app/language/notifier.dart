@@ -1,7 +1,8 @@
 import 'package:native_app/base/preference.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
-import 'package:native_app/store/base/models/language.dart';
 import 'package:state_notifier/state_notifier.dart';
+
+import 'models/language.dart';
 
 class LanguageNotifier extends StateNotifier<EntityState<Language?>>
     with LocatorMixin {
