@@ -12,7 +12,7 @@ class Login {}
 class LoginNotifier extends StateNotifier<StoreState<Login>> with LocatorMixin {
   LoginNotifier() : super(StoreState(Login()));
 
-  Future login(LoginInput input) async {
+  Future<StateResult<LoginOutput>> login(LoginInput input) async {
     state = state.copyWith(status: StateStatus.started);
     final client = read<BackendClient>();
     final result = await client.postObject(
@@ -25,5 +25,6 @@ class LoginNotifier extends StateNotifier<StoreState<Login>> with LocatorMixin {
     } else if (result is Failure<LoginOutput>) {
       state = state.copyWith(status: StateStatus.failed, error: result.error);
     }
+    return result;
   }
 }

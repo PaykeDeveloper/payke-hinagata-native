@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:native_app/store/base/models/state_error.dart';
+import 'package:native_app/store/base/models/state_result.dart';
 
 abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
+  final formKey = GlobalKey<FormBuilderState>();
+
   Map<String, List<String>>? errors;
 
-  void setError(StateError? error) {
+  void reflectResult(StateResult result) {
+    if (result is Failure) {
+      _setError(result.error);
+      formKey.currentState?.saveAndValidate();
+    }
+  }
+
+  void _setError(StateError? error) {
     if (error == null) {
       setState(() {
         errors = null;
@@ -25,7 +36,16 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
     }
   }
 
-  void resetError() {
+  Future onSubmit();
+
+  void validateAndSubmit() {
+    _resetError();
+    if (formKey.currentState?.saveAndValidate() == true) {
+      onSubmit();
+    }
+  }
+
+  void _resetError() {
     if (errors == null) {
       return;
     }

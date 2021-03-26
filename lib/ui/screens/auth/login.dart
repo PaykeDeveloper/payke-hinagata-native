@@ -25,19 +25,21 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends ValidateFormState<LoginForm> {
-  final _formKey = GlobalKey<FormBuilderState>();
-
+  @override
   Future onSubmit() async {
-    final email = _formKey.currentState?.value['email'] as String;
-    final password = _formKey.currentState?.value['password'] as String;
+    final email = formKey.currentState?.value['email'] as String;
+    final password = formKey.currentState?.value['password'] as String;
     final notifier = context.read<LoginNotifier>();
-    await notifier.login(LoginInput(email: email, password: password));
-    final error = context.read<StoreState<Login>>().error;
-    setError(error);
+    final result = await notifier.login(LoginInput(
+      email: email,
+      password: password,
+    ));
+    reflectResult(result);
   }
 
   @override
   Widget build(BuildContext context) {
+    final status = context.select((StoreState<Login> state) => state.status);
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -55,7 +57,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
             ),
           ),
           FormBuilder(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: <Widget>[
                 ValidateTextField(
@@ -63,10 +65,10 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
                   name: 'email',
                   labelText: 'Email',
                   keyboardType: TextInputType.emailAddress,
-                  validator: FormBuilderValidators.compose([
+                  validators: [
                     FormBuilderValidators.required(context),
                     FormBuilderValidators.email(context),
-                  ]),
+                  ],
                 ),
                 ValidateTextField(
                   parent: this,
@@ -74,9 +76,9 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
                   labelText: 'Password',
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
-                  validator: FormBuilderValidators.compose([
+                  validators: [
                     FormBuilderValidators.required(context),
-                  ]),
+                  ],
                 ),
               ],
             ),
@@ -86,11 +88,8 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
             children: <Widget>[
               Expanded(
                 child: MaterialButton(
-                  onPressed: () {
-                    if (_formKey.currentState?.saveAndValidate() == true) {
-                      onSubmit();
-                    }
-                  },
+                  onPressed:
+                      status == StateStatus.started ? null : validateAndSubmit,
                   color: Theme.of(context).accentColor,
                   child: const Text(
                     "Submit",
