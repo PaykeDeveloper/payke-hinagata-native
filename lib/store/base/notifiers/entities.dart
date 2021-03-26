@@ -149,13 +149,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return result;
   }
 
-  bool checkInActivePeriod(DateTime? timestamp) {
+  bool _checkInActivePeriod(DateTime? timestamp) {
     final now = DateTime.now();
     return timestamp != null &&
         now.difference(timestamp).inMinutes < _activeMinutes;
   }
 
-  bool shouldFetchEntities({required EntitiesUrl url}) {
+  bool _shouldFetchEntities({required EntitiesUrl url}) {
     switch (state.entitiesStatus) {
       case StateStatus.initial:
         return true;
@@ -163,7 +163,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
         return false;
       case StateStatus.done:
       case StateStatus.failed:
-        final preferState = checkInActivePeriod(state.entitiesTimestamp) &&
+        final preferState = _checkInActivePeriod(state.entitiesTimestamp) &&
             state.entitiesUrl == url;
         return !preferState;
     }
@@ -173,7 +173,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     required EntitiesEntity Function(Map<String, dynamic>) decode,
     required EntitiesUrl url,
   }) async {
-    if (shouldFetchEntities(url: url)) {
+    if (_shouldFetchEntities(url: url)) {
       return null;
     }
     return fetchEntities(
@@ -182,7 +182,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     );
   }
 
-  bool shouldFetchEntity({required EntityUrl url}) {
+  bool _shouldFetchEntity({required EntityUrl url}) {
     switch (state.entityStatus) {
       case StateStatus.initial:
         return true;
@@ -190,7 +190,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
         return false;
       case StateStatus.done:
       case StateStatus.failed:
-        final preferState = checkInActivePeriod(state.entityTimestamp) &&
+        final preferState = _checkInActivePeriod(state.entityTimestamp) &&
             state.entityUrl == url;
         return !preferState;
     }
@@ -200,7 +200,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     required Entity Function(Map<String, dynamic>) decode,
     required EntityUrl url,
   }) async {
-    if (shouldFetchEntity(url: url)) {
+    if (_shouldFetchEntity(url: url)) {
       return null;
     }
     return fetchEntity(

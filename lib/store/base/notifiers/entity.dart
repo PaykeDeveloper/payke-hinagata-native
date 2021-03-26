@@ -12,7 +12,7 @@ abstract class EntityNotifier<Entity, EntityUrl,
 
   final _activeMinutes = 10;
 
-  String _getEntityUrl(EntityUrl url);
+  String getEntityUrl(EntityUrl url);
 
   Future fetchEntity({
     required Entity Function(Map<String, dynamic>) decode,
@@ -24,7 +24,7 @@ abstract class EntityNotifier<Entity, EntityUrl,
     );
     final result = await read<BackendClient>().getObject(
       decode: decode,
-      path: _getEntityUrl(url),
+      path: getEntityUrl(url),
     );
     if (result is Success<Entity>) {
       state = state.copyWith(
@@ -105,13 +105,13 @@ abstract class EntityNotifier<Entity, EntityUrl,
     return result;
   }
 
-  bool checkInActivePeriod(DateTime? timestamp) {
+  bool _checkInActivePeriod(DateTime? timestamp) {
     final now = DateTime.now();
     return timestamp != null &&
         now.difference(timestamp).inMinutes < _activeMinutes;
   }
 
-  bool shouldFetchEntity({required EntityUrl url}) {
+  bool _shouldFetchEntity({required EntityUrl url}) {
     switch (state.entityStatus) {
       case StateStatus.initial:
         return true;
@@ -119,7 +119,7 @@ abstract class EntityNotifier<Entity, EntityUrl,
         return false;
       case StateStatus.done:
       case StateStatus.failed:
-        final preferState = checkInActivePeriod(state.entityTimestamp) &&
+        final preferState = _checkInActivePeriod(state.entityTimestamp) &&
             state.entityUrl == url;
         return !preferState;
     }
@@ -129,7 +129,7 @@ abstract class EntityNotifier<Entity, EntityUrl,
     required Entity Function(Map<String, dynamic>) decode,
     required EntityUrl url,
   }) async {
-    if (shouldFetchEntity(url: url)) {
+    if (_shouldFetchEntity(url: url)) {
       return null;
     }
     return fetchEntity(

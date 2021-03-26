@@ -5,23 +5,28 @@ import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 class ValidateTextField<ParentWidget extends StatefulWidget>
     extends StatelessWidget {
   const ValidateTextField({
-    required this.parent,
-    required this.name,
-    required this.labelText,
-    this.obscureText = false,
-    this.keyboardType,
-    this.validators,
-  });
+    required ValidateFormState<ParentWidget> parent,
+    required String name,
+    required String labelText,
+    bool obscureText = false,
+    TextInputType? keyboardType,
+    List<FormFieldValidator<String>>? validators,
+  })  : _parent = parent,
+        _name = name,
+        _labelText = labelText,
+        _obscureText = obscureText,
+        _keyboardType = keyboardType,
+        _validators = validators;
 
-  final ValidateFormState<ParentWidget> parent;
-  final String name;
-  final String labelText;
-  final bool obscureText;
-  final TextInputType? keyboardType;
-  final List<FormFieldValidator<String>>? validators;
+  final ValidateFormState<ParentWidget> _parent;
+  final String _name;
+  final String _labelText;
+  final bool _obscureText;
+  final TextInputType? _keyboardType;
+  final List<FormFieldValidator<String>>? _validators;
 
-  String? checkParentErrors(String? _) {
-    final error = parent.errors?[name];
+  String? _checkParentErrors(String? _) {
+    final error = _parent.errors?[_name];
     if (error == null || error.isEmpty) {
       return null;
     }
@@ -29,30 +34,30 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     return error.join(' ');
   }
 
-  void onChanged(String? _) {
-    final shouldRemove = parent.errors?.containsKey(name) == true &&
-        parent.errors?.isNotEmpty == true;
+  void _onChanged(String? _) {
+    final shouldRemove = _parent.errors?.containsKey(_name) == true &&
+        _parent.errors?.isNotEmpty == true;
 
     if (!shouldRemove) {
       return;
     }
 
     // ignore: invalid_use_of_protected_member
-    parent.setState(() {
-      parent.errors?.remove(name);
+    _parent.setState(() {
+      _parent.errors?.remove(_name);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
-      name: name,
-      decoration: InputDecoration(labelText: labelText),
-      onChanged: onChanged,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
+      name: _name,
+      decoration: InputDecoration(labelText: _labelText),
+      onChanged: _onChanged,
+      obscureText: _obscureText,
+      keyboardType: _keyboardType,
       validator: FormBuilderValidators.compose(
-          [...validators ?? [], checkParentErrors]),
+          [..._validators ?? [], _checkParentErrors]),
     );
   }
 }

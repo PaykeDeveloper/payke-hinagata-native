@@ -1,4 +1,4 @@
-import 'package:native_app/base/preference.dart';
+import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
@@ -16,13 +16,13 @@ class LanguageNotifier extends StateNotifier<StoreState<Language?>>
   }
 
   Future _fetch() async {
-    final value = await Preference.language.get();
+    final value = await Preferences.language.get();
     final language = value != null ? LanguageExt.fromIso639_1(value) : null;
     state = state.copyWith(data: language, status: StateStatus.done);
   }
 
   Future<bool> setLanguage(Language language) async {
-    final result = await Preference.language.set(language.iso639_1);
+    final result = await Preferences.language.set(language.iso639_1);
     state = state.copyWith(data: language, status: StateStatus.done);
     return result;
   }
