@@ -31,7 +31,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
     final email = formKey.currentState?.value['email'] as String;
     final password = formKey.currentState?.value['password'] as String;
     final notifier = context.read<LoginNotifier>();
-    return await notifier.login(LoginInput(
+    return notifier.login(LoginInput(
       email: email,
       password: password,
     ));
