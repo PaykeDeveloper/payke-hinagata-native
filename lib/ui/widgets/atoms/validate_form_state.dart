@@ -8,6 +8,25 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
 
   Map<String, List<String>>? errors;
 
+  Future onSubmit();
+
+  void validateAndSubmit() {
+    _resetError();
+    if (formKey.currentState?.saveAndValidate() == true) {
+      onSubmit();
+    }
+  }
+
+  void _resetError() {
+    if (errors == null) {
+      return;
+    }
+
+    setState(() {
+      errors = null;
+    });
+  }
+
   void reflectResult(StateResult result) {
     final error = result is Failure ? result.error : null;
     _setError(error);
@@ -33,25 +52,6 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
         backgroundColor: Theme.of(context).errorColor,
       ));
     }
-  }
-
-  Future onSubmit();
-
-  void validateAndSubmit() {
-    _resetError();
-    if (formKey.currentState?.saveAndValidate() == true) {
-      onSubmit();
-    }
-  }
-
-  void _resetError() {
-    if (errors == null) {
-      return;
-    }
-
-    setState(() {
-      errors = null;
-    });
   }
 
   String? _getMessage(StateError error) {
