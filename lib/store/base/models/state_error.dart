@@ -29,9 +29,9 @@ class StateError with _$StateError {
   const factory StateError.unexpectedError() = UnexpectedError;
 }
 
-StateError getStateError(Exception error) {
-  if (error is DioError) {
-    switch (error.type) {
+StateError getStateError(Exception exception) {
+  if (exception is DioError) {
+    switch (exception.type) {
       case DioErrorType.connectTimeout:
       case DioErrorType.sendTimeout:
       case DioErrorType.receiveTimeout:
@@ -39,24 +39,25 @@ StateError getStateError(Exception error) {
       case DioErrorType.cancel:
         return const StateError.requestCancelled();
       case DioErrorType.response:
-        final statusCode = error.response?.statusCode;
+        final statusCode = exception.response?.statusCode;
         if (statusCode == null) {
           break;
         } else if (statusCode == HttpStatus.unauthorized) {
-          final json = error.response?.data as Map<String, dynamic>?;
+          final json = exception.response?.data as Map<String, dynamic>?;
           return StateError.unauthorisedRequest(
               ErrorResult.fromJson(json ?? {}));
         } else if (statusCode == HttpStatus.notFound) {
           return const StateError.notFound();
         } else if (400 <= statusCode && statusCode < 500) {
-          final json = error.response?.data as Map<String, dynamic>?;
+          final json = exception.response?.data as Map<String, dynamic>?;
           return StateError.badRequest(ErrorResult.fromJson(json ?? {}));
         } else if (500 <= statusCode) {
           return const StateError.serviceUnavailable();
         }
         break;
       case DioErrorType.other:
-        if (error.error is SocketException) {
+        if (exception.error is SocketException ||
+            exception.error is HandshakeException) {
           return const StateError.noInternetConnection();
         }
         break;
