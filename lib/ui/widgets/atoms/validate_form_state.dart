@@ -8,12 +8,12 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
 
   Map<String, List<String>>? errors;
 
-  Future onSubmit();
+  Future<StateResult?> onSubmit() async {}
 
   void validateAndSubmit() {
     _resetError();
     if (formKey.currentState?.saveAndValidate() == true) {
-      onSubmit();
+      _handleSubmit();
     }
   }
 
@@ -27,7 +27,14 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
     });
   }
 
-  void reflectResult(StateResult result) {
+  Future _handleSubmit() async {
+    final result = await onSubmit();
+    if (result != null) {
+      _reflectResult(result);
+    }
+  }
+
+  void _reflectResult(StateResult result) {
     final error = result is Failure ? result.error : null;
     _setError(error);
     formKey.currentState?.validate();
@@ -46,7 +53,7 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
     });
 
     final message = _getMessage(error);
-    if (message != null) {
+    if (message != null && message.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(message),
         backgroundColor: Theme.of(context).errorColor,

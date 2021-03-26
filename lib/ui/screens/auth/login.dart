@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
@@ -26,15 +27,14 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends ValidateFormState<LoginForm> {
   @override
-  Future onSubmit() async {
+  Future<StateResult> onSubmit() async {
     final email = formKey.currentState?.value['email'] as String;
     final password = formKey.currentState?.value['password'] as String;
     final notifier = context.read<LoginNotifier>();
-    final result = await notifier.login(LoginInput(
+    return await notifier.login(LoginInput(
       email: email,
       password: password,
     ));
-    reflectResult(result);
   }
 
   @override

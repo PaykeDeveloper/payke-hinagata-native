@@ -29,21 +29,30 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     return error.join(' ');
   }
 
+  void onChanged(String? _) {
+    final shouldRemove = parent.errors?.containsKey(name) == true &&
+        parent.errors?.isNotEmpty == true;
+
+    if (!shouldRemove) {
+      return;
+    }
+
+    // ignore: invalid_use_of_protected_member
+    parent.setState(() {
+      parent.errors?.remove(name);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilderTextField(
       name: name,
       decoration: InputDecoration(labelText: labelText),
-      onChanged: (String? _) {
-        // ignore: invalid_use_of_protected_member
-        parent.setState(() {
-          parent.errors?.remove(name);
-        });
-      },
+      onChanged: onChanged,
       obscureText: obscureText,
       keyboardType: keyboardType,
       validator: FormBuilderValidators.compose(
-          [checkParentErrors, ...validators ?? []]),
+          [...validators ?? [], checkParentErrors]),
     );
   }
 }
