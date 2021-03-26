@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
@@ -63,7 +64,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
                 ValidateTextField(
                   parent: this,
                   name: 'email',
-                  labelText: 'Email',
+                  labelText: AppLocalizations.of(context)!.email,
                   keyboardType: TextInputType.emailAddress,
                   validators: [
                     FormBuilderValidators.required(context),
@@ -73,7 +74,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
                 ValidateTextField(
                   parent: this,
                   name: 'password',
-                  labelText: 'Password',
+                  labelText: AppLocalizations.of(context)!.password,
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
                   validators: [

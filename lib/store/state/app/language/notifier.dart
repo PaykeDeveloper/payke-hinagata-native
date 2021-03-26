@@ -17,12 +17,12 @@ class LanguageNotifier extends StateNotifier<StoreState<Language?>>
 
   Future _fetch() async {
     final value = await Preferences.language.get();
-    final language = value != null ? LanguageExt.fromIso639_1(value) : null;
+    final language = value != null ? LanguageExt.fromBcp47(value) : null;
     state = state.copyWith(data: language, status: StateStatus.done);
   }
 
   Future<bool> setLanguage(Language language) async {
-    final result = await Preferences.language.set(language.iso639_1);
+    final result = await Preferences.language.set(language.bcp47);
     state = state.copyWith(data: language, status: StateStatus.done);
     return result;
   }

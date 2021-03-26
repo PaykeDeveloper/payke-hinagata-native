@@ -1,14 +1,20 @@
 enum Language {
   japanese,
+  traditionalChinese,
+  simplifiedChinese,
 }
 
 extension LanguageExt on Language {
-  static final _iso639_1 = {
+  /// language
+  /// language-script
+  static final _bcp47 = {
     Language.japanese: 'ja',
+    Language.traditionalChinese: 'zh-Hant',
+    Language.simplifiedChinese: 'zh-Hans',
   };
 
-  String get iso639_1 => _iso639_1[this]!;
+  String get bcp47 => _bcp47[this]!;
 
-  static Language fromIso639_1(String language) =>
-      _iso639_1.keys.firstWhere((element) => _iso639_1[element] == language);
+  static Language fromBcp47(String language) =>
+      _bcp47.keys.firstWhere((element) => _bcp47[element] == language);
 }

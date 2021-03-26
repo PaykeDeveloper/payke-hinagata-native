@@ -17,7 +17,7 @@ class BackendClient {
   }
 
   void setLanguage(Language? language) {
-    _client.language = language?.iso639_1;
+    _client.language = language?.bcp47;
   }
 
   Future<StateResult<Result>> get<Result>({

@@ -217,7 +217,7 @@ packages:
     source: hosted
     version: "6.0.0-nullsafety.1"
   flutter_localizations:
-    dependency: transitive
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -281,7 +281,7 @@ packages:
     source: hosted
     version: "4.0.0"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -328,7 +328,7 @@ packages:
       name: logging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   matcher:
     dependency: transitive
     description:
