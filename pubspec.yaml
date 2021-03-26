@@ -36,6 +36,7 @@ dependencies:
   dio: ^4.0.0-prev3
   json_serializable: ^4.1.0
   freezed_annotation:
+  flutter_form_builder: ^6.0.0-nullsafety.1
 
 
 dev_dependencies:
