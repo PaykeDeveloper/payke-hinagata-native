@@ -9,10 +9,9 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
   Map<String, List<String>>? errors;
 
   void reflectResult(StateResult result) {
-    if (result is Failure) {
-      _setError(result.error);
-      formKey.currentState?.validate();
-    }
+    final error = result is Failure ? result.error : null;
+    _setError(error);
+    formKey.currentState?.validate();
   }
 
   void _setError(StateError? error) {
