@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:native_app/store/base/models/state_error.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
+import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
+import 'package:native_app/ui/widgets/atoms/validate_text_field.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -23,11 +24,8 @@ class LoginForm extends StatefulWidget {
   _LoginFormState createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends ValidateFormState<LoginForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-
-  String? _emailError;
-  String? _passwordError;
 
   Future onSubmit() async {
     final email = _formKey.currentState?.value['email'] as String;
@@ -35,19 +33,7 @@ class _LoginFormState extends State<LoginForm> {
     final notifier = context.read<LoginNotifier>();
     await notifier.login(LoginInput(email: email, password: password));
     final error = context.read<StoreState<Login>>().error;
-    if (error is BadRequest) {
-      setState(() {
-        final message = error.result.message;
-        if (message != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(message),
-            backgroundColor: Theme.of(context).errorColor,
-          ));
-        }
-        _emailError = error.result.errors?['email']?.join();
-        _passwordError = error.result.errors?['password']?.join();
-      });
-    }
+    setError(error);
   }
 
   @override
@@ -72,27 +58,21 @@ class _LoginFormState extends State<LoginForm> {
             key: _formKey,
             child: Column(
               children: <Widget>[
-                FormBuilderTextField(
+                ValidateTextField(
+                  parent: this,
                   name: 'email',
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    errorText: _emailError,
-                  ),
-                  onChanged: (value) => _emailError = null,
+                  labelText: 'Email',
                   keyboardType: TextInputType.emailAddress,
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(context),
                     FormBuilderValidators.email(context),
                   ]),
                 ),
-                FormBuilderTextField(
+                ValidateTextField(
+                  parent: this,
                   name: 'password',
+                  labelText: 'Password',
                   obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    errorText: _passwordError,
-                  ),
-                  onChanged: (value) => _passwordError = null,
                   keyboardType: TextInputType.visiblePassword,
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(context),
@@ -107,8 +87,7 @@ class _LoginFormState extends State<LoginForm> {
               Expanded(
                 child: MaterialButton(
                   onPressed: () {
-                    _formKey.currentState?.save();
-                    if (_formKey.currentState?.validate() == true) {
+                    if (_formKey.currentState?.saveAndValidate() == true) {
                       onSubmit();
                     }
                   },
