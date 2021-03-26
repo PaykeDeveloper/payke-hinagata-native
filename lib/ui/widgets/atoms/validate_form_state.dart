@@ -11,7 +11,7 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
   void reflectResult(StateResult result) {
     if (result is Failure) {
       _setError(result.error);
-      formKey.currentState?.saveAndValidate();
+      formKey.currentState?.validate();
     }
   }
 
