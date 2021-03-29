@@ -50,14 +50,17 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilderTextField(
-      name: _name,
-      decoration: InputDecoration(labelText: _labelText),
-      onChanged: _onChanged,
-      obscureText: _obscureText,
-      keyboardType: _keyboardType,
-      validator: FormBuilderValidators.compose(
-          [..._validators ?? [], _checkParentErrors]),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 84),
+      child: FormBuilderTextField(
+        name: _name,
+        decoration: InputDecoration(labelText: _labelText),
+        onChanged: _onChanged,
+        obscureText: _obscureText,
+        keyboardType: _keyboardType,
+        validator: FormBuilderValidators.compose(
+            [..._validators ?? [], _checkParentErrors]),
+      ),
     );
   }
 }
