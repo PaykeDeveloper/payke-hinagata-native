@@ -14,9 +14,12 @@ class BookListPage extends StatefulWidget {
 }
 
 class _BookListPageState extends State<BookListPage> {
-  bool _loading = true;
+  bool _loading = false;
 
   Future _initState() async {
+    setState(() {
+      _loading = true;
+    });
     await context
         .read<BooksNotifier>()
         .fetchEntitiesIfNeeded(url: const BooksUrl(), reset: true);
@@ -50,7 +53,23 @@ class _BookListPageState extends State<BookListPage> {
           child: ListView.builder(
             physics: const AlwaysScrollableScrollPhysics(),
             itemCount: books.length,
-            itemBuilder: (context, index) => _ListItem(books[index]),
+            itemBuilder: (context, index) {
+              final book = books[index];
+              return _ListItem(
+                book: book,
+                onTap: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (BuildContext context) {
+                        return BookDetailPage(book.id);
+                      },
+                    ),
+                  ).then((value) {
+                    _initState();
+                  });
+                },
+              );
+            },
           ),
         ),
       ),
@@ -59,9 +78,12 @@ class _BookListPageState extends State<BookListPage> {
 }
 
 class _ListItem extends StatelessWidget {
-  const _ListItem(this._book);
+  const _ListItem({required Book book, required GestureTapCallback onTap})
+      : _book = book,
+        _onTap = onTap;
 
   final Book _book;
+  final GestureTapCallback _onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -69,15 +91,7 @@ class _ListItem extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
         title: Text(_book.title, key: Key('text_${_book.id}')),
-        onTap: () {
-          Navigator.of(context).push(
-            CupertinoPageRoute(
-              builder: (BuildContext context) {
-                return BookDetailPage(_book.id);
-              },
-            ),
-          );
-        },
+        onTap: _onTap,
       ),
     );
   }

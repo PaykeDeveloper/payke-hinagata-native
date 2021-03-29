@@ -44,57 +44,53 @@ abstract class EntityNotifier<Entity, EntityUrl,
   }
 
   Future<StateResult<Entity>> addEntity({
-    required Entity Function(Map<String, dynamic>) decode,
-    required String Function(EntityUrl) urlBuild,
     required EntityUrl urlParams,
-    CreateInput? data,
+    required CreateInput data,
     bool useFormData = false,
   }) async {
     final result = await read<BackendClient>().postObject(
-      decode: decode,
-      path: urlBuild(urlParams),
+      decode: decodeEntity,
+      path: getEntityUrl(urlParams),
       data: data,
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done ||
           state.entityStatus == StateStatus.failed) {
-        state.copyWith(entity: result.data, entityTimestamp: DateTime.now());
+        state = state.copyWith(
+            entity: result.data, entityTimestamp: DateTime.now());
       }
     }
     return result;
   }
 
   Future<StateResult<Entity>> mergeEntity({
-    required Entity Function(Map<String, dynamic>) decode,
-    required String Function(EntityUrl) urlBuild,
     required EntityUrl urlParams,
-    CreateInput? data,
+    required CreateInput data,
     bool useFormData = false,
   }) async {
     final result = await read<BackendClient>().patchObject(
-      decode: decode,
-      path: urlBuild(urlParams),
+      decode: decodeEntity,
+      path: getEntityUrl(urlParams),
       data: data,
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done ||
           state.entityStatus == StateStatus.failed) {
-        state.copyWith(entity: result.data, entityTimestamp: DateTime.now());
+        state = state.copyWith(
+            entity: result.data, entityTimestamp: DateTime.now());
       }
     }
     return result;
   }
 
   Future deleteEntity({
-    required Entity Function(dynamic) decode,
-    required String Function(EntityUrl) urlBuild,
     required EntityUrl urlParams,
   }) async {
     final result = await read<BackendClient>().delete(
-      decode: decode,
-      path: urlBuild(urlParams),
+      decode: (json) => {},
+      path: getEntityUrl(urlParams),
     );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {

@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:native_app/ui/pages/books/list.dart';
-import 'package:native_app/ui/pages/common/home.dart';
-import 'package:native_app/ui/pages/common/loading.dart';
+
+import './pages/books/list.dart';
+import './pages/common/home.dart';
+import './pages/common/loading.dart';
 
 class Main extends StatefulWidget {
   @override

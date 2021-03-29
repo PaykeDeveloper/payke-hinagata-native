@@ -26,13 +26,9 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends ValidateFormState<LoginForm> {
   @override
   Future<StateResult> onSubmit() async {
-    final email = formKey.currentState?.value['email'] as String;
-    final password = formKey.currentState?.value['password'] as String;
+    final input = LoginInput.fromJson(formKey.currentState!.value);
     final notifier = context.read<LoginNotifier>();
-    return notifier.login(LoginInput(
-      email: email,
-      password: password,
-    ));
+    return notifier.login(input);
   }
 
   @override
@@ -51,7 +47,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
           FormBuilder(
             key: formKey,
             child: Column(
-              children: <Widget>[
+              children: [
                 ValidateTextField(
                   parent: this,
                   name: 'email',
@@ -78,7 +74,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
           ),
           const SizedBox(height: 30),
           Row(
-            children: <Widget>[
+            children: [
               Expanded(
                 child: SubmitButton(
                   onPressed: validateAndSubmit,
