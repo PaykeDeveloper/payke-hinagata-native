@@ -5,7 +5,7 @@ import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/locale/notifier.dart';
 import 'package:native_app/ui/screens/auth/login.dart';
-import 'package:native_app/ui/screens/common/home.dart';
+import 'package:native_app/ui/screens/books/list.dart';
 import 'package:native_app/ui/screens/common/loading.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +40,6 @@ class _RootPageState extends State<RootPage> {
     if (token.data == null) {
       return LoginPage();
     }
-    return HomePage();
+    return BookListPage();
   }
 }
