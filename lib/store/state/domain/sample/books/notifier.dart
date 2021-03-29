@@ -17,4 +17,10 @@ class BooksNotifier extends EntitiesNotifier<Book, BookUrl, Book, BooksUrl,
 
   @override
   String getEntityUrl(BookUrl url) => 'api/v1/books/${url.id.value}/';
+
+  @override
+  Book decodeEntities(Map<String, dynamic> json) => Book.fromJson(json);
+
+  @override
+  Book decodeEntity(Map<String, dynamic> json) => Book.fromJson(json);
 }
