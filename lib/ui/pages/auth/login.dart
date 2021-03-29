@@ -12,8 +12,6 @@ import 'package:native_app/ui/widgets/atoms/validate_text_field.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
-  static String routeName = '/login';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: LoginForm());

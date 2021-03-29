@@ -5,6 +5,7 @@ import 'package:native_app/store/state/domain/sample/books/models/book.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
 import 'package:native_app/store/state/domain/sample/books/models/books_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
+import 'package:native_app/ui/pages/books/detail.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends StatefulWidget {
@@ -52,10 +53,16 @@ class _ListItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-        title: Text(
-          _book.title,
-          key: Key('text_${_book.id}'),
-        ),
+        title: Text(_book.title, key: Key('text_${_book.id}')),
+        onTap: () {
+          Navigator.of(context).push(
+            CupertinoPageRoute(
+              builder: (BuildContext context) {
+                return BookDetailPage(_book.id);
+              },
+            ),
+          );
+        },
       ),
     );
   }
