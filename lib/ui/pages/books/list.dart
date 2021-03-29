@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book.dart';
-import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
 import 'package:native_app/store/state/domain/sample/books/models/books_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
+import 'package:native_app/store/state/domain/sample/books/selectors.dart';
 import 'package:native_app/ui/pages/books/detail.dart';
+import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends StatefulWidget {
@@ -14,10 +14,15 @@ class BookListPage extends StatefulWidget {
 }
 
 class _BookListPageState extends State<BookListPage> {
+  bool _loading = true;
+
   Future _initState() async {
     await context
         .read<BooksNotifier>()
         .fetchEntitiesIfNeeded(url: const BooksUrl(), reset: true);
+    setState(() {
+      _loading = false;
+    });
   }
 
   Future _onRefresh() async {
@@ -34,17 +39,19 @@ class _BookListPageState extends State<BookListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final books = context.select(
-        (EntitiesState<Book, BookUrl, Book, BooksUrl> state) => state.entities);
+    final books = context.select(booksSelector);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Books')),
-      body: RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: books.length,
-          itemBuilder: (context, index) => _ListItem(books[index]),
+      body: Loader(
+        loading: _loading,
+        child: RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: books.length,
+            itemBuilder: (context, index) => _ListItem(books[index]),
+          ),
         ),
       ),
     );

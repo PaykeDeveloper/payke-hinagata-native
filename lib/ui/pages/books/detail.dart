@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/entities_state.dart';
-import 'package:native_app/store/state/domain/sample/books/models/book.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
-import 'package:native_app/store/state/domain/sample/books/models/books_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
+import 'package:native_app/store/state/domain/sample/books/selectors.dart';
+import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookDetailPage extends StatefulWidget {
@@ -33,12 +32,15 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final book = context.select(
-        (EntitiesState<Book, BookUrl, Book, BooksUrl> state) => state.entity);
+    final book = context.select(bookSelector);
+    final status = context.select(bookStatusSelector);
     return Scaffold(
       appBar: AppBar(title: const Text('Book detail')),
-      body: Center(
-        child: Text('Title: ${book?.title}'),
+      body: Loader(
+        status: status,
+        child: Center(
+          child: Text('Title: ${book?.title}'),
+        ),
       ),
     );
   }
