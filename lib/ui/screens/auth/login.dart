@@ -5,6 +5,7 @@ import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
+import 'package:native_app/ui/widgets/atoms/logo.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 import 'package:native_app/ui/widgets/atoms/validate_text_field.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +15,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login page')),
-      body: LoginForm(),
-    );
+    return Scaffold(body: LoginForm());
   }
 }
 
@@ -45,17 +43,11 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
+          const SizedBox(height: 100),
           Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(10),
-            child: const Text(
-              'Test',
-              style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.w500,
-                fontSize: 30,
-              ),
-            ),
+            child: Logo(),
           ),
           FormBuilder(
             key: formKey,
