@@ -36,7 +36,7 @@ dependencies:
   state_notifier: ^0.7.0
   flutter_state_notifier: ^0.7.0
   shared_preferences: ^2.0.5
-  dio: ^4.0.0-prev3
+  dio: ^4.0.0
   json_serializable: ^4.1.0
   freezed_annotation:
   flutter_form_builder: ^6.0.0-nullsafety.1
