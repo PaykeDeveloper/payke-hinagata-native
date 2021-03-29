@@ -1,4 +1,6 @@
 {
   "email": "メールアドレス",
-  "password": "パスワード"
+  "password": "パスワード",
+  "login": "ログイン",
+  "submit": "送信"
 }

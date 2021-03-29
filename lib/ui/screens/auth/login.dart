@@ -6,6 +6,7 @@ import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
 import 'package:native_app/ui/widgets/atoms/logo.dart';
+import 'package:native_app/ui/widgets/atoms/submit_button.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 import 'package:native_app/ui/widgets/atoms/validate_text_field.dart';
 import 'package:provider/provider.dart';
@@ -63,6 +64,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
                     FormBuilderValidators.email(context),
                   ],
                 ),
+                const SizedBox(height: 10),
                 ValidateTextField(
                   parent: this,
                   name: 'password',
@@ -76,18 +78,14 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
               ],
             ),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 30),
           Row(
             children: <Widget>[
               Expanded(
-                child: MaterialButton(
-                  onPressed:
-                      status == StateStatus.started ? null : validateAndSubmit,
-                  color: Theme.of(context).accentColor,
-                  child: const Text(
-                    "Submit",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                child: SubmitButton(
+                  onPressed: validateAndSubmit,
+                  status: status,
+                  label: AppLocalizations.of(context)!.login,
                 ),
               ),
             ],
