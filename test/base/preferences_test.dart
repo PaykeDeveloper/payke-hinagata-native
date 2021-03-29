@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:native_app/base/preference.dart';
+import 'package:native_app/base/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class TestPreference {
-  static final boolValue = PreferenceProperty<bool>('boolValue');
-  static final intValue = PreferenceProperty<int>('intValue');
-  static final doubleValue = PreferenceProperty<double>('doubleValue');
-  static final stringValue = PreferenceProperty<String>('stringValue');
-  static final stringListValue = PreferenceListProperty('stringListValue');
+  static final boolValue = BoolPreference('boolValue');
+  static final intValue = IntPreference('intValue');
+  static final doubleValue = DoublePreference('doubleValue');
+  static final stringValue = StringPreference('stringValue');
+  static final stringListValue = StringListPreference('stringListValue');
 }
 
 void main() {

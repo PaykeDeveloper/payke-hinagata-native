@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
+import 'package:native_app/ui/widgets/atoms/logo.dart';
+import 'package:native_app/ui/widgets/atoms/submit_button.dart';
+import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
+import 'package:native_app/ui/widgets/atoms/validate_text_field.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -8,10 +16,7 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login page')),
-      body: LoginForm(),
-    );
+    return Scaffold(body: LoginForm());
   }
 }
 
@@ -20,69 +25,71 @@ class LoginForm extends StatefulWidget {
   _LoginFormState createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  Future _onSubmit() async {
-    if (_formKey.currentState?.validate() == true) {
-      _formKey.currentState?.save();
-      final email = _emailController.text;
-      final password = _passwordController.text;
-      final notifier = context.read<LoginNotifier>();
-      await notifier.login(LoginInput(email: email, password: password));
-    }
+class _LoginFormState extends ValidateFormState<LoginForm> {
+  @override
+  Future<StateResult> onSubmit() async {
+    final email = formKey.currentState?.value['email'] as String;
+    final password = formKey.currentState?.value['password'] as String;
+    final notifier = context.read<LoginNotifier>();
+    return notifier.login(LoginInput(
+      email: email,
+      password: password,
+    ));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+    final status = context.select((StoreState<Login> state) => state.status);
+    return Padding(
+      padding: const EdgeInsets.all(10),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            controller: _emailController,
-            decoration: const InputDecoration(
-              labelText: "Email", // ラベル
-              hintText: 'Enter your email', // 入力ヒント
-            ),
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Not good';
-              }
-              return null;
-            },
+        children: [
+          const SizedBox(height: 100),
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(10),
+            child: Logo(),
           ),
-          TextFormField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              labelText: "Password", // ラベル
-              hintText: 'Enter your password', // 入力ヒント
+          FormBuilder(
+            key: formKey,
+            child: Column(
+              children: <Widget>[
+                ValidateTextField(
+                  parent: this,
+                  name: 'email',
+                  labelText: AppLocalizations.of(context)!.email,
+                  keyboardType: TextInputType.emailAddress,
+                  validators: [
+                    FormBuilderValidators.required(context),
+                    FormBuilderValidators.email(context),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                ValidateTextField(
+                  parent: this,
+                  name: 'password',
+                  labelText: AppLocalizations.of(context)!.password,
+                  obscureText: true,
+                  keyboardType: TextInputType.visiblePassword,
+                  validators: [
+                    FormBuilderValidators.required(context),
+                  ],
+                ),
+              ],
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Not good';
-              }
-              return null;
-            },
-            onFieldSubmitted: (value) {
-              _onSubmit();
-            },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: ElevatedButton(
-              onPressed: () {
-                _onSubmit();
-              },
-              child: const Text('Submit'),
-            ),
-          )
+          const SizedBox(height: 30),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: SubmitButton(
+                  onPressed: validateAndSubmit,
+                  status: status,
+                  label: AppLocalizations.of(context)!.login,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:native_app/base/api_client.dart';
 import 'package:native_app/base/constants.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/state_error.dart';
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
-import 'package:native_app/store/state/app/language/models/language.dart';
 
 class BackendClient {
   final _client = ApiClient(backendBaseUrl);
@@ -16,8 +16,8 @@ class BackendClient {
     _client.token = token?.value;
   }
 
-  void setLanguage(Language? language) {
-    _client.language = language?.iso639_1;
+  void setLocale(Locale? locale) {
+    _client.language = locale?.toLanguageTag();
   }
 
   Future<StateResult<Result>> get<Result>({

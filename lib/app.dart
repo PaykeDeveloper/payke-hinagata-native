@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/store_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_app/store/providers.dart';
-import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/ui/routes.dart';
-import 'package:native_app/ui/screens/auth/login.dart';
-import 'package:native_app/ui/screens/common/home.dart';
-import 'package:native_app/ui/screens/common/loading.dart';
+import 'package:native_app/ui/screens/root.dart';
 import 'package:provider/provider.dart';
 
 class App extends StatelessWidget {
@@ -18,18 +15,14 @@ class App extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          buttonTheme: const ButtonThemeData(height: 48),
+          inputDecorationTheme: const InputDecorationTheme(
+            border: OutlineInputBorder(),
+          ),
         ),
-        home: Consumer<StoreState<BackendToken?>>(
-          builder: (context, value, child) {
-            if (value.status != StateStatus.done) {
-              return LoadingPage();
-            }
-            if (value.data == null) {
-              return LoginPage();
-            }
-            return HomePage();
-          },
-        ),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: RootPage(),
         routes: routes,
       ),
     );
