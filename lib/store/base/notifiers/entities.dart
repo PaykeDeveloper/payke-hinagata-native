@@ -20,8 +20,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
 
   String getEntityUrl(EntityUrl url);
 
+  EntitiesEntity decodeEntities(Map<String, dynamic> json);
+
+  Entity decodeEntity(Map<String, dynamic> json);
+
   Future fetchEntities({
-    required EntitiesEntity Function(Map<String, dynamic>) decode,
     required EntitiesUrl url,
   }) async {
     state = state.copyWith(
@@ -29,7 +32,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       entitiesUrl: url,
     );
     final result = await read<BackendClient>().getList(
-      decode: decode,
+      decode: decodeEntities,
       path: getEntitiesUrl(url),
     );
     if (result is Success<List<EntitiesEntity>>) {
@@ -50,16 +53,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return result;
   }
 
-  Future fetchEntity({
-    required Entity Function(Map<String, dynamic>) decode,
-    required EntityUrl url,
-  }) async {
+  Future fetchEntity({required EntityUrl url}) async {
     state = state.copyWith(
       entityStatus: StateStatus.started,
       entityUrl: url,
     );
     final result = await read<BackendClient>().getObject(
-      decode: decode,
+      decode: decodeEntity,
       path: getEntityUrl(url),
     );
     if (result is Success<Entity>) {
@@ -169,17 +169,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     }
   }
 
-  Future fetchEntitiesIfNeeded({
-    required EntitiesEntity Function(Map<String, dynamic>) decode,
-    required EntitiesUrl url,
-  }) async {
-    if (_shouldFetchEntities(url: url)) {
+  Future fetchEntitiesIfNeeded({required EntitiesUrl url}) async {
+    if (!_shouldFetchEntities(url: url)) {
       return null;
     }
-    return fetchEntities(
-      decode: decode,
-      url: url,
-    );
+    return fetchEntities(url: url);
   }
 
   bool _shouldFetchEntity({required EntityUrl url}) {
@@ -196,17 +190,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     }
   }
 
-  Future fetchEntityIfNeeded({
-    required Entity Function(Map<String, dynamic>) decode,
-    required EntityUrl url,
-  }) async {
-    if (_shouldFetchEntity(url: url)) {
+  Future fetchEntityIfNeeded({required EntityUrl url}) async {
+    if (!_shouldFetchEntity(url: url)) {
       return null;
     }
-    return fetchEntity(
-      decode: decode,
-      url: url,
-    );
+    return fetchEntity(url: url);
   }
 
   Future resetEntities() async {

@@ -14,16 +14,15 @@ abstract class EntityNotifier<Entity, EntityUrl,
 
   String getEntityUrl(EntityUrl url);
 
-  Future fetchEntity({
-    required Entity Function(Map<String, dynamic>) decode,
-    required EntityUrl url,
-  }) async {
+  Entity decodeEntity(Map<String, dynamic> json);
+
+  Future fetchEntity({required EntityUrl url}) async {
     state = state.copyWith(
       entityStatus: StateStatus.started,
       entityUrl: url,
     );
     final result = await read<BackendClient>().getObject(
-      decode: decode,
+      decode: decodeEntity,
       path: getEntityUrl(url),
     );
     if (result is Success<Entity>) {
@@ -125,17 +124,11 @@ abstract class EntityNotifier<Entity, EntityUrl,
     }
   }
 
-  Future fetchEntityIfNeeded({
-    required Entity Function(Map<String, dynamic>) decode,
-    required EntityUrl url,
-  }) async {
-    if (_shouldFetchEntity(url: url)) {
+  Future fetchEntityIfNeeded({required EntityUrl url}) async {
+    if (!_shouldFetchEntity(url: url)) {
       return null;
     }
-    return fetchEntity(
-      decode: decode,
-      url: url,
-    );
+    return fetchEntity(url: url);
   }
 
   Future resetEntity() async {
