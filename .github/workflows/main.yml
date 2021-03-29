@@ -33,7 +33,7 @@ jobs:
       - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN
   deploy-staging:
     needs: test
-    if: github.ref == 'refs/heads/main'
+#    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
