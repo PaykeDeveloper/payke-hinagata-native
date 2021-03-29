@@ -14,30 +14,38 @@ class BookListPage extends StatefulWidget {
 }
 
 class _BookListPageState extends State<BookListPage> {
-  void _fetchBooks() {
-    context.read<BooksNotifier>().fetchEntitiesIfNeeded(url: const BooksUrl());
+  Future _initState() async {
+    await context
+        .read<BooksNotifier>()
+        .fetchEntitiesIfNeeded(url: const BooksUrl(), reset: true);
+  }
+
+  Future _onRefresh() async {
+    await context.read<BooksNotifier>().fetchEntities(url: const BooksUrl());
   }
 
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      _fetchBooks();
+      _initState();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final books =
-        context.watch<EntitiesState<Book, BookUrl, Book, BooksUrl>>().entities;
+    final books = context.select(
+        (EntitiesState<Book, BookUrl, Book, BooksUrl> state) => state.entities);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: ListView.builder(
-        itemCount: books.length,
-        cacheExtent: 20.0,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        itemBuilder: (context, index) => _ListItem(books[index]),
+      appBar: AppBar(title: const Text('Books')),
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: books.length,
+          itemBuilder: (context, index) => _ListItem(books[index]),
+        ),
       ),
     );
   }

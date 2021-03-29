@@ -124,10 +124,18 @@ abstract class EntityNotifier<Entity, EntityUrl,
     }
   }
 
-  Future fetchEntityIfNeeded({required EntityUrl url}) async {
+  Future fetchEntityIfNeeded({
+    required EntityUrl url,
+    bool? reset,
+  }) async {
     if (!_shouldFetchEntity(url: url)) {
       return null;
     }
+
+    if (reset == true) {
+      await resetEntityIfNeeded();
+    }
+
     return fetchEntity(url: url);
   }
 

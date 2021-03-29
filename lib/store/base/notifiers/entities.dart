@@ -169,10 +169,18 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     }
   }
 
-  Future fetchEntitiesIfNeeded({required EntitiesUrl url}) async {
+  Future fetchEntitiesIfNeeded({
+    required EntitiesUrl url,
+    bool? reset,
+  }) async {
     if (!_shouldFetchEntities(url: url)) {
       return null;
     }
+
+    if (reset == true) {
+      await resetEntitiesIfNeeded();
+    }
+
     return fetchEntities(url: url);
   }
 
@@ -190,10 +198,18 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     }
   }
 
-  Future fetchEntityIfNeeded({required EntityUrl url}) async {
+  Future fetchEntityIfNeeded({
+    required EntityUrl url,
+    bool? reset,
+  }) async {
     if (!_shouldFetchEntity(url: url)) {
       return null;
     }
+
+    if (reset == true) {
+      await resetEntityIfNeeded();
+    }
+
     return fetchEntity(url: url);
   }
 
