@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 
-import 'state_error.dart';
+import './state_error.dart';
 
 part 'entity_state.freezed.dart';
 
