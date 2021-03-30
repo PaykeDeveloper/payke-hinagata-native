@@ -9,6 +9,7 @@ import 'package:native_app/ui/pages/books/detail.dart';
 import 'package:native_app/ui/pages/books/edit.dart';
 import 'package:native_app/ui/widgets/atoms/tab_floating_action_button.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
+import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends StatefulWidget {
@@ -61,6 +62,7 @@ class _BookListPageState extends State<BookListPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Books')),
+      drawer: MainDrawer(),
       floatingActionButton: TabFloatingActionButton(
         onPressed: () {
           _pushNextPage((context) {

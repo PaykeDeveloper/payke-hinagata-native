@@ -2,5 +2,6 @@
   "email": "メールアドレス",
   "password": "パスワード",
   "login": "ログイン",
-  "submit": "送信"
+  "submit": "送信",
+  "logout": "ログアウト"
 }
