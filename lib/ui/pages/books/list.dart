@@ -4,7 +4,10 @@ import 'package:native_app/store/state/domain/sample/books/models/book.dart';
 import 'package:native_app/store/state/domain/sample/books/models/books_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
+import 'package:native_app/ui/pages/books/add.dart';
 import 'package:native_app/ui/pages/books/detail.dart';
+import 'package:native_app/ui/pages/books/edit.dart';
+import 'package:native_app/ui/widgets/atoms/tab_floating_action_button.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +35,18 @@ class _BookListPageState extends State<BookListPage> {
     await context.read<BooksNotifier>().fetchEntities(url: const BooksUrl());
   }
 
+  void _pushNextPage(WidgetBuilder builder) {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (BuildContext context) {
+          return builder(context);
+        },
+      ),
+    ).then((value) {
+      _initState();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +61,14 @@ class _BookListPageState extends State<BookListPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Books')),
+      floatingActionButton: TabFloatingActionButton(
+        onPressed: () {
+          _pushNextPage((context) {
+            return BookAddPage();
+          });
+        },
+        child: const Icon(Icons.add),
+      ),
       body: Loader(
         loading: _loading,
         child: RefreshIndicator(
@@ -57,15 +80,14 @@ class _BookListPageState extends State<BookListPage> {
               final book = books[index];
               return _ListItem(
                 book: book,
-                onTap: () {
-                  Navigator.of(context).push(
-                    CupertinoPageRoute(
-                      builder: (BuildContext context) {
-                        return BookDetailPage(book.id);
-                      },
-                    ),
-                  ).then((value) {
-                    _initState();
+                onTapItem: () {
+                  _pushNextPage((context) {
+                    return BookDetailPage(book.id);
+                  });
+                },
+                onPressedEdit: () {
+                  _pushNextPage((context) {
+                    return BookEditPage(book.id);
                   });
                 },
               );
@@ -78,20 +100,33 @@ class _BookListPageState extends State<BookListPage> {
 }
 
 class _ListItem extends StatelessWidget {
-  const _ListItem({required Book book, required GestureTapCallback onTap})
-      : _book = book,
-        _onTap = onTap;
+  const _ListItem({
+    required Book book,
+    required GestureTapCallback onTapItem,
+    required VoidCallback onPressedEdit,
+  })   : _book = book,
+        _onTapItem = onTapItem,
+        _onPressedEdit = onPressedEdit;
 
   final Book _book;
-  final GestureTapCallback _onTap;
+  final GestureTapCallback _onTapItem;
+  final VoidCallback _onPressedEdit;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-        title: Text(_book.title, key: Key('text_${_book.id}')),
-        onTap: _onTap,
+        onTap: _onTapItem,
+        title: Text(
+          _book.title,
+          key: Key('text_${_book.id}'),
+        ),
+        trailing: IconButton(
+          key: Key('icon_${_book.id}'),
+          icon: const Icon(Icons.edit),
+          onPressed: _onPressedEdit,
+        ),
       ),
     );
   }
