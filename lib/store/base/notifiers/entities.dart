@@ -125,14 +125,14 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return result;
   }
 
-  Future deleteEntity({
+  Future<StateResult<void>> deleteEntity({
     required EntityUrl urlParams,
   }) async {
     final result = await read<BackendClient>().delete(
-      decode: (json) => {},
+      decode: (json) {},
       path: getEntityUrl(urlParams),
     );
-    if (result is Success<Entity>) {
+    if (result is Success) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(entity: null, entityTimestamp: DateTime.now());
       }
