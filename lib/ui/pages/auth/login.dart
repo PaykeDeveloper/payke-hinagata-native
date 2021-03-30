@@ -34,7 +34,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final status = context.select((StoreState<Login> state) => state.status);
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
