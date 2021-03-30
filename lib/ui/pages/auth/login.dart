@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_app/store/base/models/state_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
 import 'package:native_app/ui/widgets/atoms/logo.dart';
 import 'package:native_app/ui/widgets/atoms/submit_button.dart';
@@ -26,9 +25,10 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends ValidateFormState<LoginForm> {
   @override
   Future<StateResult> onSubmit() async {
-    final input = LoginInput.fromJson(formKey.currentState!.value);
+    final email = formKey.currentState!.value['email'] as String;
+    final password = formKey.currentState!.value['password'] as String;
     final notifier = context.read<LoginNotifier>();
-    return notifier.login(input);
+    return notifier.login(email, password);
   }
 
   @override
