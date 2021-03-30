@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'error_result.dart';
+import './error_result.dart';
 
 part 'state_error.freezed.dart';
 

@@ -2,7 +2,7 @@ import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-import 'models/backend_token.dart';
+import './models/backend_token.dart';
 
 class BackendTokenNotifier extends StateNotifier<StoreState<BackendToken?>>
     with LocatorMixin {
