@@ -2,10 +2,10 @@
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
 
-import 'models/book.dart';
-import 'models/book_input.dart';
-import 'models/book_url.dart';
-import 'models/books_url.dart';
+import './models/book.dart';
+import './models/book_input.dart';
+import './models/book_url.dart';
+import './models/books_url.dart';
 
 class BooksNotifier extends EntitiesNotifier<Book, BookUrl, Book, BooksUrl,
     BookInput, BookInput> {

@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'state_error.dart';
+import './state_error.dart';
 
 part 'state_result.freezed.dart';
 

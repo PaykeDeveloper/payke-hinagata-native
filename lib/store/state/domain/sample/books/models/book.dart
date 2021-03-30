@@ -1,7 +1,7 @@
 // FIXME: SAMPLE CODE
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'book_id.dart';
+import './book_id.dart';
 
 part 'book.freezed.dart';
 

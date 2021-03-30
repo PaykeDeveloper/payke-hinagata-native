@@ -4,8 +4,8 @@ import 'package:native_app/store/state/app/backend_client/models/backend_client.
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
-import 'models/login_input.dart';
-import 'models/login_output.dart';
+import './models/login_input.dart';
+import './models/login_output.dart';
 
 class Login {}
 
