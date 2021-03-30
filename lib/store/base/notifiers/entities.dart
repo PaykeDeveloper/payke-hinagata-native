@@ -81,15 +81,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   }
 
   Future<StateResult<Entity>> addEntity({
-    required Entity Function(Map<String, dynamic>) decode,
-    required String Function(EntityUrl) urlBuild,
-    required EntityUrl urlParams,
-    CreateInput? data,
+    required EntitiesUrl urlParams,
+    required CreateInput data,
     bool useFormData = false,
   }) async {
     final result = await read<BackendClient>().postObject(
-      decode: decode,
-      path: urlBuild(urlParams),
+      decode: decodeEntity,
+      path: getEntitiesUrl(urlParams),
       data: data,
       useFormData: useFormData,
     );
@@ -103,22 +101,21 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   }
 
   Future<StateResult<Entity>> mergeEntity({
-    required Entity Function(Map<String, dynamic>) decode,
-    required String Function(EntityUrl) urlBuild,
     required EntityUrl urlParams,
-    CreateInput? data,
+    required CreateInput data,
     bool useFormData = false,
   }) async {
     final result = await read<BackendClient>().patchObject(
-      decode: decode,
-      path: urlBuild(urlParams),
+      decode: decodeEntity,
+      path: getEntityUrl(urlParams),
       data: data,
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done ||
           state.entityStatus == StateStatus.failed) {
-        state.copyWith(entity: result.data, entityTimestamp: DateTime.now());
+        state = state.copyWith(
+            entity: result.data, entityTimestamp: DateTime.now());
       }
       if (state.entitiesStatus == StateStatus.done ||
           state.entitiesStatus == StateStatus.failed) {
@@ -128,18 +125,16 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return result;
   }
 
-  Future deleteEntity({
-    required Entity Function(dynamic) decode,
-    required String Function(EntityUrl) urlBuild,
+  Future<StateResult<void>> deleteEntity({
     required EntityUrl urlParams,
   }) async {
     final result = await read<BackendClient>().delete(
-      decode: decode,
-      path: urlBuild(urlParams),
+      decode: (json) {},
+      path: getEntityUrl(urlParams),
     );
-    if (result is Success<Entity>) {
+    if (result is Success) {
       if (state.entityStatus == StateStatus.done) {
-        state.copyWith(entity: null, entityTimestamp: DateTime.now());
+        state = state.copyWith(entity: null, entityTimestamp: DateTime.now());
       }
       if (state.entitiesStatus == StateStatus.done ||
           state.entitiesStatus == StateStatus.failed) {
@@ -169,10 +164,18 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     }
   }
 
-  Future fetchEntitiesIfNeeded({required EntitiesUrl url}) async {
+  Future fetchEntitiesIfNeeded({
+    required EntitiesUrl url,
+    bool? reset,
+  }) async {
     if (!_shouldFetchEntities(url: url)) {
       return null;
     }
+
+    if (reset == true) {
+      await resetEntitiesIfNeeded();
+    }
+
     return fetchEntities(url: url);
   }
 
@@ -190,10 +193,18 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     }
   }
 
-  Future fetchEntityIfNeeded({required EntityUrl url}) async {
+  Future fetchEntityIfNeeded({
+    required EntityUrl url,
+    bool? reset,
+  }) async {
     if (!_shouldFetchEntity(url: url)) {
       return null;
     }
+
+    if (reset == true) {
+      await resetEntityIfNeeded();
+    }
+
     return fetchEntity(url: url);
   }
 

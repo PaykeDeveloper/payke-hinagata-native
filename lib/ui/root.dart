@@ -4,17 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/locale/notifier.dart';
-import 'package:native_app/ui/screens/auth/login.dart';
-import 'package:native_app/ui/screens/books/list.dart';
-import 'package:native_app/ui/screens/common/loading.dart';
 import 'package:provider/provider.dart';
 
-class RootPage extends StatefulWidget {
+import './main.dart';
+import './pages/auth/login.dart';
+import './pages/common/loading.dart';
+
+class Root extends StatefulWidget {
   @override
-  _RootPageState createState() => _RootPageState();
+  _RootState createState() => _RootState();
 }
 
-class _RootPageState extends State<RootPage> {
+class _RootState extends State<Root> {
   void _setLocale() {
     final locale = Localizations.localeOf(context);
     final notifier = context.read<LocaleNotifier>();
@@ -40,6 +41,6 @@ class _RootPageState extends State<RootPage> {
     if (token.data == null) {
       return LoginPage();
     }
-    return BookListPage();
+    return Main();
   }
 }
