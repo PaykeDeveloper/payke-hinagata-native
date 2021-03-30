@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_app/store/providers.dart';
-import 'package:native_app/ui/routes.dart';
-import 'package:native_app/ui/screens/root.dart';
 import 'package:provider/provider.dart';
+
+import './ui/root.dart';
+import './ui/theme.dart';
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
@@ -13,17 +15,13 @@ class App extends StatelessWidget {
       providers: getProviders(),
       child: MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          buttonTheme: const ButtonThemeData(height: 48),
-          inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(),
-          ),
-        ),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        theme: getTheme(),
+        localizationsDelegates: const [
+          FormBuilderLocalizations.delegate,
+          ...AppLocalizations.localizationsDelegates,
+        ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: RootPage(),
-        routes: routes,
+        home: Root(),
       ),
     );
   }

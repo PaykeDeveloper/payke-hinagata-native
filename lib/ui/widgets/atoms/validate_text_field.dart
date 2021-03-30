@@ -8,12 +8,14 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
+    String? initialValue,
     bool obscureText = false,
     TextInputType? keyboardType,
     List<FormFieldValidator<String>>? validators,
   })  : _parent = parent,
         _name = name,
         _labelText = labelText,
+        _initialValue = initialValue,
         _obscureText = obscureText,
         _keyboardType = keyboardType,
         _validators = validators;
@@ -21,6 +23,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
+  final String? _initialValue;
   final bool _obscureText;
   final TextInputType? _keyboardType;
   final List<FormFieldValidator<String>>? _validators;
@@ -54,6 +57,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderTextField(
         name: _name,
+        initialValue: _initialValue,
         decoration: InputDecoration(labelText: _labelText),
         onChanged: _onChanged,
         obscureText: _obscureText,
