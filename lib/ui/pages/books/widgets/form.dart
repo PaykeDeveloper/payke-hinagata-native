@@ -35,11 +35,11 @@ class _BookFormState extends ValidateFormState<BookForm> {
   @override
   Widget build(BuildContext context) {
     final book = widget.book;
-    return Padding(
-      padding: const EdgeInsets.all(10),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          const SizedBox(height: 100),
+          const SizedBox(height: 10),
           FormBuilder(
             key: formKey,
             child: Column(
@@ -63,7 +63,7 @@ class _BookFormState extends ValidateFormState<BookForm> {
               ],
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
           Row(
             children: [
               Expanded(

@@ -84,7 +84,10 @@ class ApiClient {
     );
     final dio = Dio(options);
     if (!productMode) {
-      dio.interceptors.add(LogInterceptor(responseBody: true));
+      dio.interceptors.add(LogInterceptor(
+        requestBody: true,
+        responseBody: true,
+      ));
     }
     return dio;
   }

@@ -11,6 +11,7 @@ import './state/app/backend_token/models/backend_token.dart';
 import './state/app/backend_token/notifier.dart';
 import './state/app/locale/notifier.dart';
 import './state/app/login/notifier.dart';
+import './state/app/logout/notifier.dart';
 import './state/domain/sample/books/models/book.dart';
 import './state/domain/sample/books/models/book_url.dart';
 import './state/domain/sample/books/models/books_url.dart';
@@ -26,6 +27,8 @@ List<SingleChildWidget> getProviders() {
         create: (context) => BackendClientNotifier()),
     StateNotifierProvider<LoginNotifier, StoreState<Login>>(
         create: (context) => LoginNotifier()),
+    StateNotifierProvider<LogoutNotifier, StoreState<Logout>>(
+        create: (context) => LogoutNotifier()),
 
     // FIXME: SAMPLE CODE
     StateNotifierProvider<BooksNotifier,

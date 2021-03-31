@@ -9,8 +9,12 @@ import 'package:native_app/store/state/domain/sample/books/models/book.dart';
 void main() {
   group('ApiClient Tests', () {
     test('ログイン、データ取得、ログアウトを一通り通す。', () async {
-      const data =
-          LoginInput(email: 'user01@example.com', password: 'payke123');
+      const data = LoginInput(
+        email: 'user01@example.com',
+        password: 'payke123',
+        packageName: 'web',
+        platformType: 'web',
+      );
       final client = BackendClient();
       final loginResult = await client.postObject(
         decode: (json) => LoginOutput.fromJson(json),

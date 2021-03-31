@@ -26,4 +26,10 @@ class BackendTokenNotifier extends StateNotifier<StoreState<BackendToken?>>
     state = state.copyWith(data: token, status: StateStatus.done);
     return result;
   }
+
+  Future<bool?> removeToken() async {
+    final result = await Preferences.backendToken.remove();
+    state = state.copyWith(data: null, status: StateStatus.done);
+    return result;
+  }
 }
