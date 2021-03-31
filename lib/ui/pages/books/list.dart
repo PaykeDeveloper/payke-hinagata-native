@@ -12,6 +12,10 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends StatefulWidget {
+  const BookListPage({this.onPressedDrawerMenu});
+
+  final VoidCallback? onPressedDrawerMenu;
+
   @override
   _BookListPageState createState() => _BookListPageState();
 }
@@ -60,7 +64,13 @@ class _BookListPageState extends State<BookListPage> {
     final books = context.select(booksSelector);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Books')),
+      appBar: AppBar(
+        title: const Text('Books'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: widget.onPressedDrawerMenu,
+        ),
+      ),
       floatingActionButton: TabFloatingActionButton(
         onPressed: () {
           _pushNextPage((context) {

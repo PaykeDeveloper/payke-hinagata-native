@@ -17,8 +17,8 @@ class App extends StatelessWidget {
         title: 'Flutter Demo',
         theme: getTheme(),
         localizationsDelegates: const [
-          FormBuilderLocalizations.delegate,
           ...AppLocalizations.localizationsDelegates,
+          FormBuilderLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
         home: Root(),
