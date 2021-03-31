@@ -42,11 +42,13 @@ StateError getStateError(Exception exception) {
         return const StateError.requestCancelled();
       case DioErrorType.response:
         final statusCode = exception.response?.statusCode;
-        final data = exception.response?.data;
-        final json = data is Map<String, dynamic> ? data : <String, dynamic>{};
         if (statusCode == null) {
           break;
-        } else if (statusCode == HttpStatus.unauthorized) {
+        }
+
+        final data = exception.response?.data;
+        final json = data is Map<String, dynamic> ? data : <String, dynamic>{};
+        if (statusCode == HttpStatus.unauthorized) {
           return StateError.unauthorisedRequest(ErrorResult.fromJson(json));
         } else if (statusCode == HttpStatus.notFound) {
           return StateError.notFound(ErrorResult.fromJson(json));
