@@ -5,6 +5,7 @@ import 'package:native_app/store/state/domain/sample/books/models/books_url.dart
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
 import 'package:native_app/ui/pages/books/widgets/form.dart';
+import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
@@ -26,17 +27,21 @@ class _BookAddPageState extends State<BookAddPage> {
 
   @override
   Widget build(BuildContext context) {
+    final error = context.select(booksErrorSelector);
     final status = context.select(booksStatusSelector);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add book'),
       ),
-      body: Loader(
-        status: status,
-        child: BookForm(
-          book: null,
+      body: ErrorWrapper(
+        error: error,
+        child: Loader(
           status: status,
-          onSubmit: _onSubmit,
+          child: BookForm(
+            book: null,
+            status: status,
+            onSubmit: _onSubmit,
+          ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:native_app/store/base/models/state_error.dart';
 import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/ui/extensions/state_error.dart';
 
 abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
   final formKey = GlobalKey<FormBuilderState>();
@@ -52,20 +53,11 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
       errors = _getErrors(error);
     });
 
-    final message = _getMessage(error);
-    if (message != null && message.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).errorColor,
-      ));
-    }
-  }
-
-  String? _getMessage(StateError error) {
-    if (error is BadRequest) {
-      return error.result.message;
-    }
-    return null;
+    final message = error.getContextMessage(context);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: Theme.of(context).errorColor,
+    ));
   }
 
   Map<String, List<String>>? _getErrors(StateError error) {

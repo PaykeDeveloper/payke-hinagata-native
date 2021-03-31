@@ -109,11 +109,11 @@ abstract class EntityNotifier<Entity, EntityUrl,
   bool _shouldFetchEntity({required EntityUrl url}) {
     switch (state.entityStatus) {
       case StateStatus.initial:
+      case StateStatus.failed:
         return true;
       case StateStatus.started:
         return false;
       case StateStatus.done:
-      case StateStatus.failed:
         final preferState = _checkInActivePeriod(state.entityTimestamp) &&
             state.entityUrl == url;
         return !preferState;

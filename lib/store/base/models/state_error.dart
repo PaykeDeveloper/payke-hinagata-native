@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import './error_result.dart';
@@ -18,11 +19,12 @@ class StateError with _$StateError {
 
   const factory StateError.badRequest(ErrorResult result) = BadRequest;
 
-  const factory StateError.notFound() = NotFound;
+  const factory StateError.notFound(ErrorResult result) = NotFound;
 
   const factory StateError.requestTimeout() = RequestTimeout;
 
-  const factory StateError.serviceUnavailable() = ServiceUnavailable;
+  const factory StateError.serviceUnavailable(ErrorResult result) =
+      ServiceUnavailable;
 
   const factory StateError.noInternetConnection() = NoInternetConnection;
 
@@ -43,16 +45,17 @@ StateError getStateError(Exception exception) {
         if (statusCode == null) {
           break;
         } else if (statusCode == HttpStatus.unauthorized) {
-          final json = exception.response?.data as Map<String, dynamic>?;
-          return StateError.unauthorisedRequest(
-              ErrorResult.fromJson(json ?? {}));
+          final json = (exception.response?.data ?? {}) as Map<String, dynamic>;
+          return StateError.unauthorisedRequest(ErrorResult.fromJson(json));
         } else if (statusCode == HttpStatus.notFound) {
-          return const StateError.notFound();
+          final json = (exception.response?.data ?? {}) as Map<String, dynamic>;
+          return StateError.notFound(ErrorResult.fromJson(json));
         } else if (400 <= statusCode && statusCode < 500) {
-          final json = exception.response?.data as Map<String, dynamic>?;
-          return StateError.badRequest(ErrorResult.fromJson(json ?? {}));
+          final json = (exception.response?.data ?? {}) as Map<String, dynamic>;
+          return StateError.badRequest(ErrorResult.fromJson(json));
         } else if (500 <= statusCode) {
-          return const StateError.serviceUnavailable();
+          final json = (exception.response?.data ?? {}) as Map<String, dynamic>;
+          return StateError.serviceUnavailable(ErrorResult.fromJson(json));
         }
         break;
       case DioErrorType.other:
@@ -64,4 +67,21 @@ StateError getStateError(Exception exception) {
     }
   }
   return const StateError.unexpectedError();
+}
+
+extension StateErrorExt on StateError {
+  String? getMessage() {
+    final message = map(
+      sendTimeout: (error) => null,
+      requestCancelled: (error) => null,
+      unauthorisedRequest: (error) => error.result.message,
+      badRequest: (error) => error.result.message,
+      notFound: (error) => error.result.message,
+      requestTimeout: (error) => null,
+      serviceUnavailable: (error) => error.result.message,
+      noInternetConnection: (error) => null,
+      unexpectedError: (error) => null,
+    );
+    return message?.isNotEmpty == true ? message : null;
+  }
 }
