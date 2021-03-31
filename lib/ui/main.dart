@@ -30,15 +30,6 @@ class _MainState extends State<Main> {
     true,
   ];
 
-  // void _onTabNavigate(int index, bool isFirst) {
-  //   final currentValue = _isFirsts[index];
-  //   if (currentValue != isFirst) {
-  //     setState(() {
-  //       _isFirsts[index] = isFirst;
-  //     });
-  //   }
-  // }
-
   void _onTabNavigate() {
     final index = _tabController.index;
     final canPop = _navigatorKeys[index].currentState?.canPop();
@@ -57,8 +48,8 @@ class _MainState extends State<Main> {
   void initState() {
     super.initState();
     _tabNavigatorObservers = [
-      _TabNavigatorObserver((isFirst) => _onTabNavigate()),
-      _TabNavigatorObserver((isFirst) => _onTabNavigate()),
+      _TabNavigatorObserver(_onTabNavigate),
+      _TabNavigatorObserver(_onTabNavigate),
     ];
     _tabController.addListener(() {
       debugPrint('aaaaaaaaaaaaaaa');
@@ -127,47 +118,32 @@ class _MainState extends State<Main> {
   }
 }
 
-// class _TabData {
-//   _TabData({
-//     required this.barItem,
-//     required this.builder,
-//     required this.navigatorKey,
-//   });
-//
-//   final BottomNavigationBarItem barItem;
-//   final WidgetBuilder builder;
-//   final GlobalKey<NavigatorState> navigatorKey;
-// }
-
 class _TabNavigatorObserver extends NavigatorObserver {
   _TabNavigatorObserver(this._didNavigate);
 
-  final Function(bool) _didNavigate;
+  final Function() _didNavigate;
 
   @override
   void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
-    _didNavigate(route.isFirst);
+    _didNavigate();
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-    _didNavigate(previousRoute?.isFirst == true);
+    _didNavigate();
   }
 
   @override
   void didRemove(Route route, Route? previousRoute) {
     super.didRemove(route, previousRoute);
+    _didNavigate();
   }
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
+    _didNavigate();
   }
-
-  // @override
-  // void didStartUserGesture(Route route, Route? previousRoute) {
-  //   super.didStartUserGesture(route, previousRoute);
-  // }
 }
