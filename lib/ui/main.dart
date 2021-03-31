@@ -57,11 +57,17 @@ class _MainState extends State<Main> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        if (_scaffoldKey.currentState?.isDrawerOpen == true) {
+          Navigator.of(context).pop();
+          return false;
+        }
+
         final popped =
             await _navigatorKeys[_tabController.index].currentState?.maybePop();
         if (popped == true) {
           return false;
         }
+
         if (_tabController.index != 0) {
           setState(() {
             _tabController.index = 0;
