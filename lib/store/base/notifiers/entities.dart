@@ -153,11 +153,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   bool _shouldFetchEntities({required EntitiesUrl url}) {
     switch (state.entitiesStatus) {
       case StateStatus.initial:
+      case StateStatus.failed:
         return true;
       case StateStatus.started:
         return false;
       case StateStatus.done:
-      case StateStatus.failed:
         final preferState = _checkInActivePeriod(state.entitiesTimestamp) &&
             state.entitiesUrl == url;
         return !preferState;
@@ -182,11 +182,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   bool _shouldFetchEntity({required EntityUrl url}) {
     switch (state.entityStatus) {
       case StateStatus.initial:
+      case StateStatus.failed:
         return true;
       case StateStatus.started:
         return false;
       case StateStatus.done:
-      case StateStatus.failed:
         final preferState = _checkInActivePeriod(state.entityTimestamp) &&
             state.entityUrl == url;
         return !preferState;

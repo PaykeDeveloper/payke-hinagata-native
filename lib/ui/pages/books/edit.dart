@@ -7,6 +7,7 @@ import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
 import 'package:native_app/ui/pages/books/widgets/form.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
+import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
@@ -56,6 +57,7 @@ class _BookEditPageState extends ValidateFormState<BookEditPage> {
   @override
   Widget build(BuildContext context) {
     final book = context.select(bookSelector);
+    final error = context.select(bookErrorSelector);
     final status = context.select(bookStatusSelector);
     return Scaffold(
       appBar: AppBar(
@@ -68,12 +70,16 @@ class _BookEditPageState extends ValidateFormState<BookEditPage> {
           ),
         ],
       ),
-      body: Loader(
-        status: status,
-        child: BookForm(
-          book: book,
+      body: ErrorWrapper(
+        error: error,
+        onPressedReload: _initState,
+        child: Loader(
           status: status,
-          onSubmit: _onSubmit,
+          child: BookForm(
+            book: book,
+            status: status,
+            onSubmit: _onSubmit,
+          ),
         ),
       ),
     );

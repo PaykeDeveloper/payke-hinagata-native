@@ -8,6 +8,7 @@ import 'package:native_app/ui/pages/books/add.dart';
 import 'package:native_app/ui/pages/books/detail.dart';
 import 'package:native_app/ui/pages/books/edit.dart';
 import 'package:native_app/ui/widgets/atoms/tab_floating_action_button.dart';
+import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
@@ -62,6 +63,7 @@ class _BookListPageState extends State<BookListPage> {
   @override
   Widget build(BuildContext context) {
     final books = context.select(booksSelector);
+    final error = context.select(booksErrorSelector);
 
     return Scaffold(
       appBar: AppBar(
@@ -79,29 +81,33 @@ class _BookListPageState extends State<BookListPage> {
         },
         child: const Icon(Icons.add),
       ),
-      body: Loader(
-        loading: _loading,
-        child: RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: books.length,
-            itemBuilder: (context, index) {
-              final book = books[index];
-              return _ListItem(
-                book: book,
-                onTapItem: () {
-                  _pushNextPage((context) {
-                    return BookDetailPage(book.id);
-                  });
-                },
-                onPressedEdit: () {
-                  _pushNextPage((context) {
-                    return BookEditPage(book.id);
-                  });
-                },
-              );
-            },
+      body: ErrorWrapper(
+        error: error,
+        onPressedReload: _initState,
+        child: Loader(
+          loading: _loading,
+          child: RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: ListView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: books.length,
+              itemBuilder: (context, index) {
+                final book = books[index];
+                return _ListItem(
+                  book: book,
+                  onTapItem: () {
+                    _pushNextPage((context) {
+                      return BookDetailPage(book.id);
+                    });
+                  },
+                  onPressedEdit: () {
+                    _pushNextPage((context) {
+                      return BookEditPage(book.id);
+                    });
+                  },
+                );
+              },
+            ),
           ),
         ),
       ),
