@@ -51,9 +51,6 @@ class _MainState extends State<Main> {
       _TabNavigatorObserver(_onTabNavigate),
       _TabNavigatorObserver(_onTabNavigate),
     ];
-    _tabController.addListener(() {
-      debugPrint('aaaaaaaaaaaaaaa');
-    });
   }
 
   @override
