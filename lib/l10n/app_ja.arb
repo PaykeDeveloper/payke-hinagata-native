@@ -3,5 +3,15 @@
   "password": "パスワード",
   "login": "ログイン",
   "submit": "送信",
-  "logout": "ログアウト"
+  "logout": "ログアウト",
+  "reload": "再読み込み",
+  "sendTimeout": "リクエストがタイムアウトしました。",
+  "requestCancelled": "リクエストがタイムアウトしました。",
+  "unauthorisedRequest": "認証に失敗しました。",
+  "badRequest": "リクエストに誤りがあります。",
+  "notFound": "データが見つかりません。",
+  "requestTimeout": "リクエストがタイムアウトしました。",
+  "serviceUnavailable": "サービスが一時利用できません。",
+  "noInternetConnection": "インターネットに接続できません。",
+  "unexpectedError": "予期せぬエラーが発生しました。"
 }
