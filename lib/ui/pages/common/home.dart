@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
-import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -20,7 +19,6 @@ class HomePage extends StatelessWidget {
           onPressed: _onPressedDrawerMenu,
         ),
       ),
-      drawer: MainDrawer(),
       body: Center(
         child: ElevatedButton(
           onPressed: () {
