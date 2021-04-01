@@ -1,45 +1,44 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import './error_result.dart';
 
-part 'state_error.freezed.dart';
+part 'store_error.freezed.dart';
 
 @freezed
-class StateError with _$StateError {
-  const factory StateError.sendTimeout() = SendTimeout;
+class StoreError with _$StoreError {
+  const factory StoreError.sendTimeout() = SendTimeout;
 
-  const factory StateError.requestCancelled() = RequestCancelled;
+  const factory StoreError.requestCancelled() = RequestCancelled;
 
-  const factory StateError.unauthorisedRequest(ErrorResult result) =
+  const factory StoreError.unauthorisedRequest(ErrorResult result) =
       UnauthorisedRequest;
 
-  const factory StateError.badRequest(ErrorResult result) = BadRequest;
+  const factory StoreError.badRequest(ErrorResult result) = BadRequest;
 
-  const factory StateError.notFound(ErrorResult result) = NotFound;
+  const factory StoreError.notFound(ErrorResult result) = NotFound;
 
-  const factory StateError.requestTimeout() = RequestTimeout;
+  const factory StoreError.requestTimeout() = RequestTimeout;
 
-  const factory StateError.serviceUnavailable(ErrorResult result) =
+  const factory StoreError.serviceUnavailable(ErrorResult result) =
       ServiceUnavailable;
 
-  const factory StateError.noInternetConnection() = NoInternetConnection;
+  const factory StoreError.noInternetConnection() = NoInternetConnection;
 
-  const factory StateError.unexpectedError() = UnexpectedError;
+  const factory StoreError.unexpectedError() = UnexpectedError;
 }
 
-StateError getStateError(Exception exception) {
+StoreError getStateError(Exception exception) {
   if (exception is DioError) {
     switch (exception.type) {
       case DioErrorType.connectTimeout:
       case DioErrorType.sendTimeout:
       case DioErrorType.receiveTimeout:
-        return const StateError.sendTimeout();
+        return const StoreError.sendTimeout();
       case DioErrorType.cancel:
-        return const StateError.requestCancelled();
+        return const StoreError.requestCancelled();
       case DioErrorType.response:
         final statusCode = exception.response?.statusCode;
         if (statusCode == null) {
@@ -49,27 +48,27 @@ StateError getStateError(Exception exception) {
         final data = exception.response?.data;
         final json = data is Map<String, dynamic> ? data : <String, dynamic>{};
         if (statusCode == HttpStatus.unauthorized) {
-          return StateError.unauthorisedRequest(ErrorResult.fromJson(json));
+          return StoreError.unauthorisedRequest(ErrorResult.fromJson(json));
         } else if (statusCode == HttpStatus.notFound) {
-          return StateError.notFound(ErrorResult.fromJson(json));
+          return StoreError.notFound(ErrorResult.fromJson(json));
         } else if (400 <= statusCode && statusCode < 500) {
-          return StateError.badRequest(ErrorResult.fromJson(json));
+          return StoreError.badRequest(ErrorResult.fromJson(json));
         } else if (500 <= statusCode) {
-          return StateError.serviceUnavailable(ErrorResult.fromJson(json));
+          return StoreError.serviceUnavailable(ErrorResult.fromJson(json));
         }
         break;
       case DioErrorType.other:
         if (exception.error is SocketException ||
             exception.error is HandshakeException) {
-          return const StateError.noInternetConnection();
+          return const StoreError.noInternetConnection();
         }
         break;
     }
   }
-  return const StateError.unexpectedError();
+  return const StoreError.unexpectedError();
 }
 
-extension StateErrorExt on StateError {
+extension StateErrorExt on StoreError {
   String? getMessage() {
     final message = map(
       sendTimeout: (error) => null,

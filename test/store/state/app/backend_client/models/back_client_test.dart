@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:native_app/store/base/models/state_error.dart';
-import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/base/models/store_error.dart';
+import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:native_app/store/state/app/login/models/login_input.dart';
 import 'package:native_app/store/state/app/login/models/login_output.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_input.dart';
 import 'package:native_app/store/state/domain/sample/books/models/books_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
@@ -15,7 +15,7 @@ class BookAddPage extends StatefulWidget {
 }
 
 class _BookAddPageState extends State<BookAddPage> {
-  Future<StateResult?> _onSubmit(BookInput input) async {
+  Future<StoreResult?> _onSubmit(BookInput input) async {
     final result = await context
         .read<BooksNotifier>()
         .addEntity(urlParams: const BooksUrl(), data: input);

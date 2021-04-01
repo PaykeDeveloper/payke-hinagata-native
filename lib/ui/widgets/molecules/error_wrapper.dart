@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:native_app/store/base/models/state_error.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/logout/notifier.dart';
 import 'package:native_app/ui/extensions/state_error.dart';
 import 'package:provider/provider.dart';
@@ -8,14 +8,14 @@ import 'package:provider/provider.dart';
 class ErrorWrapper extends StatelessWidget {
   const ErrorWrapper({
     required Widget child,
-    required StateError? error,
+    required StoreError? error,
     VoidCallback? onPressedReload,
   })  : _child = child,
         _error = error,
         _onPressedReload = onPressedReload;
 
   final Widget _child;
-  final StateError? _error;
+  final StoreError? _error;
   final VoidCallback? _onPressedReload;
 
   @override
@@ -55,7 +55,11 @@ class ErrorWrapper extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.error_outline, size: 80),
+              Icon(
+                Icons.error_outline,
+                size: 80,
+                color: Theme.of(context).colorScheme.error,
+              ),
               const SizedBox(height: 10),
               Text(
                 message,

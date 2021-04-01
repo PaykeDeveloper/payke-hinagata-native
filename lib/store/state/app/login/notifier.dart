@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
-import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
@@ -19,7 +19,7 @@ const _web = 'web';
 class LoginNotifier extends StateNotifier<StoreState<Login>> with LocatorMixin {
   LoginNotifier() : super(StoreState(Login()));
 
-  Future<StateResult<LoginOutput>> login(String email, String password) async {
+  Future<StoreResult<LoginOutput>> login(String email, String password) async {
     final packageName = await _getPackageName();
     final platformType = await _getPlatformType();
     final deviceId = await _getDeviceId();
