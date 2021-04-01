@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_input.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
@@ -27,7 +27,7 @@ class _BookEditPageState extends ValidateFormState<BookEditPage> {
         .fetchEntityIfNeeded(url: BookUrl(id: widget.bookId), reset: true);
   }
 
-  Future<StateResult?> _onSubmit(BookInput input) async {
+  Future<StoreResult?> _onSubmit(BookInput input) async {
     final result = await context
         .read<BooksNotifier>()
         .mergeEntity(urlParams: BookUrl(id: widget.bookId), data: input);

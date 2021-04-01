@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 
-import './state_error.dart';
+import './store_error.dart';
 
 part 'entity_state.freezed.dart';
 
@@ -12,6 +12,6 @@ class EntityState<Entity, EntityUrl> with _$EntityState<Entity, EntityUrl> {
     @Default(StateStatus.initial) StateStatus entityStatus,
     @Default(null) EntityUrl? entityUrl,
     @Default(null) DateTime? entityTimestamp,
-    @Default(null) StateError? entityError,
+    @Default(null) StoreError? entityError,
   }) = _EntityState<Entity, EntityUrl>;
 }

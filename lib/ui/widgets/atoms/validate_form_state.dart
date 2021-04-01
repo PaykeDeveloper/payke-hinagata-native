@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:native_app/store/base/models/state_error.dart';
-import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/base/models/store_error.dart';
+import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/ui/extensions/state_error.dart';
 
 abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
@@ -9,7 +9,7 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
 
   Map<String, List<String>>? errors;
 
-  Future<StateResult?> onSubmit() async {}
+  Future<StoreResult?> onSubmit() async {}
 
   void validateAndSubmit() {
     _resetError();
@@ -35,13 +35,16 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
     }
   }
 
-  void _reflectResult(StateResult result) {
-    final error = result is Failure ? result.error : null;
+  void _reflectResult(StoreResult result) {
+    final error = result.map(
+      success: (_) => null,
+      failure: (result) => result.error,
+    );
     _setError(error);
     formKey.currentState?.validate();
   }
 
-  void _setError(StateError? error) {
+  void _setError(StoreError? error) {
     if (error == null) {
       setState(() {
         errors = null;
@@ -60,7 +63,7 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
     ));
   }
 
-  Map<String, List<String>>? _getErrors(StateError error) {
+  Map<String, List<String>>? _getErrors(StoreError error) {
     if (error is BadRequest) {
       return error.result.errors;
     }

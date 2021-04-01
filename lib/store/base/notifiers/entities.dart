@@ -1,6 +1,6 @@
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
-import 'package:native_app/store/base/models/state_result.dart';
+import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:state_notifier/state_notifier.dart';
@@ -35,21 +35,24 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       decode: decodeEntities,
       path: getEntitiesUrl(url),
     );
-    if (result is Success<List<EntitiesEntity>>) {
-      state = state.copyWith(
-        entities: result.data,
-        entitiesStatus: StateStatus.done,
-        entitiesTimestamp: DateTime.now(),
-        entitiesError: null,
-      );
-    } else if (result is Failure<List<EntitiesEntity>>) {
-      state = state.copyWith(
-        entities: [],
-        entitiesStatus: StateStatus.failed,
-        entitiesTimestamp: DateTime.now(),
-        entitiesError: result.error,
-      );
-    }
+    result.when(
+      success: (data) {
+        state = state.copyWith(
+          entities: data,
+          entitiesStatus: StateStatus.done,
+          entitiesTimestamp: DateTime.now(),
+          entitiesError: null,
+        );
+      },
+      failure: (error) {
+        state = state.copyWith(
+          entities: [],
+          entitiesStatus: StateStatus.failed,
+          entitiesTimestamp: DateTime.now(),
+          entitiesError: error,
+        );
+      },
+    );
     return result;
   }
 
@@ -62,25 +65,28 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       decode: decodeEntity,
       path: getEntityUrl(url),
     );
-    if (result is Success<Entity>) {
-      state = state.copyWith(
-        entity: result.data,
-        entityStatus: StateStatus.done,
-        entityTimestamp: DateTime.now(),
-        entityError: null,
-      );
-    } else if (result is Failure<Entity>) {
-      state = state.copyWith(
-        entity: null,
-        entityStatus: StateStatus.failed,
-        entityTimestamp: DateTime.now(),
-        entityError: result.error,
-      );
-    }
+    result.when(
+      success: (data) {
+        state = state.copyWith(
+          entity: data,
+          entityStatus: StateStatus.done,
+          entityTimestamp: DateTime.now(),
+          entityError: null,
+        );
+      },
+      failure: (error) {
+        state = state.copyWith(
+          entity: null,
+          entityStatus: StateStatus.failed,
+          entityTimestamp: DateTime.now(),
+          entityError: error,
+        );
+      },
+    );
     return result;
   }
 
-  Future<StateResult<Entity>> addEntity({
+  Future<StoreResult<Entity>> addEntity({
     required EntitiesUrl urlParams,
     required CreateInput data,
     bool useFormData = false,
@@ -92,15 +98,14 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
-      if (state.entitiesStatus == StateStatus.done ||
-          state.entitiesStatus == StateStatus.failed) {
-        resetEntities();
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
       }
     }
     return result;
   }
 
-  Future<StateResult<Entity>> mergeEntity({
+  Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
     required CreateInput data,
     bool useFormData = false,
@@ -112,20 +117,20 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done ||
-          state.entityStatus == StateStatus.failed) {
+      if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
-            entity: result.data, entityTimestamp: DateTime.now());
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
       }
-      if (state.entitiesStatus == StateStatus.done ||
-          state.entitiesStatus == StateStatus.failed) {
-        resetEntities();
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
       }
     }
     return result;
   }
 
-  Future<StateResult<void>> deleteEntity({
+  Future<StoreResult<void>> deleteEntity({
     required EntityUrl urlParams,
   }) async {
     final result = await read<BackendClient>().delete(
@@ -134,11 +139,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     );
     if (result is Success) {
       if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(entity: null, entityTimestamp: DateTime.now());
+        state = state.copyWith(
+          entity: null,
+          entityTimestamp: DateTime.now(),
+        );
       }
-      if (state.entitiesStatus == StateStatus.done ||
-          state.entitiesStatus == StateStatus.failed) {
-        resetEntities();
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
       }
     }
     return result;

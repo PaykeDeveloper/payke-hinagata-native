@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:native_app/store/base/models/state_error.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 
-extension StateErrorExt on StateError {
+extension StateErrorExt on StoreError {
   String getContextMessage(BuildContext context) {
     final message = getMessage();
     if (message != null) {

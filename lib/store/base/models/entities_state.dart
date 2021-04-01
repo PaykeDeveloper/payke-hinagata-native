@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 
-import './state_error.dart';
+import './store_error.dart';
 
 part 'entities_state.freezed.dart';
 
@@ -13,11 +13,11 @@ class EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
     @Default(StateStatus.initial) StateStatus entityStatus,
     @Default(null) EntityUrl? entityUrl,
     @Default(null) DateTime? entityTimestamp,
-    @Default(null) StateError? entityError,
+    @Default(null) StoreError? entityError,
     @Default([]) List<EntitiesEntity> entities,
     @Default(StateStatus.initial) StateStatus entitiesStatus,
     @Default(null) EntitiesUrl? entitiesUrl,
     @Default(null) DateTime? entitiesTimestamp,
-    @Default(null) StateError? entitiesError,
+    @Default(null) StoreError? entitiesError,
   }) = _EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>;
 }
