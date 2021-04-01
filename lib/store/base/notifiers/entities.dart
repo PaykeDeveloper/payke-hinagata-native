@@ -99,7 +99,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     );
     if (result is Success<Entity>) {
       if (state.entitiesStatus == StateStatus.done) {
-        resetEntities();
+        await resetEntities();
       }
     }
     return result;
@@ -119,10 +119,12 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
-            entity: result.data, entityTimestamp: DateTime.now());
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
       }
       if (state.entitiesStatus == StateStatus.done) {
-        resetEntities();
+        await resetEntities();
       }
     }
     return result;
@@ -137,10 +139,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     );
     if (result is Success) {
       if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(entity: null, entityTimestamp: DateTime.now());
+        state = state.copyWith(
+          entity: null,
+          entityTimestamp: DateTime.now(),
+        );
       }
       if (state.entitiesStatus == StateStatus.done) {
-        resetEntities();
+        await resetEntities();
       }
     }
     return result;

@@ -60,7 +60,9 @@ abstract class EntityNotifier<Entity, EntityUrl,
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
-            entity: result.data, entityTimestamp: DateTime.now());
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
       }
     }
     return result;
@@ -80,7 +82,9 @@ abstract class EntityNotifier<Entity, EntityUrl,
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
-            entity: result.data, entityTimestamp: DateTime.now());
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
       }
     }
     return result;
@@ -95,7 +99,10 @@ abstract class EntityNotifier<Entity, EntityUrl,
     );
     if (result is Success) {
       if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(entity: null, entityTimestamp: DateTime.now());
+        state = state.copyWith(
+          entity: null,
+          entityTimestamp: DateTime.now(),
+        );
       }
     }
     return result;
