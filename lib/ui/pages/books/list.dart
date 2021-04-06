@@ -7,15 +7,16 @@ import 'package:native_app/store/state/domain/sample/books/selectors.dart';
 import 'package:native_app/ui/pages/books/add.dart';
 import 'package:native_app/ui/pages/books/detail.dart';
 import 'package:native_app/ui/pages/books/edit.dart';
+import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:native_app/ui/widgets/atoms/tab_floating_action_button.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends StatefulWidget {
-  const BookListPage({this.onPressedDrawerMenu});
+  const BookListPage({required this.main});
 
-  final VoidCallback? onPressedDrawerMenu;
+  final MainInterface main;
 
   @override
   _BookListPageState createState() => _BookListPageState();
@@ -70,7 +71,7 @@ class _BookListPageState extends State<BookListPage> {
         title: const Text('Books'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget.onPressedDrawerMenu,
+          onPressed: widget.main.openDrawer,
         ),
       ),
       floatingActionButton: TabFloatingActionButton(

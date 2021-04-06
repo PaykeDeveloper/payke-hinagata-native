@@ -1,32 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
+import 'package:native_app/store/state/domain/sample/books/selectors.dart';
+import 'package:native_app/ui/extensions/list.dart';
+import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({
-    VoidCallback? onPressedDrawerMenu,
-  }) : _onPressedDrawerMenu = onPressedDrawerMenu;
-  final VoidCallback? _onPressedDrawerMenu;
+  const HomePage({required MainInterface main}) : _main = main;
+
+  final MainInterface _main;
 
   @override
   Widget build(BuildContext context) {
-    final authenticated = context.watch<BackendClient>().authenticated;
+    final book = context.select(booksSelector).firstOrNull();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: _onPressedDrawerMenu,
+          onPressed: _main.openDrawer,
         ),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('Auth: $authenticated'),
-            ));
-          },
-          child: Text('Auth: $authenticated'),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                _main.openBooks();
+              },
+              child: const Text('Open books'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (book == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                    content: Text('No book'),
+                  ));
+                } else {
+                  _main.openBook(book.id);
+                }
+              },
+              child: const Text('Open book'),
+            ),
+          ],
         ),
       ),
     );
