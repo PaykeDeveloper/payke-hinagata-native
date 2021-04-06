@@ -71,7 +71,7 @@ class _BookListPageState extends State<BookListPage> {
         title: const Text('Books'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget.main.openDrawer,
+          onPressed: widget.main.getScaffoldState()?.openDrawer,
         ),
       ),
       floatingActionButton: TabFloatingActionButton(

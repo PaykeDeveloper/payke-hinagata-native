@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
 import 'package:native_app/ui/extensions/list.dart';
+import 'package:native_app/ui/pages/books/detail.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +19,7 @@ class HomePage extends StatelessWidget {
         title: const Text('Home'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: _main.openDrawer,
+          onPressed: _main.getScaffoldState()?.openDrawer,
         ),
       ),
       body: Center(
@@ -26,7 +28,7 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                _main.openBooks();
+                _main.getNavigatorState(1)?.popUntil((route) => route.isFirst);
               },
               child: const Text('Open books'),
             ),
@@ -37,7 +39,14 @@ class HomePage extends StatelessWidget {
                     content: Text('No book'),
                   ));
                 } else {
-                  _main.openBook(book.id);
+                  _main.getNavigatorState(1)?.pushAndRemoveUntil(
+                    CupertinoPageRoute(
+                      builder: (BuildContext context) {
+                        return BookDetailPage(book.id);
+                      },
+                    ),
+                    (route) => route.isFirst,
+                  );
                 }
               },
               child: const Text('Open book'),

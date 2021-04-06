@@ -1,9 +1,7 @@
-import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
+import 'package:flutter/material.dart';
 
 abstract class MainInterface {
-  void openDrawer() {}
+  ScaffoldState? getScaffoldState();
 
-  void openBooks() {}
-
-  void openBook(BookId bookId) {}
+  NavigatorState? getNavigatorState(int index);
 }

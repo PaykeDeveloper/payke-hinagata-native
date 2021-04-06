@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
-import 'package:native_app/ui/pages/books/detail.dart';
 
 import './pages/books/list.dart';
 import './pages/common/home.dart';
@@ -23,32 +21,6 @@ class _MainState extends State<Main> implements MainInterface {
   ];
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  @override
-  void openDrawer() {
-    _scaffoldKey.currentState?.openDrawer();
-  }
-
-  @override
-  void openBooks() {
-    const index = 1;
-    _tabController.index = index;
-    _navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
-  }
-
-  @override
-  void openBook(BookId bookId) {
-    const index = 1;
-    _tabController.index = index;
-    _navigatorKeys[index].currentState?.pushAndRemoveUntil(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return BookDetailPage(bookId);
-        },
-      ),
-      (route) => route.isFirst,
-    );
-  }
 
   final _isFirsts = [
     true,
@@ -143,6 +115,17 @@ class _MainState extends State<Main> implements MainInterface {
       default:
         return LoadingPage();
     }
+  }
+
+  @override
+  ScaffoldState? getScaffoldState() => _scaffoldKey.currentState;
+
+  @override
+  NavigatorState? getNavigatorState(int index) {
+    if (_tabController.index != index) {
+      _tabController.index = index;
+    }
+    return _navigatorKeys[index].currentState;
   }
 }
 
