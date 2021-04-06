@@ -10,6 +10,8 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookAddPage extends StatefulWidget {
+  static const routeName = '/books/add';
+
   @override
   _BookAddPageState createState() => _BookAddPageState();
 }

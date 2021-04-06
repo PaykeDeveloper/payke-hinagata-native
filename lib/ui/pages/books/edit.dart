@@ -5,32 +5,40 @@ import 'package:native_app/store/state/domain/sample/books/models/book_input.dar
 import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
+import 'package:native_app/ui/pages/books/list.dart';
 import 'package:native_app/ui/pages/books/widgets/form.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-class BookEditPage extends StatefulWidget {
-  const BookEditPage(this.bookId);
-
+class BookEditArgs {
   final BookId bookId;
+
+  BookEditArgs(this.bookId);
+}
+
+class BookEditPage extends StatefulWidget {
+  static const routeName = '/book/edit';
 
   @override
   _BookEditPageState createState() => _BookEditPageState();
 }
 
 class _BookEditPageState extends ValidateFormState<BookEditPage> {
+  BookEditArgs get _args =>
+      ModalRoute.of(context)!.settings.arguments! as BookEditArgs;
+
   Future _initState() async {
     await context
         .read<BooksNotifier>()
-        .fetchEntityIfNeeded(url: BookUrl(id: widget.bookId), reset: true);
+        .fetchEntityIfNeeded(url: BookUrl(id: _args.bookId), reset: true);
   }
 
   Future<StoreResult?> _onSubmit(BookInput input) async {
     final result = await context
         .read<BooksNotifier>()
-        .mergeEntity(urlParams: BookUrl(id: widget.bookId), data: input);
+        .mergeEntity(urlParams: BookUrl(id: _args.bookId), data: input);
     if (result is Success) {
       Navigator.of(context).pop();
     }
@@ -40,9 +48,10 @@ class _BookEditPageState extends ValidateFormState<BookEditPage> {
   Future _onPressedDelete() async {
     final result = await context
         .read<BooksNotifier>()
-        .deleteEntity(urlParams: BookUrl(id: widget.bookId));
+        .deleteEntity(urlParams: BookUrl(id: _args.bookId));
     if (result is Success) {
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context)
+          .popUntil((route) => route.settings.name == BookListPage.routeName);
     }
   }
 

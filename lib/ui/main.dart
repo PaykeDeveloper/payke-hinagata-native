@@ -15,19 +15,55 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> implements MainInterface {
   final _tabController = CupertinoTabController();
 
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   final _navigatorKeys = [
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
   ];
 
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  final _tabNavigatorObservers = [
+    _TabNavigatorObserver(),
+    _TabNavigatorObserver(),
+  ];
 
   final _isFirsts = [
     true,
     true,
   ];
 
-  void _onTabNavigate() {
+  final _tabItems = [
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: 'Home',
+    ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.book),
+      label: 'Books',
+    ),
+  ];
+
+  Widget _getTabWidget(int index) {
+    switch (index) {
+      case 0:
+        return HomePage(main: this);
+      case 1:
+        return BookListPage(main: this);
+      default:
+        return LoadingPage();
+    }
+  }
+
+  int _getIndexFromTab(BottomTab tab) {
+    switch (tab) {
+      case BottomTab.home:
+        return 0;
+      case BottomTab.books:
+        return 1;
+    }
+  }
+
+  void _didNavigate() {
     final index = _tabController.index;
     final canPop = _navigatorKeys[index].currentState?.canPop();
     final isFirst = canPop == false;
@@ -39,15 +75,12 @@ class _MainState extends State<Main> implements MainInterface {
     }
   }
 
-  late final List<_TabNavigatorObserver> _tabNavigatorObservers;
-
   @override
   void initState() {
     super.initState();
-    _tabNavigatorObservers = [
-      _TabNavigatorObserver(_onTabNavigate),
-      _TabNavigatorObserver(_onTabNavigate),
-    ];
+    for (final observer in _tabNavigatorObservers) {
+      observer.didNavigate = _didNavigate;
+    }
   }
 
   @override
@@ -81,16 +114,7 @@ class _MainState extends State<Main> implements MainInterface {
         body: CupertinoTabScaffold(
           controller: _tabController,
           tabBar: CupertinoTabBar(
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.book),
-                label: 'Books',
-              ),
-            ],
+            items: _tabItems,
           ),
           tabBuilder: (BuildContext context, int index) {
             return CupertinoTabView(
@@ -106,22 +130,12 @@ class _MainState extends State<Main> implements MainInterface {
     );
   }
 
-  Widget _getTabWidget(int index) {
-    switch (index) {
-      case 0:
-        return HomePage(main: this);
-      case 1:
-        return BookListPage(main: this);
-      default:
-        return LoadingPage();
-    }
-  }
-
   @override
   ScaffoldState? getScaffoldState() => _scaffoldKey.currentState;
 
   @override
-  NavigatorState? getNavigatorState(int index) {
+  NavigatorState? getNavigatorState(BottomTab tab) {
+    final index = _getIndexFromTab(tab);
     if (_tabController.index != index) {
       _tabController.index = index;
     }
@@ -130,31 +144,30 @@ class _MainState extends State<Main> implements MainInterface {
 }
 
 class _TabNavigatorObserver extends NavigatorObserver {
-  _TabNavigatorObserver(this._didNavigate);
-
-  final Function() _didNavigate;
+  // ignore: prefer_function_declarations_over_variables
+  VoidCallback didNavigate = () {};
 
   @override
   void didPush(Route route, Route? previousRoute) {
     super.didPush(route, previousRoute);
-    _didNavigate();
+    didNavigate();
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-    _didNavigate();
+    didNavigate();
   }
 
   @override
   void didRemove(Route route, Route? previousRoute) {
     super.didRemove(route, previousRoute);
-    _didNavigate();
+    didNavigate();
   }
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    _didNavigate();
+    didNavigate();
   }
 }

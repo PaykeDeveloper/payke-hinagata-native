@@ -16,6 +16,8 @@ import 'package:provider/provider.dart';
 class BookListPage extends StatefulWidget {
   const BookListPage({required this.main});
 
+  static const routeName = '/books';
+
   final MainInterface main;
 
   @override
@@ -41,14 +43,8 @@ class _BookListPageState extends State<BookListPage> {
     await context.read<BooksNotifier>().fetchEntities(url: const BooksUrl());
   }
 
-  void _pushNextPage(WidgetBuilder builder) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return builder(context);
-        },
-      ),
-    ).then((value) {
+  void _pushNextPage(CupertinoPageRoute route) {
+    Navigator.of(context).push(route).then((value) {
       _initState();
     });
   }
@@ -71,14 +67,18 @@ class _BookListPageState extends State<BookListPage> {
         title: const Text('Books'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget.main.getScaffoldState()?.openDrawer,
+          onPressed: widget.main.openDrawer,
         ),
       ),
       floatingActionButton: TabFloatingActionButton(
         onPressed: () {
-          _pushNextPage((context) {
-            return BookAddPage();
-          });
+          _pushNextPage(
+            CupertinoPageRoute(
+              builder: (BuildContext context) {
+                return BookAddPage();
+              },
+            ),
+          );
         },
         child: const Icon(Icons.add),
       ),
@@ -97,14 +97,30 @@ class _BookListPageState extends State<BookListPage> {
                 return _ListItem(
                   book: book,
                   onTapItem: () {
-                    _pushNextPage((context) {
-                      return BookDetailPage(book.id);
-                    });
+                    _pushNextPage(
+                      CupertinoPageRoute(
+                        builder: (BuildContext context) {
+                          return BookDetailPage();
+                        },
+                        settings: RouteSettings(
+                          name: BookDetailPage.routeName,
+                          arguments: BookDetailArgs(book.id),
+                        ),
+                      ),
+                    );
                   },
                   onPressedEdit: () {
-                    _pushNextPage((context) {
-                      return BookEditPage(book.id);
-                    });
+                    _pushNextPage(
+                      CupertinoPageRoute(
+                        builder: (BuildContext context) {
+                          return BookEditPage();
+                        },
+                        settings: RouteSettings(
+                          name: BookEditPage.routeName,
+                          arguments: BookEditArgs(book.id),
+                        ),
+                      ),
+                    );
                   },
                 );
               },
