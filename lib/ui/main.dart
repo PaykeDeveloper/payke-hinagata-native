@@ -52,7 +52,7 @@ class _MainState extends State<Main> implements MainInterface {
   @override
   Widget build(BuildContext context) {
     final index = context.select((RouteState state) => state.tabIndex);
-    final isFirst = context.select((RouteState state) => state.isFirstTab());
+    final isFirst = context.select((RouteState state) => state.isFirstTab);
     return WillPopScope(
       onWillPop: () async {
         if (_scaffoldKey.currentState?.isDrawerOpen == true) {

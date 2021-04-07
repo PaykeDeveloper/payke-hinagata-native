@@ -4,11 +4,8 @@ import 'package:state_notifier/state_notifier.dart';
 
 import './models/route_state.dart';
 
-const _tabHome = 0;
-const _tabBooks = 1;
-
 class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
-  RouteStateNotifier() : super(const RouteState(tabIndex: _tabHome));
+  RouteStateNotifier() : super(const RouteState(tabIndex: tabHome));
 
   Future changeIndex(int index) async {
     state = state.copyWith(
@@ -18,7 +15,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
 
   Future showBookList() async {
     state = state.copyWith(
-      tabIndex: _tabBooks,
+      tabIndex: tabBooks,
       bookDetailId: null,
       bookEditId: null,
       bookNew: false,
@@ -27,7 +24,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
 
   Future showBookDetail(BookId bookId) async {
     state = state.copyWith(
-      tabIndex: _tabBooks,
+      tabIndex: tabBooks,
       bookDetailId: bookId,
       bookEditId: null,
       bookNew: false,
@@ -42,7 +39,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
 
   Future showBookEdit(BookId bookId) async {
     state = state.copyWith(
-      tabIndex: _tabBooks,
+      tabIndex: tabBooks,
       bookEditId: bookId,
       bookNew: false,
     );
@@ -63,7 +60,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
 
   Future showBookNew() async {
     state = state.copyWith(
-      tabIndex: _tabBooks,
+      tabIndex: tabBooks,
       bookDetailId: null,
       bookEditId: null,
       bookNew: true,
