@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book.dart';
@@ -7,7 +6,6 @@ import 'package:native_app/store/state/domain/sample/books/models/books_url.dart
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
-import 'package:native_app/ui/widgets/atoms/tab_floating_action_button.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +83,7 @@ class _BookListScreenState extends State<BookListScreen> {
           onPressed: widget._main.openDrawer,
         ),
       ),
-      floatingActionButton: TabFloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: _onPressedNew,
         child: const Icon(Icons.add),
       ),
