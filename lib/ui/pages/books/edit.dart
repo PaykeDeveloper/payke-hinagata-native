@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
@@ -12,22 +13,34 @@ import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-class BookEditArgs {
+class _BookEditArgs {
   final BookId bookId;
 
-  BookEditArgs(this.bookId);
+  _BookEditArgs(this.bookId);
 }
 
 class BookEditPage extends StatefulWidget {
   static const routeName = '/book/edit';
+
+  static CupertinoPageRoute getRoute({required BookId bookId}) {
+    return CupertinoPageRoute(
+      builder: (BuildContext context) {
+        return BookEditPage();
+      },
+      settings: RouteSettings(
+        name: routeName,
+        arguments: _BookEditArgs(bookId),
+      ),
+    );
+  }
 
   @override
   _BookEditPageState createState() => _BookEditPageState();
 }
 
 class _BookEditPageState extends ValidateFormState<BookEditPage> {
-  BookEditArgs get _args =>
-      ModalRoute.of(context)!.settings.arguments! as BookEditArgs;
+  _BookEditArgs get _args =>
+      ModalRoute.of(context)!.settings.arguments! as _BookEditArgs;
 
   Future _initState() async {
     await context

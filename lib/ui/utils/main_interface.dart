@@ -22,17 +22,9 @@ extension BookInterfaceExt on MainInterface {
   void openBooks() =>
       getNavigatorState(BottomTab.books)?.popUntil((route) => route.isFirst);
 
-  void openBookDetail(BookId bookId) =>
-      getNavigatorState(BottomTab.books)?.pushAndRemoveUntil(
-        CupertinoPageRoute(
-          builder: (BuildContext context) {
-            return BookDetailPage();
-          },
-          settings: RouteSettings(
-            name: BookDetailPage.routeName,
-            arguments: BookDetailArgs(bookId),
-          ),
-        ),
+  Future openBookDetail({required BookId bookId}) async =>
+      await getNavigatorState(BottomTab.books)?.pushAndRemoveUntil(
+        BookDetailPage.getRoute(bookId: bookId),
         (route) => route.isFirst,
       );
 }

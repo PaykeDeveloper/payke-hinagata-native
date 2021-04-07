@@ -9,22 +9,33 @@ import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-class BookDetailArgs {
+class _BookDetailArgs {
   final BookId bookId;
 
-  BookDetailArgs(this.bookId);
+  _BookDetailArgs(this.bookId);
 }
 
 class BookDetailPage extends StatefulWidget {
   static const routeName = '/book';
+
+  static CupertinoPageRoute getRoute({required BookId bookId}) =>
+      CupertinoPageRoute(
+        builder: (BuildContext context) {
+          return BookDetailPage();
+        },
+        settings: RouteSettings(
+          name: BookDetailPage.routeName,
+          arguments: _BookDetailArgs(bookId),
+        ),
+      );
 
   @override
   _BookDetailPageState createState() => _BookDetailPageState();
 }
 
 class _BookDetailPageState extends State<BookDetailPage> {
-  BookDetailArgs get _args =>
-      ModalRoute.of(context)!.settings.arguments! as BookDetailArgs;
+  _BookDetailArgs get _args =>
+      ModalRoute.of(context)!.settings.arguments! as _BookDetailArgs;
 
   Future _initState() async {
     await context
@@ -55,17 +66,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
             onPressed: book == null
                 ? null
                 : () {
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (BuildContext context) {
-                          return BookEditPage();
-                        },
-                        settings: RouteSettings(
-                          name: BookEditPage.routeName,
-                          arguments: BookEditArgs(book.id),
-                        ),
-                      ),
-                    );
+                    Navigator.of(context)
+                        .push(BookEditPage.getRoute(bookId: book.id));
                   },
           ),
         ],

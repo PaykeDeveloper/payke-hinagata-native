@@ -72,13 +72,7 @@ class _BookListPageState extends State<BookListPage> {
       ),
       floatingActionButton: TabFloatingActionButton(
         onPressed: () {
-          _pushNextPage(
-            CupertinoPageRoute(
-              builder: (BuildContext context) {
-                return BookAddPage();
-              },
-            ),
-          );
+          _pushNextPage(BookAddPage.getRoute());
         },
         child: const Icon(Icons.add),
       ),
@@ -97,30 +91,10 @@ class _BookListPageState extends State<BookListPage> {
                 return _ListItem(
                   book: book,
                   onTapItem: () {
-                    _pushNextPage(
-                      CupertinoPageRoute(
-                        builder: (BuildContext context) {
-                          return BookDetailPage();
-                        },
-                        settings: RouteSettings(
-                          name: BookDetailPage.routeName,
-                          arguments: BookDetailArgs(book.id),
-                        ),
-                      ),
-                    );
+                    _pushNextPage(BookDetailPage.getRoute(bookId: book.id));
                   },
                   onPressedEdit: () {
-                    _pushNextPage(
-                      CupertinoPageRoute(
-                        builder: (BuildContext context) {
-                          return BookEditPage();
-                        },
-                        settings: RouteSettings(
-                          name: BookEditPage.routeName,
-                          arguments: BookEditArgs(book.id),
-                        ),
-                      ),
-                    );
+                    _pushNextPage(BookEditPage.getRoute(bookId: book.id));
                   },
                 );
               },
@@ -152,7 +126,7 @@ class _ListItem extends StatelessWidget {
       child: ListTile(
         onTap: _onTapItem,
         title: Text(
-          _book.title,
+          '${_book.id.value}: ${_book.title}',
           key: Key('text_${_book.id}'),
         ),
         trailing: IconButton(

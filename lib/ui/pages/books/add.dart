@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_input.dart';
@@ -11,6 +12,12 @@ import 'package:provider/provider.dart';
 
 class BookAddPage extends StatefulWidget {
   static const routeName = '/books/add';
+
+  static CupertinoPageRoute getRoute() => CupertinoPageRoute(
+        builder: (BuildContext context) {
+          return BookAddPage();
+        },
+      );
 
   @override
   _BookAddPageState createState() => _BookAddPageState();

@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:native_app/store/state/domain/sample/books/selectors.dart';
-import 'package:native_app/ui/extensions/list.dart';
+import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
-import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({required MainInterface main}) : _main = main;
 
   static const routeName = '/';
@@ -13,14 +11,20 @@ class HomePage extends StatelessWidget {
   final MainInterface _main;
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _textEditingController = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
-    final book = context.select(booksSelector).firstOrNull();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: _main.openDrawer,
+          onPressed: widget._main.openDrawer,
         ),
       ),
       body: Center(
@@ -29,22 +33,30 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                _main.openBooks();
+                widget._main.openBooks();
               },
               child: const Text('Open books'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                if (book == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('No book'),
-                  ));
-                } else {
-                  _main.openBookDetail(book.id);
-                }
-              },
-              child: const Text('Open book'),
-            ),
+            // const SizedBox(height: 20),
+            // Padding(
+            //   padding: const EdgeInsets.all(10),
+            //   child: TextField(
+            //     controller: _textEditingController,
+            //     decoration: const InputDecoration(labelText: 'Book Id'),
+            //   ),
+            // ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            //     //   content: Text('No book'),
+            //     // ));
+            //
+            //     final bookId =
+            //         BookId(int.tryParse(_textEditingController.text) ?? 0);
+            //     widget._main.openBookDetail(bookId: bookId);
+            //   },
+            //   child: const Text('Open book'),
+            // ),
           ],
         ),
       ),
