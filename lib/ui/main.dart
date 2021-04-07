@@ -23,16 +23,6 @@ class _MainState extends State<Main> implements MainInterface {
     GlobalKey<NavigatorState>(),
   ];
 
-  final _tabNavigatorObservers = [
-    _TabNavigatorObserver(),
-    _TabNavigatorObserver(),
-  ];
-
-  final _isFirsts = [
-    true,
-    true,
-  ];
-
   final _tabItems = [
     const BottomNavigationBarItem(
       icon: Icon(Icons.home),
@@ -44,41 +34,25 @@ class _MainState extends State<Main> implements MainInterface {
     ),
   ];
 
-  void _didNavigate() {
-    final index = context.read<RouteState>().tabIndex;
-    final canPop = _navigatorKeys[index].currentState?.canPop();
-    final isFirst = canPop == false;
-    final currentValue = _isFirsts[index];
-    if (currentValue != isFirst) {
-      setState(() {
-        _isFirsts[index] = isFirst;
-      });
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     _children = [
       HomeNavigator(
         navigatorKey: _navigatorKeys[0],
-        navigatorObservers: [_tabNavigatorObservers[0]],
         main: this,
       ),
       BooksNavigator(
         navigatorKey: _navigatorKeys[1],
-        navigatorObservers: [_tabNavigatorObservers[1]],
         main: this,
       )
     ];
-    for (final observer in _tabNavigatorObservers) {
-      observer.didNavigate = _didNavigate;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     final index = context.select((RouteState state) => state.tabIndex);
+    final isFirst = context.select((RouteState state) => state.isFirstTab());
     return WillPopScope(
       onWillPop: () async {
         if (_scaffoldKey.currentState?.isDrawerOpen == true) {
@@ -101,7 +75,7 @@ class _MainState extends State<Main> implements MainInterface {
       child: Scaffold(
         key: _scaffoldKey,
         drawer: MainDrawer(),
-        drawerEnableOpenDragGesture: _isFirsts[index],
+        drawerEnableOpenDragGesture: isFirst,
         body: IndexedStack(
           index: index,
           children: _children,
@@ -118,33 +92,4 @@ class _MainState extends State<Main> implements MainInterface {
 
   @override
   ScaffoldState? getScaffoldState() => _scaffoldKey.currentState;
-}
-
-class _TabNavigatorObserver extends NavigatorObserver {
-  // ignore: prefer_function_declarations_over_variables
-  VoidCallback didNavigate = () {};
-
-  @override
-  void didPush(Route route, Route? previousRoute) {
-    super.didPush(route, previousRoute);
-    didNavigate();
-  }
-
-  @override
-  void didPop(Route route, Route? previousRoute) {
-    super.didPop(route, previousRoute);
-    didNavigate();
-  }
-
-  @override
-  void didRemove(Route route, Route? previousRoute) {
-    super.didRemove(route, previousRoute);
-    didNavigate();
-  }
-
-  @override
-  void didReplace({Route? newRoute, Route? oldRoute}) {
-    super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    didNavigate();
-  }
 }

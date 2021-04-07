@@ -5,10 +5,16 @@ part 'route_state.freezed.dart';
 
 @freezed
 class RouteState with _$RouteState {
+  const RouteState._();
+
   const factory RouteState({
     required int tabIndex,
     BookId? bookDetailId,
     BookId? bookEditId,
     @Default(false) bool bookNew,
   }) = _RouteState;
+
+  bool isFirstTab() {
+    return bookDetailId == null && bookEditId == null && !bookNew;
+  }
 }
