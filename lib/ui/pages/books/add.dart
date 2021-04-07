@@ -10,20 +10,22 @@ import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-class BookAddPage extends StatefulWidget {
-  static const routeName = '/books/add';
-
-  static CupertinoPageRoute getRoute() => CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return BookAddPage();
-        },
-      );
-
+class BookAddPage extends Page {
   @override
-  _BookAddPageState createState() => _BookAddPageState();
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (context) => BookAddScreen(),
+    );
+  }
 }
 
-class _BookAddPageState extends State<BookAddPage> {
+class BookAddScreen extends StatefulWidget {
+  @override
+  _BookAddScreenState createState() => _BookAddScreenState();
+}
+
+class _BookAddScreenState extends State<BookAddScreen> {
   Future<StoreResult?> _onSubmit(BookInput input) async {
     final result = await context
         .read<BooksNotifier>()

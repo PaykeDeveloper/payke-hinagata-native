@@ -1,21 +1,41 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
+import 'package:provider/provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends Page {
   const HomePage({required MainInterface main}) : _main = main;
-
-  static const routeName = '/';
-
   final MainInterface _main;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (context) => HomeScreen(main: _main),
+    );
+  }
 }
 
-class _HomePageState extends State<HomePage> {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({required MainInterface main}) : _main = main;
+  final MainInterface _main;
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final _textEditingController = TextEditingController();
+
+  void _onPressedBookList() {
+    context.read<RouteStateNotifier>().showBookList();
+  }
+
+  void _onPressedBook(BookId bookId) {
+    context.read<RouteStateNotifier>().showBookEdit(bookId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,31 +52,29 @@ class _HomePageState extends State<HomePage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: () {
-                widget._main.openBooks();
-              },
+              onPressed: _onPressedBookList,
               child: const Text('Open books'),
             ),
-            // const SizedBox(height: 20),
-            // Padding(
-            //   padding: const EdgeInsets.all(10),
-            //   child: TextField(
-            //     controller: _textEditingController,
-            //     decoration: const InputDecoration(labelText: 'Book Id'),
-            //   ),
-            // ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            //     //   content: Text('No book'),
-            //     // ));
-            //
-            //     final bookId =
-            //         BookId(int.tryParse(_textEditingController.text) ?? 0);
-            //     widget._main.openBookDetail(bookId: bookId);
-            //   },
-            //   child: const Text('Open book'),
-            // ),
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: _textEditingController,
+                decoration: const InputDecoration(labelText: 'Book Id'),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                //   content: Text('No book'),
+                // ));
+
+                final bookId =
+                    BookId(int.tryParse(_textEditingController.text) ?? 0);
+                _onPressedBook(bookId);
+              },
+              child: const Text('Open book'),
+            ),
           ],
         ),
       ),

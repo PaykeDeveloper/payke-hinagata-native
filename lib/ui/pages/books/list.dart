@@ -1,30 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book.dart';
+import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/books_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
-import 'package:native_app/ui/pages/books/add.dart';
-import 'package:native_app/ui/pages/books/detail.dart';
-import 'package:native_app/ui/pages/books/edit.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:native_app/ui/widgets/atoms/tab_floating_action_button.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-class BookListPage extends StatefulWidget {
-  const BookListPage({required this.main});
-
-  static const routeName = '/books';
-
-  final MainInterface main;
+class BookListPage extends Page {
+  const BookListPage({required MainInterface main}) : _main = main;
+  final MainInterface _main;
 
   @override
-  _BookListPageState createState() => _BookListPageState();
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (context) => BookListScreen(main: _main),
+    );
+  }
 }
 
-class _BookListPageState extends State<BookListPage> {
+class BookListScreen extends StatefulWidget {
+  const BookListScreen({required MainInterface main}) : _main = main;
+  final MainInterface _main;
+
+  @override
+  _BookListScreenState createState() => _BookListScreenState();
+}
+
+class _BookListScreenState extends State<BookListScreen> {
   bool _loading = false;
 
   Future _initState() async {
@@ -43,18 +52,24 @@ class _BookListPageState extends State<BookListPage> {
     await context.read<BooksNotifier>().fetchEntities(url: const BooksUrl());
   }
 
-  void _pushNextPage(CupertinoPageRoute route) {
-    Navigator.of(context).push(route).then((value) {
-      _initState();
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
       _initState();
     });
+  }
+
+  void _onPressedNew() {
+    context.read<RouteStateNotifier>().showBookNew();
+  }
+
+  void _onTapShow(BookId bookId) {
+    context.read<RouteStateNotifier>().showBookDetail(bookId);
+  }
+
+  void _onPressedEdit(BookId bookId) {
+    context.read<RouteStateNotifier>().showBookEdit(bookId);
   }
 
   @override
@@ -67,13 +82,11 @@ class _BookListPageState extends State<BookListPage> {
         title: const Text('Books'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget.main.openDrawer,
+          onPressed: widget._main.openDrawer,
         ),
       ),
       floatingActionButton: TabFloatingActionButton(
-        onPressed: () {
-          _pushNextPage(BookAddPage.getRoute());
-        },
+        onPressed: _onPressedNew,
         child: const Icon(Icons.add),
       ),
       body: ErrorWrapper(
@@ -90,12 +103,8 @@ class _BookListPageState extends State<BookListPage> {
                 final book = books[index];
                 return _ListItem(
                   book: book,
-                  onTapItem: () {
-                    _pushNextPage(BookDetailPage.getRoute(bookId: book.id));
-                  },
-                  onPressedEdit: () {
-                    _pushNextPage(BookEditPage.getRoute(bookId: book.id));
-                  },
+                  onTapItem: () => _onTapShow(book.id),
+                  onPressedEdit: () => _onPressedEdit(book.id),
                 );
               },
             ),

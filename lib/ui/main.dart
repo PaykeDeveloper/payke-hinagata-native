@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/ui/navigators/books.dart';
+import 'package:native_app/ui/navigators/home.dart';
+import 'package:provider/provider.dart';
 
-import './pages/books/list.dart';
-import './pages/common/home.dart';
-import './pages/common/loading.dart';
 import './utils/main_interface.dart';
 import './widgets/organisms/main_drawer.dart';
 
@@ -13,7 +14,7 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> implements MainInterface {
-  final _tabController = CupertinoTabController();
+  late List<Widget> _children;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -43,28 +44,8 @@ class _MainState extends State<Main> implements MainInterface {
     ),
   ];
 
-  Widget _getTabWidget(int index) {
-    switch (index) {
-      case 0:
-        return HomePage(main: this);
-      case 1:
-        return BookListPage(main: this);
-      default:
-        return LoadingPage();
-    }
-  }
-
-  int _getIndexFromTab(BottomTab tab) {
-    switch (tab) {
-      case BottomTab.home:
-        return 0;
-      case BottomTab.books:
-        return 1;
-    }
-  }
-
   void _didNavigate() {
-    final index = _tabController.index;
+    final index = context.read<RouteState>().tabIndex;
     final canPop = _navigatorKeys[index].currentState?.canPop();
     final isFirst = canPop == false;
     final currentValue = _isFirsts[index];
@@ -78,6 +59,18 @@ class _MainState extends State<Main> implements MainInterface {
   @override
   void initState() {
     super.initState();
+    _children = [
+      HomeNavigator(
+        navigatorKey: _navigatorKeys[0],
+        navigatorObservers: [_tabNavigatorObservers[0]],
+        main: this,
+      ),
+      BooksNavigator(
+        navigatorKey: _navigatorKeys[1],
+        navigatorObservers: [_tabNavigatorObservers[1]],
+        main: this,
+      )
+    ];
     for (final observer in _tabNavigatorObservers) {
       observer.didNavigate = _didNavigate;
     }
@@ -85,6 +78,7 @@ class _MainState extends State<Main> implements MainInterface {
 
   @override
   Widget build(BuildContext context) {
+    final index = context.select((RouteState state) => state.tabIndex);
     return WillPopScope(
       onWillPop: () async {
         if (_scaffoldKey.currentState?.isDrawerOpen == true) {
@@ -92,16 +86,13 @@ class _MainState extends State<Main> implements MainInterface {
           return false;
         }
 
-        final popped =
-            await _navigatorKeys[_tabController.index].currentState?.maybePop();
+        final popped = await _navigatorKeys[index].currentState?.maybePop();
         if (popped == true) {
           return false;
         }
 
-        if (_tabController.index != 0) {
-          setState(() {
-            _tabController.index = 0;
-          });
+        if (index != 0) {
+          context.read<RouteStateNotifier>().changeIndex(0);
           return false;
         }
 
@@ -110,21 +101,16 @@ class _MainState extends State<Main> implements MainInterface {
       child: Scaffold(
         key: _scaffoldKey,
         drawer: MainDrawer(),
-        drawerEnableOpenDragGesture: _isFirsts[_tabController.index],
-        body: CupertinoTabScaffold(
-          controller: _tabController,
-          tabBar: CupertinoTabBar(
-            items: _tabItems,
-          ),
-          tabBuilder: (BuildContext context, int index) {
-            return CupertinoTabView(
-              navigatorObservers: [_tabNavigatorObservers[index]],
-              navigatorKey: _navigatorKeys[index],
-              builder: (BuildContext context) {
-                return _getTabWidget(index);
-              },
-            );
-          },
+        drawerEnableOpenDragGesture: _isFirsts[index],
+        body: IndexedStack(
+          index: index,
+          children: _children,
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: index,
+          items: _tabItems,
+          onTap: (value) =>
+              context.read<RouteStateNotifier>().changeIndex(value),
         ),
       ),
     );
@@ -132,15 +118,6 @@ class _MainState extends State<Main> implements MainInterface {
 
   @override
   ScaffoldState? getScaffoldState() => _scaffoldKey.currentState;
-
-  @override
-  NavigatorState? getNavigatorState(BottomTab tab) {
-    final index = _getIndexFromTab(tab);
-    if (_tabController.index != index) {
-      _tabController.index = index;
-    }
-    return _navigatorKeys[index].currentState;
-  }
 }
 
 class _TabNavigatorObserver extends NavigatorObserver {
