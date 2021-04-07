@@ -8,7 +8,7 @@ import 'package:native_app/ui/pages/books/list.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
 
-class BooksNavigator extends StatefulWidget {
+class BooksNavigator extends StatelessWidget {
   const BooksNavigator({
     GlobalKey<NavigatorState>? navigatorKey,
     required MainInterface main,
@@ -18,17 +18,12 @@ class BooksNavigator extends StatefulWidget {
   final MainInterface _main;
 
   @override
-  _BooksNavigatorState createState() => _BooksNavigatorState();
-}
-
-class _BooksNavigatorState extends State<BooksNavigator> {
-  @override
   Widget build(BuildContext context) {
     final routeState = context.watch<RouteState>();
     final bookDetailId = routeState.bookDetailId;
     final bookEditId = routeState.bookEditId;
     return Navigator(
-      key: widget._navigatorKey,
+      key: _navigatorKey,
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
@@ -45,13 +40,18 @@ class _BooksNavigatorState extends State<BooksNavigator> {
         return true;
       },
       pages: [
-        MaterialPage(
-          key: const ValueKey('BookListScreen'),
-          child: BookListScreen(main: widget._main),
-        ),
-        if (bookDetailId != null) BookDetailPage(bookId: bookDetailId),
-        if (bookEditId != null) BookEditPage(bookId: bookEditId),
-        if (routeState.bookNew) BookAddPage(),
+        BookListPage(key: const ValueKey('BookListPage'), main: _main),
+        if (bookDetailId != null)
+          BookDetailPage(
+            key: ValueKey('BookDetailPage-${bookDetailId.value}'),
+            bookId: bookDetailId,
+          ),
+        if (bookEditId != null)
+          BookEditPage(
+            key: ValueKey('BookEditPage-${bookEditId.value}'),
+            bookId: bookEditId,
+          ),
+        if (routeState.bookNew) const BookAddPage(key: ValueKey('BookAddPage')),
       ],
     );
   }

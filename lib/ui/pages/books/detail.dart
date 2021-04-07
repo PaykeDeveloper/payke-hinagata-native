@@ -9,7 +9,11 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookDetailPage extends Page {
-  const BookDetailPage({required BookId bookId}) : _bookId = bookId;
+  const BookDetailPage({
+    LocalKey? key,
+    required BookId bookId,
+  })   : _bookId = bookId,
+        super(key: key);
   final BookId _bookId;
 
   @override

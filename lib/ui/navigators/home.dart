@@ -22,7 +22,7 @@ class HomeNavigator extends StatelessWidget {
 
         return true;
       },
-      pages: [HomePage(main: _main)],
+      pages: [HomePage(key: const ValueKey('HomePage'), main: _main)],
     );
   }
 }

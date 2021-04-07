@@ -5,7 +5,11 @@ import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends Page {
-  const HomePage({required MainInterface main}) : _main = main;
+  const HomePage({
+    LocalKey? key,
+    required MainInterface main,
+  })   : _main = main,
+        super(key: key);
   final MainInterface _main;
 
   @override

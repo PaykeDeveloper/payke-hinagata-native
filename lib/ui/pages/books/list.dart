@@ -11,7 +11,11 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends Page {
-  const BookListPage({required MainInterface main}) : _main = main;
+  const BookListPage({
+    LocalKey? key,
+    required MainInterface main,
+  })   : _main = main,
+        super(key: key);
   final MainInterface _main;
 
   @override

@@ -13,7 +13,11 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookEditPage extends Page {
-  const BookEditPage({required BookId bookId}) : _bookId = bookId;
+  const BookEditPage({
+    LocalKey? key,
+    required BookId bookId,
+  })   : _bookId = bookId,
+        super(key: key);
   final BookId _bookId;
 
   @override
