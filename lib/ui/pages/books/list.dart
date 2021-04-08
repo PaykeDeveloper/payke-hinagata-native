@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
@@ -78,6 +79,14 @@ class _BookListScreenState extends State<BookListScreen> {
     Future.delayed(Duration.zero, () {
       _initState();
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant BookListScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (context.read<RouteState>().bookPages.isEmpty) {
+      _initState();
+    }
   }
 
   @override
