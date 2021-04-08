@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/ui/pages/common/loading.dart';
 import 'package:provider/provider.dart';
 
 import './navigators/books.dart';
 import './navigators/home.dart';
 import './widgets/organisms/main_drawer.dart';
+import './widgets/templates/loading.dart';
 
 class Main extends StatefulWidget {
   @override
@@ -33,8 +33,8 @@ class _MainState extends State<Main> {
   ];
 
   final _children = <Widget>[
-    LoadingPage(),
-    LoadingPage(),
+    Loading(),
+    Loading(),
   ];
 
   Widget _getWidget(BottomTab tab) {
@@ -67,7 +67,7 @@ class _MainState extends State<Main> {
     final tab = context.select((RouteState state) => state.tab);
     final index = tab.getIndex();
     final isFirst = context.select((RouteState state) => state.isFirstTab);
-    if (_children[index] is LoadingPage) {
+    if (_children[index] is Loading) {
       _children[index] = _getWidget(tab);
     }
     return WillPopScope(

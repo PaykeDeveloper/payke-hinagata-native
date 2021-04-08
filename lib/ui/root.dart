@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import './main.dart';
 import './pages/auth/login.dart';
-import './pages/common/loading.dart';
+import './widgets/templates/loading.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _RootState extends State<Root> {
     final token = context.watch<StoreState<BackendToken?>>();
 
     if (locale == null || token.status != StateStatus.done) {
-      return LoadingPage();
+      return Loading();
     }
     if (token.data == null) {
       return LoginPage();
