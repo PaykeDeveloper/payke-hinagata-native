@@ -13,26 +13,25 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends Page {
-  const BookListPage({
-    required GlobalKey<ScaffoldState> scaffoldKey,
-  })   : _scaffoldKey = scaffoldKey,
+  const BookListPage({required VoidCallback openDrawer})
+      : _openDrawer = openDrawer,
         super(key: const ValueKey("bookListPage"));
-  final GlobalKey<ScaffoldState> _scaffoldKey;
+  final VoidCallback _openDrawer;
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => BookListScreen(scaffoldKey: _scaffoldKey),
+      builder: (context) => BookListScreen(openDrawer: _openDrawer),
     );
   }
 }
 
 class BookListScreen extends StatefulWidget {
   const BookListScreen({
-    required GlobalKey<ScaffoldState> scaffoldKey,
-  }) : _scaffoldKey = scaffoldKey;
-  final GlobalKey<ScaffoldState> _scaffoldKey;
+    required VoidCallback openDrawer,
+  }) : _openDrawer = openDrawer;
+  final VoidCallback _openDrawer;
 
   @override
   _BookListScreenState createState() => _BookListScreenState();
@@ -91,7 +90,7 @@ class _BookListScreenState extends State<BookListScreen> {
         title: const Text('Books'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget._scaffoldKey.currentState?.openDrawer,
+          onPressed: widget._openDrawer,
         ),
       ),
       floatingActionButton: FloatingActionButton(

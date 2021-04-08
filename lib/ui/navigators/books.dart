@@ -13,6 +13,8 @@ class BooksNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState>? _navigatorKey;
   final GlobalKey<ScaffoldState> _scaffoldKey;
 
+  void _openDrawer() => _scaffoldKey.currentState?.openDrawer();
+
   @override
   Widget build(BuildContext context) {
     final pages = context.select((RouteState state) => state.bookPages);
@@ -27,7 +29,7 @@ class BooksNavigator extends StatelessWidget {
         notifier.popBookPage();
         return true;
       },
-      pages: [BookListPage(scaffoldKey: _scaffoldKey), ...pages],
+      pages: [BookListPage(openDrawer: _openDrawer), ...pages],
     );
   }
 }

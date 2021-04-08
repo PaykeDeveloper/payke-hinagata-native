@@ -13,6 +13,8 @@ class HomeNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> _navigatorKey;
   final GlobalKey<ScaffoldState> _scaffoldKey;
 
+  void _openDrawer() => _scaffoldKey.currentState?.openDrawer();
+
   @override
   Widget build(BuildContext context) {
     final pages = context.select((RouteState state) => state.homePages);
@@ -27,7 +29,7 @@ class HomeNavigator extends StatelessWidget {
         notifier.popHomePage();
         return true;
       },
-      pages: [HomePage(scaffoldKey: _scaffoldKey), ...pages],
+      pages: [HomePage(openDrawer: _openDrawer), ...pages],
     );
   }
 }

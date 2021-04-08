@@ -8,26 +8,26 @@ import 'package:provider/provider.dart';
 
 class HomePage extends Page {
   const HomePage({
-    required GlobalKey<ScaffoldState> scaffoldKey,
-  })   : _scaffoldKey = scaffoldKey,
+    required VoidCallback openDrawer,
+  })   : _openDrawer = openDrawer,
         super(key: const ValueKey("homePage"));
-  final GlobalKey<ScaffoldState> _scaffoldKey;
+  final VoidCallback _openDrawer;
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => HomeScreen(scaffoldKey: _scaffoldKey),
+      builder: (context) => HomeScreen(openDrawer: _openDrawer),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
-    required GlobalKey<ScaffoldState> scaffoldKey,
-  }) : _scaffoldKey = scaffoldKey;
+    required VoidCallback openDrawer,
+  }) : _openDrawer = openDrawer;
 
-  final GlobalKey<ScaffoldState> _scaffoldKey;
+  final VoidCallback _openDrawer;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget._scaffoldKey.currentState?.openDrawer,
+          onPressed: widget._openDrawer,
         ),
       ),
       body: Center(
