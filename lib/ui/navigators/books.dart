@@ -7,11 +7,11 @@ import 'package:provider/provider.dart';
 class BooksNavigator extends StatelessWidget {
   const BooksNavigator({
     required GlobalKey<NavigatorState>? navigatorKey,
-    required ScaffoldState? mainState,
+    required GlobalKey<ScaffoldState> scaffoldKey,
   })   : _navigatorKey = navigatorKey,
-        _mainState = mainState;
+        _scaffoldKey = scaffoldKey;
   final GlobalKey<NavigatorState>? _navigatorKey;
-  final ScaffoldState? _mainState;
+  final GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class BooksNavigator extends StatelessWidget {
         notifier.popBookPage();
         return true;
       },
-      pages: [BookListPage(mainState: _mainState), ...pages],
+      pages: [BookListPage(scaffoldKey: _scaffoldKey), ...pages],
     );
   }
 }

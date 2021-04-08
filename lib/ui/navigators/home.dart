@@ -7,11 +7,11 @@ import 'package:provider/provider.dart';
 class HomeNavigator extends StatelessWidget {
   const HomeNavigator({
     required GlobalKey<NavigatorState> navigatorKey,
-    required ScaffoldState? mainState,
+    required GlobalKey<ScaffoldState> scaffoldKey,
   })   : _navigatorKey = navigatorKey,
-        _mainState = mainState;
-  final GlobalKey<NavigatorState>? _navigatorKey;
-  final ScaffoldState? _mainState;
+        _scaffoldKey = scaffoldKey;
+  final GlobalKey<NavigatorState> _navigatorKey;
+  final GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class HomeNavigator extends StatelessWidget {
         notifier.popHomePage();
         return true;
       },
-      pages: [HomePage(mainState: _mainState), ...pages],
+      pages: [HomePage(scaffoldKey: _scaffoldKey), ...pages],
     );
   }
 }

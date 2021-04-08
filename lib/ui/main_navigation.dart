@@ -6,14 +6,9 @@ import 'package:provider/provider.dart';
 import './navigators/books.dart';
 import './navigators/home.dart';
 import './widgets/organisms/main_drawer.dart';
-import './widgets/templates/loading.dart';
+import 'pages/common/loading.dart';
 
-class Main extends StatefulWidget {
-  @override
-  _MainState createState() => _MainState();
-}
-
-class _MainState extends State<Main> {
+class MainNavigation extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _navigatorKeys = [
@@ -33,8 +28,8 @@ class _MainState extends State<Main> {
   ];
 
   final _children = <Widget>[
-    Loading(),
-    Loading(),
+    LoadingScreen(),
+    LoadingScreen(),
   ];
 
   Widget _getWidget(BottomTab tab) {
@@ -43,23 +38,14 @@ class _MainState extends State<Main> {
       case BottomTab.home:
         return HomeNavigator(
           navigatorKey: _navigatorKeys[index],
-          mainState: _scaffoldKey.currentState,
+          scaffoldKey: _scaffoldKey,
         );
       case BottomTab.books:
         return BooksNavigator(
           navigatorKey: _navigatorKeys[index],
-          mainState: _scaffoldKey.currentState,
+          scaffoldKey: _scaffoldKey,
         );
     }
-  }
-
-  void _onTap(int index) {
-    context.read<RouteStateNotifier>().changeIndex(BottomTabExt.getTab(index));
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -67,7 +53,7 @@ class _MainState extends State<Main> {
     final tab = context.select((RouteState state) => state.tab);
     final index = tab.getIndex();
     final isFirst = context.select((RouteState state) => state.isFirstTab);
-    if (_children[index] is Loading) {
+    if (_children[index] is LoadingScreen) {
       _children[index] = _getWidget(tab);
     }
     return WillPopScope(
@@ -100,7 +86,11 @@ class _MainState extends State<Main> {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: index,
           items: _tabItems,
-          onTap: _onTap,
+          onTap: (int index) {
+            context
+                .read<RouteStateNotifier>()
+                .changeIndex(BottomTabExt.getTab(index));
+          },
         ),
       ),
     );

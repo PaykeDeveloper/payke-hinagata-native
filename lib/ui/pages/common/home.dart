@@ -7,24 +7,27 @@ import 'package:native_app/ui/pages/books/edit.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends Page {
-  const HomePage({required ScaffoldState? mainState})
-      : _mainState = mainState,
+  const HomePage({
+    required GlobalKey<ScaffoldState> scaffoldKey,
+  })   : _scaffoldKey = scaffoldKey,
         super(key: const ValueKey("homePage"));
-  final ScaffoldState? _mainState;
+  final GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => HomeScreen(mainState: _mainState),
+      builder: (context) => HomeScreen(scaffoldKey: _scaffoldKey),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({required ScaffoldState? mainState})
-      : _mainState = mainState;
-  final ScaffoldState? _mainState;
+  const HomeScreen({
+    required GlobalKey<ScaffoldState> scaffoldKey,
+  }) : _scaffoldKey = scaffoldKey;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -65,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget._mainState?.openDrawer,
+          onPressed: widget._scaffoldKey.currentState?.openDrawer,
         ),
       ),
       body: Center(
