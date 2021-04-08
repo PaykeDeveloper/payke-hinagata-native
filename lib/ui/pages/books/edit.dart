@@ -13,11 +13,9 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookEditPage extends Page {
-  const BookEditPage({
-    LocalKey? key,
-    required BookId bookId,
-  })   : _bookId = bookId,
-        super(key: key);
+  BookEditPage({required BookId bookId})
+      : _bookId = bookId,
+        super(key: ValueKey("bookEditPage-${bookId.value}"));
   final BookId _bookId;
 
   @override
@@ -59,7 +57,7 @@ class _BookEditScreenState extends ValidateFormState<BookEditScreen> {
         .read<BooksNotifier>()
         .deleteEntity(urlParams: BookUrl(id: widget._bookId));
     if (result is Success) {
-      await context.read<RouteStateNotifier>().removeBookEdit();
+      await context.read<RouteStateNotifier>().replaceBookPages([]);
     }
   }
 

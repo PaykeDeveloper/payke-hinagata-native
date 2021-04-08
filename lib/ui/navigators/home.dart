@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/ui/pages/common/home.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
+import 'package:provider/provider.dart';
 
 class HomeNavigator extends StatelessWidget {
   const HomeNavigator({
@@ -13,6 +16,7 @@ class HomeNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pages = context.select((RouteState state) => state.homePages);
     return Navigator(
       key: _navigatorKey,
       onPopPage: (route, result) {
@@ -20,9 +24,11 @@ class HomeNavigator extends StatelessWidget {
           return false;
         }
 
+        final notifier = context.read<RouteStateNotifier>();
+        notifier.popHomePage();
         return true;
       },
-      pages: [HomePage(key: const ValueKey('HomePage'), main: _main)],
+      pages: [HomePage(main: _main), ...pages],
     );
   }
 }

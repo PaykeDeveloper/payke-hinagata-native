@@ -1,75 +1,53 @@
+import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
-import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import './models/route_state.dart';
 
+const initialTab = BottomTab.home;
+
 class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
-  RouteStateNotifier() : super(const RouteState(tabIndex: tabHome));
+  RouteStateNotifier() : super(const RouteState(tab: initialTab));
 
-  Future changeIndex(int index) async {
+  Future changeIndex(BottomTab tab) async {
     state = state.copyWith(
-      tabIndex: index,
+      tab: tab,
     );
   }
 
-  Future showBookList() async {
+  Future pushHomePage(Page page) async {
     state = state.copyWith(
-      tabIndex: tabBooks,
-      bookDetailId: null,
-      bookEditId: null,
-      bookNew: false,
+      homePages: [...state.homePages, page],
     );
   }
 
-  Future showBookDetail(BookId bookId) async {
+  Future popHomePage() async {
     state = state.copyWith(
-      tabIndex: tabBooks,
-      bookDetailId: bookId,
-      bookEditId: null,
-      bookNew: false,
+      homePages: state.homePages.toList()..removeLast(),
     );
   }
 
-  Future removeBookDetail() async {
+  Future replaceHomePages(List<Page> pages) async {
     state = state.copyWith(
-      bookDetailId: null,
+      homePages: pages,
     );
   }
 
-  Future showBookEdit(BookId bookId) async {
+  Future pushBookPage(Page page) async {
     state = state.copyWith(
-      tabIndex: tabBooks,
-      bookEditId: bookId,
-      bookNew: false,
+      bookPages: [...state.bookPages, page],
     );
   }
 
-  Future removeBookEdit() async {
+  Future popBookPage() async {
     state = state.copyWith(
-      bookEditId: null,
+      bookPages: state.bookPages.toList()..removeLast(),
     );
   }
 
-  Future removeBook() async {
+  Future replaceBookPages(List<Page> pages) async {
     state = state.copyWith(
-      bookDetailId: null,
-      bookEditId: null,
-    );
-  }
-
-  Future showBookNew() async {
-    state = state.copyWith(
-      tabIndex: tabBooks,
-      bookDetailId: null,
-      bookEditId: null,
-      bookNew: true,
-    );
-  }
-
-  Future removeBookNew() async {
-    state = state.copyWith(
-      bookNew: false,
+      bookPages: pages,
     );
   }
 }

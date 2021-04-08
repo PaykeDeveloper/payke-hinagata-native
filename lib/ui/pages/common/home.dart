@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
+import 'package:native_app/ui/pages/books/detail.dart';
+import 'package:native_app/ui/pages/books/edit.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends Page {
-  const HomePage({
-    LocalKey? key,
-    required MainInterface main,
-  })   : _main = main,
-        super(key: key);
+  const HomePage({required MainInterface main})
+      : _main = main,
+        super(key: const ValueKey("homePage"));
   final MainInterface _main;
 
   @override
@@ -32,12 +33,29 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _textEditingController = TextEditingController();
 
-  void _onPressedBookList() {
-    context.read<RouteStateNotifier>().showBookList();
+  Future _onPressedBookList() async {
+    final notifier = context.read<RouteStateNotifier>();
+    await notifier.changeIndex(BottomTab.books);
+    await notifier.replaceBookPages([]);
   }
 
-  void _onPressedBook(BookId bookId) {
-    context.read<RouteStateNotifier>().showBookEdit(bookId);
+  Future _onPressedBookDetail() async {
+    final bookId = BookId(int.tryParse(_textEditingController.text) ?? 0);
+
+    final notifier = context.read<RouteStateNotifier>();
+    await notifier.changeIndex(BottomTab.books);
+    await notifier.replaceBookPages([BookDetailPage(bookId: bookId)]);
+  }
+
+  Future _onPressedBookEdit() async {
+    final bookId = BookId(int.tryParse(_textEditingController.text) ?? 0);
+
+    final notifier = context.read<RouteStateNotifier>();
+    await notifier.changeIndex(BottomTab.books);
+    await notifier.replaceBookPages([
+      BookDetailPage(bookId: bookId),
+      BookEditPage(bookId: bookId),
+    ]);
   }
 
   @override
@@ -56,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             ElevatedButton(
               onPressed: _onPressedBookList,
-              child: const Text('Open books'),
+              child: const Text('Book list'),
             ),
             const SizedBox(height: 20),
             Padding(
@@ -67,16 +85,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                //   content: Text('No book'),
-                // ));
-
-                final bookId =
-                    BookId(int.tryParse(_textEditingController.text) ?? 0);
-                _onPressedBook(bookId);
-              },
-              child: const Text('Open book'),
+              onPressed: _onPressedBookDetail,
+              child: const Text('Book detail'),
+            ),
+            ElevatedButton(
+              onPressed: _onPressedBookEdit,
+              child: const Text('Book edit'),
             ),
           ],
         ),

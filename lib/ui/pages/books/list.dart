@@ -5,17 +5,18 @@ import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/books_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
+import 'package:native_app/ui/pages/books/add.dart';
+import 'package:native_app/ui/pages/books/detail.dart';
+import 'package:native_app/ui/pages/books/edit.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends Page {
-  const BookListPage({
-    LocalKey? key,
-    required MainInterface main,
-  })   : _main = main,
-        super(key: key);
+  const BookListPage({required MainInterface main})
+      : _main = main,
+        super(key: const ValueKey("bookListPage"));
   final MainInterface _main;
 
   @override
@@ -63,15 +64,19 @@ class _BookListScreenState extends State<BookListScreen> {
   }
 
   void _onPressedNew() {
-    context.read<RouteStateNotifier>().showBookNew();
+    context.read<RouteStateNotifier>().pushBookPage(const BookAddPage());
   }
 
   void _onTapShow(BookId bookId) {
-    context.read<RouteStateNotifier>().showBookDetail(bookId);
+    context
+        .read<RouteStateNotifier>()
+        .pushBookPage(BookDetailPage(bookId: bookId));
   }
 
   void _onPressedEdit(BookId bookId) {
-    context.read<RouteStateNotifier>().showBookEdit(bookId);
+    context
+        .read<RouteStateNotifier>()
+        .pushBookPage(BookEditPage(bookId: bookId));
   }
 
   @override

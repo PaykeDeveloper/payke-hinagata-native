@@ -34,6 +34,10 @@ class _MainState extends State<Main> implements MainInterface {
     ),
   ];
 
+  void _onTap(int index) {
+    context.read<RouteStateNotifier>().changeIndex(BottomTabExt.getTab(index));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +55,8 @@ class _MainState extends State<Main> implements MainInterface {
 
   @override
   Widget build(BuildContext context) {
-    final index = context.select((RouteState state) => state.tabIndex);
+    final tab = context.select((RouteState state) => state.tab);
+    final index = tab.getIndex();
     final isFirst = context.select((RouteState state) => state.isFirstTab);
     return WillPopScope(
       onWillPop: () async {
@@ -65,8 +70,8 @@ class _MainState extends State<Main> implements MainInterface {
           return false;
         }
 
-        if (index != 0) {
-          context.read<RouteStateNotifier>().changeIndex(0);
+        if (tab != initialTab) {
+          context.read<RouteStateNotifier>().changeIndex(initialTab);
           return false;
         }
 
@@ -83,8 +88,7 @@ class _MainState extends State<Main> implements MainInterface {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: index,
           items: _tabItems,
-          onTap: (value) =>
-              context.read<RouteStateNotifier>().changeIndex(value),
+          onTap: _onTap,
         ),
       ),
     );

@@ -4,16 +4,15 @@ import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
+import 'package:native_app/ui/pages/books/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookDetailPage extends Page {
-  const BookDetailPage({
-    LocalKey? key,
-    required BookId bookId,
-  })   : _bookId = bookId,
-        super(key: key);
+  BookDetailPage({required BookId bookId})
+      : _bookId = bookId,
+        super(key: ValueKey("bookDetailPage-${bookId.value}"));
   final BookId _bookId;
 
   @override
@@ -49,7 +48,9 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   }
 
   void _onPressedEdit() {
-    context.read<RouteStateNotifier>().showBookEdit(widget._bookId);
+    context
+        .read<RouteStateNotifier>()
+        .pushBookPage(BookEditPage(bookId: widget._bookId));
   }
 
   @override

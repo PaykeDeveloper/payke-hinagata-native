@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/ui/pages/books/add.dart';
-import 'package:native_app/ui/pages/books/detail.dart';
-import 'package:native_app/ui/pages/books/edit.dart';
 import 'package:native_app/ui/pages/books/list.dart';
 import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +16,7 @@ class BooksNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final routeState = context.watch<RouteState>();
-    final bookDetailId = routeState.bookDetailId;
-    final bookEditId = routeState.bookEditId;
+    final pages = context.select((RouteState state) => state.bookPages);
     return Navigator(
       key: _navigatorKey,
       onPopPage: (route, result) {
@@ -30,29 +25,10 @@ class BooksNavigator extends StatelessWidget {
         }
 
         final notifier = context.read<RouteStateNotifier>();
-        if (routeState.bookNew) {
-          notifier.removeBookNew();
-        } else if (bookEditId != null) {
-          notifier.removeBookEdit();
-        } else if (bookDetailId != null) {
-          notifier.removeBookDetail();
-        }
+        notifier.popBookPage();
         return true;
       },
-      pages: [
-        BookListPage(key: const ValueKey('BookListPage'), main: _main),
-        if (bookDetailId != null)
-          BookDetailPage(
-            key: ValueKey('BookDetailPage-${bookDetailId.value}'),
-            bookId: bookDetailId,
-          ),
-        if (bookEditId != null)
-          BookEditPage(
-            key: ValueKey('BookEditPage-${bookEditId.value}'),
-            bookId: bookEditId,
-          ),
-        if (routeState.bookNew) const BookAddPage(key: ValueKey('BookAddPage')),
-      ],
+      pages: [BookListPage(main: _main), ...pages],
     );
   }
 }

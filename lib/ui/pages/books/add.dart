@@ -10,7 +10,7 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookAddPage extends Page {
-  const BookAddPage({LocalKey? key}) : super(key: key);
+  const BookAddPage() : super(key: const ValueKey("bookAddPage"));
 
   @override
   Route createRoute(BuildContext context) {
