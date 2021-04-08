@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:provider/single_child_widget.dart';
 
 import './base/models/entities_state.dart';
@@ -29,6 +31,8 @@ List<SingleChildWidget> getProviders() {
         create: (context) => LoginNotifier()),
     StateNotifierProvider<LogoutNotifier, StoreState<Logout>>(
         create: (context) => LogoutNotifier()),
+    StateNotifierProvider<RouteStateNotifier, RouteState>(
+        create: (context) => RouteStateNotifier()),
 
     // FIXME: SAMPLE CODE
     StateNotifierProvider<BooksNotifier,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_input.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
@@ -11,26 +12,40 @@ import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-class BookEditPage extends StatefulWidget {
-  const BookEditPage(this.bookId);
-
-  final BookId bookId;
+class BookEditPage extends Page {
+  BookEditPage({required BookId bookId})
+      : _bookId = bookId,
+        super(key: ValueKey("bookEditPage-${bookId.value}"));
+  final BookId _bookId;
 
   @override
-  _BookEditPageState createState() => _BookEditPageState();
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (context) => BookEditScreen(bookId: _bookId),
+    );
+  }
 }
 
-class _BookEditPageState extends ValidateFormState<BookEditPage> {
+class BookEditScreen extends StatefulWidget {
+  const BookEditScreen({required BookId bookId}) : _bookId = bookId;
+  final BookId _bookId;
+
+  @override
+  _BookEditScreenState createState() => _BookEditScreenState();
+}
+
+class _BookEditScreenState extends ValidateFormState<BookEditScreen> {
   Future _initState() async {
     await context
         .read<BooksNotifier>()
-        .fetchEntityIfNeeded(url: BookUrl(id: widget.bookId), reset: true);
+        .fetchEntityIfNeeded(url: BookUrl(id: widget._bookId), reset: true);
   }
 
   Future<StoreResult?> _onSubmit(BookInput input) async {
     final result = await context
         .read<BooksNotifier>()
-        .mergeEntity(urlParams: BookUrl(id: widget.bookId), data: input);
+        .mergeEntity(urlParams: BookUrl(id: widget._bookId), data: input);
     if (result is Success) {
       Navigator.of(context).pop();
     }
@@ -40,9 +55,9 @@ class _BookEditPageState extends ValidateFormState<BookEditPage> {
   Future _onPressedDelete() async {
     final result = await context
         .read<BooksNotifier>()
-        .deleteEntity(urlParams: BookUrl(id: widget.bookId));
+        .deleteEntity(urlParams: BookUrl(id: widget._bookId));
     if (result is Success) {
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      await context.read<RouteStateNotifier>().replaceBookPages([]);
     }
   }
 

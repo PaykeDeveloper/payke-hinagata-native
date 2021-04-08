@@ -6,7 +6,7 @@ import 'package:native_app/store/state/app/backend_token/models/backend_token.da
 import 'package:native_app/store/state/app/locale/notifier.dart';
 import 'package:provider/provider.dart';
 
-import './main.dart';
+import './main_navigation.dart';
 import './pages/auth/login.dart';
 import './pages/common/loading.dart';
 
@@ -36,11 +36,11 @@ class _RootState extends State<Root> {
     final token = context.watch<StoreState<BackendToken?>>();
 
     if (locale == null || token.status != StateStatus.done) {
-      return LoadingPage();
+      return LoadingScreen();
     }
     if (token.data == null) {
-      return LoginPage();
+      return LoginScreen();
     }
-    return Main();
+    return MainNavigation();
   }
 }

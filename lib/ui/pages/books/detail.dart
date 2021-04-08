@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
@@ -9,20 +9,40 @@ import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-class BookDetailPage extends StatefulWidget {
-  const BookDetailPage(this.bookId);
-
-  final BookId bookId;
+class BookDetailPage extends Page {
+  BookDetailPage({required BookId bookId})
+      : _bookId = bookId,
+        super(key: ValueKey("bookDetailPage-${bookId.value}"));
+  final BookId _bookId;
 
   @override
-  _BookDetailPageState createState() => _BookDetailPageState();
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (context) => BookDetailScreen(bookId: _bookId),
+    );
+  }
 }
 
-class _BookDetailPageState extends State<BookDetailPage> {
+class BookDetailScreen extends StatefulWidget {
+  const BookDetailScreen({required BookId bookId}) : _bookId = bookId;
+  final BookId _bookId;
+
+  @override
+  _BookDetailScreenState createState() => _BookDetailScreenState();
+}
+
+class _BookDetailScreenState extends State<BookDetailScreen> {
   Future _initState() async {
     await context
         .read<BooksNotifier>()
-        .fetchEntityIfNeeded(url: BookUrl(id: widget.bookId), reset: true);
+        .fetchEntityIfNeeded(url: BookUrl(id: widget._bookId), reset: true);
+  }
+
+  void _onPressedEdit() {
+    context
+        .read<RouteStateNotifier>()
+        .pushBookPage(BookEditPage(bookId: widget._bookId));
   }
 
   @override
@@ -45,17 +65,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
           IconButton(
             icon: const Icon(Icons.edit),
             tooltip: 'Edit book',
-            onPressed: book == null
-                ? null
-                : () {
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (BuildContext context) {
-                          return BookEditPage(book.id);
-                        },
-                      ),
-                    );
-                  },
+            onPressed: book == null ? null : _onPressedEdit,
           ),
         ],
       ),

@@ -1,27 +1,44 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book.dart';
+import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/books_url.dart';
 import 'package:native_app/store/state/domain/sample/books/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/selectors.dart';
 import 'package:native_app/ui/pages/books/add.dart';
 import 'package:native_app/ui/pages/books/detail.dart';
 import 'package:native_app/ui/pages/books/edit.dart';
-import 'package:native_app/ui/widgets/atoms/tab_floating_action_button.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-class BookListPage extends StatefulWidget {
-  const BookListPage({this.onPressedDrawerMenu});
-
-  final VoidCallback? onPressedDrawerMenu;
+class BookListPage extends Page {
+  const BookListPage({required VoidCallback openDrawer})
+      : _openDrawer = openDrawer,
+        super(key: const ValueKey("bookListPage"));
+  final VoidCallback _openDrawer;
 
   @override
-  _BookListPageState createState() => _BookListPageState();
+  Route createRoute(BuildContext context) {
+    return MaterialPageRoute(
+      settings: this,
+      builder: (context) => BookListScreen(openDrawer: _openDrawer),
+    );
+  }
 }
 
-class _BookListPageState extends State<BookListPage> {
+class BookListScreen extends StatefulWidget {
+  const BookListScreen({
+    required VoidCallback openDrawer,
+  }) : _openDrawer = openDrawer;
+  final VoidCallback _openDrawer;
+
+  @override
+  _BookListScreenState createState() => _BookListScreenState();
+}
+
+class _BookListScreenState extends State<BookListScreen> {
   bool _loading = false;
 
   Future _initState() async {
@@ -40,16 +57,20 @@ class _BookListPageState extends State<BookListPage> {
     await context.read<BooksNotifier>().fetchEntities(url: const BooksUrl());
   }
 
-  void _pushNextPage(WidgetBuilder builder) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (BuildContext context) {
-          return builder(context);
-        },
-      ),
-    ).then((value) {
-      _initState();
-    });
+  void _onPressedNew() {
+    context.read<RouteStateNotifier>().pushBookPage(const BookAddPage());
+  }
+
+  void _onTapShow(BookId bookId) {
+    context
+        .read<RouteStateNotifier>()
+        .pushBookPage(BookDetailPage(bookId: bookId));
+  }
+
+  void _onPressedEdit(BookId bookId) {
+    context
+        .read<RouteStateNotifier>()
+        .pushBookPage(BookEditPage(bookId: bookId));
   }
 
   @override
@@ -58,6 +79,14 @@ class _BookListPageState extends State<BookListPage> {
     Future.delayed(Duration.zero, () {
       _initState();
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant BookListScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (context.read<RouteState>().bookPages.isEmpty) {
+      _initState();
+    }
   }
 
   @override
@@ -70,15 +99,11 @@ class _BookListPageState extends State<BookListPage> {
         title: const Text('Books'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget.onPressedDrawerMenu,
+          onPressed: widget._openDrawer,
         ),
       ),
-      floatingActionButton: TabFloatingActionButton(
-        onPressed: () {
-          _pushNextPage((context) {
-            return BookAddPage();
-          });
-        },
+      floatingActionButton: FloatingActionButton(
+        onPressed: _onPressedNew,
         child: const Icon(Icons.add),
       ),
       body: ErrorWrapper(
@@ -95,16 +120,8 @@ class _BookListPageState extends State<BookListPage> {
                 final book = books[index];
                 return _ListItem(
                   book: book,
-                  onTapItem: () {
-                    _pushNextPage((context) {
-                      return BookDetailPage(book.id);
-                    });
-                  },
-                  onPressedEdit: () {
-                    _pushNextPage((context) {
-                      return BookEditPage(book.id);
-                    });
-                  },
+                  onTapItem: () => _onTapShow(book.id),
+                  onPressedEdit: () => _onPressedEdit(book.id),
                 );
               },
             ),
@@ -135,7 +152,7 @@ class _ListItem extends StatelessWidget {
       child: ListTile(
         onTap: _onTapItem,
         title: Text(
-          _book.title,
+          '${_book.id.value}: ${_book.title}',
           key: Key('text_${_book.id}'),
         ),
         trailing: IconButton(
