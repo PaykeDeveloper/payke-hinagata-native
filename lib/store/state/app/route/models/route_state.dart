@@ -28,24 +28,24 @@ enum BottomTab {
   books,
 }
 
-const tabHome = 0;
-const tabBooks = 1;
+const _tabHome = 0;
+const _tabBooks = 1;
 
 extension BottomTabExt on BottomTab {
   int getIndex() {
     switch (this) {
       case BottomTab.home:
-        return tabHome;
+        return _tabHome;
       case BottomTab.books:
-        return tabBooks;
+        return _tabBooks;
     }
   }
 
   static BottomTab getTab(int index) {
     switch (index) {
-      case tabHome:
+      case _tabHome:
         return BottomTab.home;
-      case tabBooks:
+      case _tabBooks:
         return BottomTab.books;
       default:
         throw ArgumentError.value(index);

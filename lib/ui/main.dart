@@ -38,15 +38,16 @@ class _MainState extends State<Main> {
   ];
 
   Widget _getWidget(BottomTab tab) {
+    final index = tab.getIndex();
     switch (tab) {
       case BottomTab.home:
         return HomeNavigator(
-          navigatorKey: _navigatorKeys[0],
+          navigatorKey: _navigatorKeys[index],
           mainState: _scaffoldKey.currentState,
         );
       case BottomTab.books:
         return BooksNavigator(
-          navigatorKey: _navigatorKeys[1],
+          navigatorKey: _navigatorKeys[index],
           mainState: _scaffoldKey.currentState,
         );
     }
