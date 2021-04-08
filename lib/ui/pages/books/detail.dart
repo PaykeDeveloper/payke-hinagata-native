@@ -39,18 +39,18 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
         .fetchEntityIfNeeded(url: BookUrl(id: widget._bookId), reset: true);
   }
 
+  void _onPressedEdit() {
+    context
+        .read<RouteStateNotifier>()
+        .pushBookPage(BookEditPage(bookId: widget._bookId));
+  }
+
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
       _initState();
     });
-  }
-
-  void _onPressedEdit() {
-    context
-        .read<RouteStateNotifier>()
-        .pushBookPage(BookEditPage(bookId: widget._bookId));
   }
 
   @override

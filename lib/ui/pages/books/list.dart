@@ -56,14 +56,6 @@ class _BookListScreenState extends State<BookListScreen> {
     await context.read<BooksNotifier>().fetchEntities(url: const BooksUrl());
   }
 
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      _initState();
-    });
-  }
-
   void _onPressedNew() {
     context.read<RouteStateNotifier>().pushBookPage(const BookAddPage());
   }
@@ -78,6 +70,14 @@ class _BookListScreenState extends State<BookListScreen> {
     context
         .read<RouteStateNotifier>()
         .pushBookPage(BookEditPage(bookId: bookId));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      _initState();
+    });
   }
 
   @override
