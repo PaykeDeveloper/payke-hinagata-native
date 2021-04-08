@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/ui/navigators/books.dart';
-import 'package:native_app/ui/navigators/home.dart';
+import 'package:native_app/ui/pages/common/loading.dart';
 import 'package:provider/provider.dart';
 
-import './utils/main_interface.dart';
+import './navigators/books.dart';
+import './navigators/home.dart';
 import './widgets/organisms/main_drawer.dart';
 
 class Main extends StatefulWidget {
@@ -13,9 +13,7 @@ class Main extends StatefulWidget {
   _MainState createState() => _MainState();
 }
 
-class _MainState extends State<Main> implements MainInterface {
-  late List<Widget> _children;
-
+class _MainState extends State<Main> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _navigatorKeys = [
@@ -34,6 +32,26 @@ class _MainState extends State<Main> implements MainInterface {
     ),
   ];
 
+  final _children = <Widget>[
+    LoadingPage(),
+    LoadingPage(),
+  ];
+
+  Widget _getWidget(BottomTab tab) {
+    switch (tab) {
+      case BottomTab.home:
+        return HomeNavigator(
+          navigatorKey: _navigatorKeys[0],
+          mainState: _scaffoldKey.currentState,
+        );
+      case BottomTab.books:
+        return BooksNavigator(
+          navigatorKey: _navigatorKeys[1],
+          mainState: _scaffoldKey.currentState,
+        );
+    }
+  }
+
   void _onTap(int index) {
     context.read<RouteStateNotifier>().changeIndex(BottomTabExt.getTab(index));
   }
@@ -41,16 +59,6 @@ class _MainState extends State<Main> implements MainInterface {
   @override
   void initState() {
     super.initState();
-    _children = [
-      HomeNavigator(
-        navigatorKey: _navigatorKeys[0],
-        main: this,
-      ),
-      BooksNavigator(
-        navigatorKey: _navigatorKeys[1],
-        main: this,
-      )
-    ];
   }
 
   @override
@@ -58,6 +66,9 @@ class _MainState extends State<Main> implements MainInterface {
     final tab = context.select((RouteState state) => state.tab);
     final index = tab.getIndex();
     final isFirst = context.select((RouteState state) => state.isFirstTab);
+    if (_children[index] is LoadingPage) {
+      _children[index] = _getWidget(tab);
+    }
     return WillPopScope(
       onWillPop: () async {
         if (_scaffoldKey.currentState?.isDrawerOpen == true) {
@@ -93,7 +104,4 @@ class _MainState extends State<Main> implements MainInterface {
       ),
     );
   }
-
-  @override
-  ScaffoldState? getScaffoldState() => _scaffoldKey.currentState;
 }

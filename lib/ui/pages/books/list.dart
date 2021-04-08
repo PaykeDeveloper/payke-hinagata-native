@@ -8,29 +8,29 @@ import 'package:native_app/store/state/domain/sample/books/selectors.dart';
 import 'package:native_app/ui/pages/books/add.dart';
 import 'package:native_app/ui/pages/books/detail.dart';
 import 'package:native_app/ui/pages/books/edit.dart';
-import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class BookListPage extends Page {
-  const BookListPage({required MainInterface main})
-      : _main = main,
+  const BookListPage({required ScaffoldState? mainState})
+      : _mainState = mainState,
         super(key: const ValueKey("bookListPage"));
-  final MainInterface _main;
+  final ScaffoldState? _mainState;
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => BookListScreen(main: _main),
+      builder: (context) => BookListScreen(mainState: _mainState),
     );
   }
 }
 
 class BookListScreen extends StatefulWidget {
-  const BookListScreen({required MainInterface main}) : _main = main;
-  final MainInterface _main;
+  const BookListScreen({required ScaffoldState? mainState})
+      : _mainState = mainState;
+  final ScaffoldState? _mainState;
 
   @override
   _BookListScreenState createState() => _BookListScreenState();
@@ -89,7 +89,7 @@ class _BookListScreenState extends State<BookListScreen> {
         title: const Text('Books'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget._main.openDrawer,
+          onPressed: widget._mainState?.openDrawer,
         ),
       ),
       floatingActionButton: FloatingActionButton(

@@ -4,27 +4,27 @@ import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/ui/pages/books/detail.dart';
 import 'package:native_app/ui/pages/books/edit.dart';
-import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends Page {
-  const HomePage({required MainInterface main})
-      : _main = main,
+  const HomePage({required ScaffoldState? mainState})
+      : _mainState = mainState,
         super(key: const ValueKey("homePage"));
-  final MainInterface _main;
+  final ScaffoldState? _mainState;
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => HomeScreen(main: _main),
+      builder: (context) => HomeScreen(mainState: _mainState),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({required MainInterface main}) : _main = main;
-  final MainInterface _main;
+  const HomeScreen({required ScaffoldState? mainState})
+      : _mainState = mainState;
+  final ScaffoldState? _mainState;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Home'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget._main.openDrawer,
+          onPressed: widget._mainState?.openDrawer,
         ),
       ),
       body: Center(

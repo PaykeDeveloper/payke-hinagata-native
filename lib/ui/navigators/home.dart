@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/ui/pages/common/home.dart';
-import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
 
 class HomeNavigator extends StatelessWidget {
   const HomeNavigator({
-    GlobalKey<NavigatorState>? navigatorKey,
-    required MainInterface main,
+    required GlobalKey<NavigatorState> navigatorKey,
+    required ScaffoldState? mainState,
   })   : _navigatorKey = navigatorKey,
-        _main = main;
+        _mainState = mainState;
   final GlobalKey<NavigatorState>? _navigatorKey;
-  final MainInterface _main;
+  final ScaffoldState? _mainState;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class HomeNavigator extends StatelessWidget {
         notifier.popHomePage();
         return true;
       },
-      pages: [HomePage(main: _main), ...pages],
+      pages: [HomePage(mainState: _mainState), ...pages],
     );
   }
 }

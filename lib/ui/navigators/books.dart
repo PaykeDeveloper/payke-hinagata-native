@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/ui/pages/books/list.dart';
-import 'package:native_app/ui/utils/main_interface.dart';
 import 'package:provider/provider.dart';
 
 class BooksNavigator extends StatelessWidget {
   const BooksNavigator({
-    GlobalKey<NavigatorState>? navigatorKey,
-    required MainInterface main,
+    required GlobalKey<NavigatorState>? navigatorKey,
+    required ScaffoldState? mainState,
   })   : _navigatorKey = navigatorKey,
-        _main = main;
+        _mainState = mainState;
   final GlobalKey<NavigatorState>? _navigatorKey;
-  final MainInterface _main;
+  final ScaffoldState? _mainState;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +27,7 @@ class BooksNavigator extends StatelessWidget {
         notifier.popBookPage();
         return true;
       },
-      pages: [BookListPage(main: _main), ...pages],
+      pages: [BookListPage(mainState: _mainState), ...pages],
     );
   }
 }
