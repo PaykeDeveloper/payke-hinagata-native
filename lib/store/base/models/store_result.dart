@@ -6,11 +6,11 @@ part 'store_result.freezed.dart';
 
 @freezed
 class StoreResult<T> with _$StoreResult<T> {
-  const StoreResult._();
-
   const factory StoreResult.success(T data) = Success<T>;
 
   const factory StoreResult.failure(StoreError error) = Failure;
+
+  const StoreResult._();
 
   T? getDataOrNull() => when(
         success: (data) => data,

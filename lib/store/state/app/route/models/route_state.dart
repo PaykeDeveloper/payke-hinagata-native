@@ -5,13 +5,13 @@ part 'route_state.freezed.dart';
 
 @freezed
 class RouteState with _$RouteState {
-  const RouteState._();
-
   const factory RouteState({
     required BottomTab tab,
     @Default([]) List<Page> homePages,
     @Default([]) List<Page> bookPages,
   }) = _RouteState;
+
+  const RouteState._();
 
   bool get isFirstTab {
     switch (tab) {
