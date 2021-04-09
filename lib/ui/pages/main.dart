@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/ui/navigators/books.dart';
+import 'package:native_app/ui/navigators/home.dart';
+import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
 import 'package:provider/provider.dart';
 
-import './navigators/books.dart';
-import './navigators/home.dart';
-import './widgets/organisms/main_drawer.dart';
-import 'pages/common/loading.dart';
+import './common/loading.dart';
 
-class MainNavigation extends StatelessWidget {
+class MainScreen extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _navigatorKeys = [
