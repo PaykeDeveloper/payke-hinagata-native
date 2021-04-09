@@ -6,9 +6,9 @@ import 'package:native_app/store/state/app/backend_token/models/backend_token.da
 import 'package:native_app/store/state/app/locale/notifier.dart';
 import 'package:provider/provider.dart';
 
-import './main_navigation.dart';
 import './pages/auth/login.dart';
 import './pages/common/loading.dart';
+import './pages/main.dart';
 
 class Root extends StatefulWidget {
   @override
@@ -41,6 +41,6 @@ class _RootState extends State<Root> {
     if (token.data == null) {
       return LoginScreen();
     }
-    return MainNavigation();
+    return MainScreen();
   }
 }
