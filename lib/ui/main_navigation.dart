@@ -87,9 +87,20 @@ class MainNavigation extends StatelessWidget {
           currentIndex: index,
           items: _tabItems,
           onTap: (int index) {
-            context
-                .read<RouteStateNotifier>()
-                .changeIndex(BottomTabExt.getTab(index));
+            final tab = BottomTabExt.getTab(index);
+            final notifier = context.read<RouteStateNotifier>();
+            if (tab != context.read<RouteState>().tab) {
+              notifier.changeIndex(tab);
+            } else {
+              switch (tab) {
+                case BottomTab.home:
+                  notifier.replaceHomePages([]);
+                  break;
+                case BottomTab.books:
+                  notifier.replaceBookPages([]);
+                  break;
+              }
+            }
           },
         ),
       ),
