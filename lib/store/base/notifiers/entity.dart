@@ -3,14 +3,31 @@ import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
+import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 abstract class EntityNotifier<Entity, EntityUrl,
         CreateInput extends JsonGenerator, UpdateInput extends JsonGenerator>
     extends StateNotifier<EntityState<Entity, EntityUrl>> with LocatorMixin {
-  EntityNotifier(EntityState<Entity, EntityUrl> state) : super(state);
+  EntityNotifier(
+    EntityState<Entity, EntityUrl> state, {
+    int activeMinutes = 10,
+    bool reset = true,
+  })  : _activeMinutes = activeMinutes,
+        _reset = reset,
+        super(state);
 
-  final _activeMinutes = 10;
+  final int _activeMinutes;
+  final bool _reset;
+
+  @override
+  void update(Locator watch) {
+    super.update(watch);
+    final token = watch<StoreState<BackendToken?>>().data;
+    if (_reset && token == null) {
+      resetEntityIfNeeded();
+    }
+  }
 
   String getEntityUrl(EntityUrl url);
 

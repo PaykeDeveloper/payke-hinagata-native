@@ -3,6 +3,7 @@ import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
+import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
@@ -11,10 +12,24 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
         EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>>
     with LocatorMixin {
   EntitiesNotifier(
-      EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> state)
-      : super(state);
+    EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> state, {
+    int activeMinutes = 10,
+    bool reset = true,
+  })  : _activeMinutes = activeMinutes,
+        _reset = reset,
+        super(state);
 
-  final _activeMinutes = 10;
+  final int _activeMinutes;
+  final bool _reset;
+
+  @override
+  void update(Locator watch) {
+    super.update(watch);
+    final token = watch<StoreState<BackendToken?>>().data;
+    if (_reset && token == null) {
+      resetAllIfNeeded();
+    }
+  }
 
   String getEntitiesUrl(EntitiesUrl url);
 
@@ -245,5 +260,10 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     if (state.entityStatus != StateStatus.initial) {
       await resetEntity();
     }
+  }
+
+  Future resetAllIfNeeded() async {
+    await resetEntitiesIfNeeded();
+    await resetEntityIfNeeded();
   }
 }
