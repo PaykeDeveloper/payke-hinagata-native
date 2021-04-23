@@ -58,19 +58,21 @@ class _BookListScreenState extends State<BookListScreen> {
   }
 
   void _onPressedNew() {
-    context.read<RouteStateNotifier>().pushBookPage(const BookAddPage());
+    context
+        .read<RouteStateNotifier>()
+        .push(BottomTab.books, const BookAddPage());
   }
 
   void _onTapShow(BookId bookId) {
     context
         .read<RouteStateNotifier>()
-        .pushBookPage(BookDetailPage(bookId: bookId));
+        .push(BottomTab.books, BookDetailPage(bookId: bookId));
   }
 
   void _onPressedEdit(BookId bookId) {
     context
         .read<RouteStateNotifier>()
-        .pushBookPage(BookEditPage(bookId: bookId));
+        .push(BottomTab.books, BookEditPage(bookId: bookId));
   }
 
   @override

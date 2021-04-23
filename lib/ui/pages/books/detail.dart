@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_url.dart';
@@ -42,7 +43,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   void _onPressedEdit() {
     context
         .read<RouteStateNotifier>()
-        .pushBookPage(BookEditPage(bookId: widget._bookId));
+        .push(BottomTab.books, BookEditPage(bookId: widget._bookId));
   }
 
   @override

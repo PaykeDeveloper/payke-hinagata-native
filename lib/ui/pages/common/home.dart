@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future _onPressedBookList() async {
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.books);
-    await notifier.replaceBookPages([]);
+    await notifier.replace(BottomTab.books, []);
   }
 
   Future _onPressedBookDetail() async {
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.books);
-    await notifier.replaceBookPages([BookDetailPage(bookId: bookId)]);
+    await notifier.replace(BottomTab.books, [BookDetailPage(bookId: bookId)]);
   }
 
   Future _onPressedBookEdit() async {
@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.books);
-    await notifier.replaceBookPages([
+    await notifier.replace(BottomTab.books, [
       BookDetailPage(bookId: bookId),
       BookEditPage(bookId: bookId),
     ]);

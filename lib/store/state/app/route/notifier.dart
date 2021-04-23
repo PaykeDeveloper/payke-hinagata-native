@@ -15,39 +15,48 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     );
   }
 
-  Future pushHomePage(Page page) async {
-    state = state.copyWith(
-      homePages: [...state.homePages, page],
-    );
+  Future<List<Page>> push(BottomTab tab, Page page) async {
+    switch (tab) {
+      case BottomTab.home:
+        state = state.copyWith(
+          homePages: [...state.homePages, page],
+        );
+        return state.homePages;
+      case BottomTab.books:
+        state = state.copyWith(
+          bookPages: [...state.bookPages, page],
+        );
+        return state.bookPages;
+    }
   }
 
-  Future popHomePage() async {
-    state = state.copyWith(
-      homePages: state.homePages.toList()..removeLast(),
-    );
+  Future<List<Page>> pop(BottomTab tab) async {
+    switch (tab) {
+      case BottomTab.home:
+        state = state.copyWith(
+          homePages: state.homePages.toList()..removeLast(),
+        );
+        return state.homePages;
+      case BottomTab.books:
+        state = state.copyWith(
+          bookPages: state.bookPages.toList()..removeLast(),
+        );
+        return state.bookPages;
+    }
   }
 
-  Future replaceHomePages(List<Page> pages) async {
-    state = state.copyWith(
-      homePages: pages,
-    );
-  }
-
-  Future pushBookPage(Page page) async {
-    state = state.copyWith(
-      bookPages: [...state.bookPages, page],
-    );
-  }
-
-  Future popBookPage() async {
-    state = state.copyWith(
-      bookPages: state.bookPages.toList()..removeLast(),
-    );
-  }
-
-  Future replaceBookPages(List<Page> pages) async {
-    state = state.copyWith(
-      bookPages: pages,
-    );
+  Future<List<Page>> replace(BottomTab tab, List<Page> pages) async {
+    switch (tab) {
+      case BottomTab.home:
+        state = state.copyWith(
+          homePages: pages,
+        );
+        return state.homePages;
+      case BottomTab.books:
+        state = state.copyWith(
+          bookPages: pages,
+        );
+        return state.bookPages;
+    }
   }
 }

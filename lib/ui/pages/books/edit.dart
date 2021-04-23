@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
 import 'package:native_app/store/state/domain/sample/books/models/book_input.dart';
@@ -57,7 +58,7 @@ class _BookEditScreenState extends ValidateFormState<BookEditScreen> {
         .read<BooksNotifier>()
         .deleteEntity(urlParams: BookUrl(id: widget._bookId));
     if (result is Success) {
-      await context.read<RouteStateNotifier>().replaceBookPages([]);
+      await context.read<RouteStateNotifier>().replace(BottomTab.books, []);
     }
   }
 

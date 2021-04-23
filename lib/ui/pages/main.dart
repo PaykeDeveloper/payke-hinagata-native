@@ -92,14 +92,7 @@ class MainScreen extends StatelessWidget {
             if (tab != context.read<RouteState>().tab) {
               notifier.changeIndex(tab);
             } else {
-              switch (tab) {
-                case BottomTab.home:
-                  notifier.replaceHomePages([]);
-                  break;
-                case BottomTab.books:
-                  notifier.replaceBookPages([]);
-                  break;
-              }
+              notifier.replace(tab, []);
             }
           },
         ),

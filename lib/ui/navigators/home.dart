@@ -26,7 +26,7 @@ class HomeNavigator extends StatelessWidget {
         }
 
         final notifier = context.read<RouteStateNotifier>();
-        notifier.popHomePage();
+        notifier.pop(BottomTab.home);
         return true;
       },
       pages: [HomePage(openDrawer: _openDrawer), ...pages],

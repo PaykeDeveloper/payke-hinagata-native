@@ -26,7 +26,7 @@ class BooksNavigator extends StatelessWidget {
         }
 
         final notifier = context.read<RouteStateNotifier>();
-        notifier.popBookPage();
+        notifier.pop(BottomTab.books);
         return true;
       },
       pages: [BookListPage(openDrawer: _openDrawer), ...pages],
