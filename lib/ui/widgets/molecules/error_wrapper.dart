@@ -37,7 +37,7 @@ class ErrorWrapper extends StatelessWidget {
       final onPressed = error.map(
         sendTimeout: (_) => _onPressedReload,
         requestCancelled: (_) => _onPressedReload,
-        unauthorisedRequest: (_) => () {
+        unauthorisedRequest: (_) {
           final notifier = context.read<LogoutNotifier>();
           notifier.logout();
         },
