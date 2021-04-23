@@ -12,7 +12,7 @@ abstract class EntityNotifier<Entity, EntityUrl,
   EntityNotifier(
     EntityState<Entity, EntityUrl> state, {
     int activeMinutes = 10,
-    bool reset = false,
+    bool reset = true,
   })  : _activeMinutes = activeMinutes,
         _reset = reset,
         super(state);

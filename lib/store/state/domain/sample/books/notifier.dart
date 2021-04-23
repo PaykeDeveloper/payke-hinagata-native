@@ -10,7 +10,7 @@ import './models/books_url.dart';
 class BooksNotifier extends EntitiesNotifier<Book, BookUrl, Book, BooksUrl,
     BookInput, BookInput> {
   BooksNotifier(EntitiesState<Book, BookUrl, Book, BooksUrl> state)
-      : super(state, reset: true);
+      : super(state);
 
   @override
   String getEntitiesUrl(BooksUrl url) => 'api/v1/books/';
