@@ -13,18 +13,6 @@ import 'package:provider/provider.dart';
 import './add.dart';
 import './edit.dart';
 
-// class DivisionListPage extends Page {
-//   const DivisionListPage() : super(key: const ValueKey("divisionListPage"));
-//
-//   @override
-//   Route createRoute(BuildContext context) {
-//     return MaterialPageRoute(
-//       settings: this,
-//       builder: (context) => const DivisionListScreen(),
-//     );
-//   }
-// }
-
 class DivisionListScreen extends StatefulWidget {
   const DivisionListScreen();
 
@@ -141,12 +129,8 @@ class _ListItem extends StatelessWidget {
       child: ListTile(
         onTap: _onTapItem,
         leading: Text('${_division.id.value}'),
-        title: Text(
-          _division.name,
-          key: Key('text_${_division.id}'),
-        ),
+        title: Text(_division.name),
         trailing: IconButton(
-          key: Key('icon_${_division.id}'),
           icon: const Icon(Icons.edit),
           onPressed: _onPressedEdit,
         ),

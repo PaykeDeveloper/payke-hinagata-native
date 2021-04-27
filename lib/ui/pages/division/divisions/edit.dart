@@ -13,21 +13,6 @@ import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
-// class DivisionEditPage extends Page {
-//   DivisionEditPage({required DivisionId divisionId})
-//       : _divisionId = divisionId,
-//         super(key: ValueKey("divisionEditPage-${divisionId.value}"));
-//   final DivisionId _divisionId;
-//
-//   @override
-//   Route createRoute(BuildContext context) {
-//     return MaterialPageRoute(
-//       settings: this,
-//       builder: (context) => DivisionEditScreen(divisionId: _divisionId),
-//     );
-//   }
-// }
-
 class DivisionEditScreen extends StatefulWidget {
   const DivisionEditScreen({required DivisionId divisionId})
       : _divisionId = divisionId;

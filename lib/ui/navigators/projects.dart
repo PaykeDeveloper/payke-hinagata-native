@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/ui/pages/books/list.dart';
+import 'package:native_app/store/state/ui/division_id/selectors.dart';
+import 'package:native_app/ui/pages/sample/projects/list.dart';
 import 'package:provider/provider.dart';
 
-class BooksNavigator extends StatelessWidget {
-  const BooksNavigator({
+class ProjectsNavigator extends StatelessWidget {
+  const ProjectsNavigator({
     required GlobalKey<NavigatorState>? navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
   })   : _navigatorKey = navigatorKey,
@@ -17,7 +18,8 @@ class BooksNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pages = context.select((RouteState state) => state.bookPages);
+    final pages = context.select((RouteState state) => state.projectPages);
+    final divisionId = context.select(divisionIdSelector);
     return Navigator(
       key: _navigatorKey,
       onPopPage: (route, result) {
@@ -26,10 +28,13 @@ class BooksNavigator extends StatelessWidget {
         }
 
         final notifier = context.read<RouteStateNotifier>();
-        notifier.pop(BottomTab.books);
+        notifier.pop(BottomTab.projects);
         return true;
       },
-      pages: [BookListPage(openDrawer: _openDrawer), ...pages],
+      pages: [
+        ProjectListPage(divisionId: divisionId!, openDrawer: _openDrawer),
+        ...pages
+      ],
     );
   }
 }

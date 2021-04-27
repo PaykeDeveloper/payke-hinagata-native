@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/domain/sample/books/models/book_id.dart';
-import 'package:native_app/ui/pages/books/detail.dart';
-import 'package:native_app/ui/pages/books/edit.dart';
+import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project_id.dart';
+import 'package:native_app/ui/pages/sample/projects/detail.dart';
+import 'package:native_app/ui/pages/sample/projects/edit.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends Page {
@@ -36,28 +38,37 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _textEditingController = TextEditingController();
 
-  Future _onPressedBookList() async {
+  Future _onPressedProjectList() async {
     final notifier = context.read<RouteStateNotifier>();
-    await notifier.changeIndex(BottomTab.books);
-    await notifier.replace(BottomTab.books, []);
+    await notifier.changeIndex(BottomTab.projects);
+    await notifier.replace(BottomTab.projects, []);
   }
 
-  Future _onPressedBookDetail() async {
-    final bookId = BookId(int.tryParse(_textEditingController.text) ?? 0);
+  Future _onPressedProjectDetail() async {
+    final divisionId = context.read<StoreState<DivisionId?>>().data;
+    if (divisionId == null) return;
+    final projectId = ProjectId(int.tryParse(_textEditingController.text) ?? 0);
 
     final notifier = context.read<RouteStateNotifier>();
-    await notifier.changeIndex(BottomTab.books);
-    await notifier.replace(BottomTab.books, [BookDetailPage(bookId: bookId)]);
+    await notifier.changeIndex(BottomTab.projects);
+    await notifier.replace(BottomTab.projects, [
+      ProjectDetailPage(
+        divisionId: divisionId,
+        projectId: projectId,
+      ),
+    ]);
   }
 
-  Future _onPressedBookEdit() async {
-    final bookId = BookId(int.tryParse(_textEditingController.text) ?? 0);
+  Future _onPressedProjectEdit() async {
+    final divisionId = context.read<StoreState<DivisionId?>>().data;
+    if (divisionId == null) return;
+    final projectId = ProjectId(int.tryParse(_textEditingController.text) ?? 0);
 
     final notifier = context.read<RouteStateNotifier>();
-    await notifier.changeIndex(BottomTab.books);
-    await notifier.replace(BottomTab.books, [
-      BookDetailPage(bookId: bookId),
-      BookEditPage(bookId: bookId),
+    await notifier.changeIndex(BottomTab.projects);
+    await notifier.replace(BottomTab.projects, [
+      ProjectDetailPage(divisionId: divisionId, projectId: projectId),
+      ProjectEditPage(divisionId: divisionId, projectId: projectId),
     ]);
   }
 
@@ -76,24 +87,24 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: _onPressedBookList,
-              child: const Text('Book list'),
+              onPressed: _onPressedProjectList,
+              child: const Text('Project list'),
             ),
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.all(10),
               child: TextField(
                 controller: _textEditingController,
-                decoration: const InputDecoration(labelText: 'Book Id'),
+                decoration: const InputDecoration(labelText: 'Project Id'),
               ),
             ),
             ElevatedButton(
-              onPressed: _onPressedBookDetail,
-              child: const Text('Book detail'),
+              onPressed: _onPressedProjectDetail,
+              child: const Text('Project detail'),
             ),
             ElevatedButton(
-              onPressed: _onPressedBookEdit,
-              child: const Text('Book edit'),
+              onPressed: _onPressedProjectEdit,
+              child: const Text('Project edit'),
             ),
           ],
         ),

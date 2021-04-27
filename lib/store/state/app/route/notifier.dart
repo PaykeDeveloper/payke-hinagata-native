@@ -16,20 +16,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     super.update(watch);
     final token = watch<StoreState<BackendToken?>>().data;
     if (token == null) {
-      for (final tab in BottomTab.values) {
-        if (_get(tab).isNotEmpty) {
-          replace(tab, []);
-        }
-      }
-    }
-  }
-
-  List<Page> _get(BottomTab tab) {
-    switch (tab) {
-      case BottomTab.home:
-        return state.homePages;
-      case BottomTab.books:
-        return state.bookPages;
+      _resetAll();
     }
   }
 
@@ -46,9 +33,9 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
           homePages: [...state.homePages, page],
         );
         break;
-      case BottomTab.books:
+      case BottomTab.projects:
         state = state.copyWith(
-          bookPages: [...state.bookPages, page],
+          projectPages: [...state.projectPages, page],
         );
         break;
     }
@@ -61,9 +48,9 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
           homePages: state.homePages.toList()..removeLast(),
         );
         break;
-      case BottomTab.books:
+      case BottomTab.projects:
         state = state.copyWith(
-          bookPages: state.bookPages.toList()..removeLast(),
+          projectPages: state.projectPages.toList()..removeLast(),
         );
         break;
     }
@@ -76,11 +63,32 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
           homePages: pages,
         );
         break;
-      case BottomTab.books:
+      case BottomTab.projects:
         state = state.copyWith(
-          bookPages: pages,
+          projectPages: pages,
         );
         break;
+    }
+  }
+
+  Future _resetAll() async {
+    for (final tab in BottomTab.values) {
+      await _reset(tab);
+    }
+  }
+
+  Future _reset(BottomTab tab) async {
+    if (_get(tab).isNotEmpty) {
+      await replace(tab, []);
+    }
+  }
+
+  List<Page> _get(BottomTab tab) {
+    switch (tab) {
+      case BottomTab.home:
+        return state.homePages;
+      case BottomTab.projects:
+        return state.projectPages;
     }
   }
 }

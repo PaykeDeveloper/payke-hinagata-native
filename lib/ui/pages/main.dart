@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/ui/navigators/books.dart';
 import 'package:native_app/ui/navigators/home.dart';
+import 'package:native_app/ui/navigators/projects.dart';
 import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -40,8 +40,8 @@ class MainScreen extends StatelessWidget {
           navigatorKey: _navigatorKeys[index],
           scaffoldKey: _scaffoldKey,
         );
-      case BottomTab.books:
-        return BooksNavigator(
+      case BottomTab.projects:
+        return ProjectsNavigator(
           navigatorKey: _navigatorKeys[index],
           scaffoldKey: _scaffoldKey,
         );

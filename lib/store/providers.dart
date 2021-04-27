@@ -19,10 +19,10 @@ import './state/domain/division/divisions/models/division.dart';
 import './state/domain/division/divisions/models/division_url.dart';
 import './state/domain/division/divisions/models/divisions_url.dart';
 import './state/domain/division/divisions/notifier.dart';
-import './state/domain/sample/books/models/book.dart';
-import './state/domain/sample/books/models/book_url.dart';
-import './state/domain/sample/books/models/books_url.dart';
-import './state/domain/sample/books/notifier.dart';
+import './state/domain/sample/projects/models/project.dart';
+import './state/domain/sample/projects/models/project_url.dart';
+import './state/domain/sample/projects/models/projects_url.dart';
+import './state/domain/sample/projects/notifier.dart';
 import './state/ui/division_id/notifier.dart';
 
 List<SingleChildWidget> getProviders() {
@@ -46,8 +46,8 @@ List<SingleChildWidget> getProviders() {
     StateNotifierProvider<DivisionsNotifier,
             EntitiesState<Division, DivisionUrl, Division, DivisionsUrl>>(
         create: (context) => DivisionsNotifier(const EntitiesState())),
-    StateNotifierProvider<BooksNotifier,
-            EntitiesState<Book, BookUrl, Book, BooksUrl>>(
-        create: (context) => BooksNotifier(const EntitiesState())),
+    StateNotifierProvider<ProjectsNotifier,
+            EntitiesState<Project, ProjectUrl, Project, ProjectsUrl>>(
+        create: (context) => ProjectsNotifier(const EntitiesState())),
   ];
 }

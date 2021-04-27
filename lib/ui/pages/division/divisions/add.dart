@@ -10,18 +10,6 @@ import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
-// class DivisionAddPage extends Page {
-//   const DivisionAddPage() : super(key: const ValueKey("divisionAddPage"));
-//
-//   @override
-//   Route createRoute(BuildContext context) {
-//     return MaterialPageRoute(
-//       settings: this,
-//       builder: (context) => DivisionAddScreen(),
-//     );
-//   }
-// }
-
 class DivisionAddScreen extends StatefulWidget {
   @override
   _DivisionAddScreenState createState() => _DivisionAddScreenState();
