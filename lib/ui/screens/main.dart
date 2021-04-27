@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/ui/routes/navigators/home.dart';
-import 'package:native_app/ui/routes/navigators/projects.dart';
+import 'package:native_app/ui/navigation/navigators/home.dart';
+import 'package:native_app/ui/navigation/navigators/projects.dart';
 import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
 import 'package:provider/provider.dart';
 
