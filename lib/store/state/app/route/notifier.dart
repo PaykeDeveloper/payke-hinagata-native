@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
@@ -9,45 +11,84 @@ const initialTab = BottomTab.home;
 class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
   RouteStateNotifier() : super(const RouteState(tab: initialTab));
 
+  @override
+  void update(Locator watch) {
+    super.update(watch);
+    final token = watch<StoreState<BackendToken?>>().data;
+    if (token == null) {
+      _resetAll();
+    }
+  }
+
   Future changeIndex(BottomTab tab) async {
     state = state.copyWith(
       tab: tab,
     );
   }
 
-  Future pushHomePage(Page page) async {
-    state = state.copyWith(
-      homePages: [...state.homePages, page],
-    );
+  Future push(BottomTab tab, Page page) async {
+    switch (tab) {
+      case BottomTab.home:
+        state = state.copyWith(
+          homePages: [...state.homePages, page],
+        );
+        break;
+      case BottomTab.projects:
+        state = state.copyWith(
+          projectPages: [...state.projectPages, page],
+        );
+        break;
+    }
   }
 
-  Future popHomePage() async {
-    state = state.copyWith(
-      homePages: state.homePages.toList()..removeLast(),
-    );
+  Future pop(BottomTab tab) async {
+    switch (tab) {
+      case BottomTab.home:
+        state = state.copyWith(
+          homePages: state.homePages.toList()..removeLast(),
+        );
+        break;
+      case BottomTab.projects:
+        state = state.copyWith(
+          projectPages: state.projectPages.toList()..removeLast(),
+        );
+        break;
+    }
   }
 
-  Future replaceHomePages(List<Page> pages) async {
-    state = state.copyWith(
-      homePages: pages,
-    );
+  Future replace(BottomTab tab, List<Page> pages) async {
+    switch (tab) {
+      case BottomTab.home:
+        state = state.copyWith(
+          homePages: pages,
+        );
+        break;
+      case BottomTab.projects:
+        state = state.copyWith(
+          projectPages: pages,
+        );
+        break;
+    }
   }
 
-  Future pushBookPage(Page page) async {
-    state = state.copyWith(
-      bookPages: [...state.bookPages, page],
-    );
+  Future _resetAll() async {
+    for (final tab in BottomTab.values) {
+      await _reset(tab);
+    }
   }
 
-  Future popBookPage() async {
-    state = state.copyWith(
-      bookPages: state.bookPages.toList()..removeLast(),
-    );
+  Future _reset(BottomTab tab) async {
+    if (_get(tab).isNotEmpty) {
+      await replace(tab, []);
+    }
   }
 
-  Future replaceBookPages(List<Page> pages) async {
-    state = state.copyWith(
-      bookPages: pages,
-    );
+  List<Page> _get(BottomTab tab) {
+    switch (tab) {
+      case BottomTab.home:
+        return state.homePages;
+      case BottomTab.projects:
+        return state.projectPages;
+    }
   }
 }

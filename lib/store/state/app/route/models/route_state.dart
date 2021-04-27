@@ -8,7 +8,7 @@ class RouteState with _$RouteState {
   const factory RouteState({
     required BottomTab tab,
     @Default([]) List<Page> homePages,
-    @Default([]) List<Page> bookPages,
+    @Default([]) List<Page> projectPages,
   }) = _RouteState;
 
   const RouteState._();
@@ -17,27 +17,27 @@ class RouteState with _$RouteState {
     switch (tab) {
       case BottomTab.home:
         return homePages.isEmpty;
-      case BottomTab.books:
-        return bookPages.isEmpty;
+      case BottomTab.projects:
+        return projectPages.isEmpty;
     }
   }
 }
 
 enum BottomTab {
   home,
-  books,
+  projects,
 }
 
 const _tabHome = 0;
-const _tabBooks = 1;
+const _tabProjects = 1;
 
 extension BottomTabExt on BottomTab {
   int getIndex() {
     switch (this) {
       case BottomTab.home:
         return _tabHome;
-      case BottomTab.books:
-        return _tabBooks;
+      case BottomTab.projects:
+        return _tabProjects;
     }
   }
 
@@ -45,8 +45,8 @@ extension BottomTabExt on BottomTab {
     switch (index) {
       case _tabHome:
         return BottomTab.home;
-      case _tabBooks:
-        return BottomTab.books;
+      case _tabProjects:
+        return BottomTab.projects;
       default:
         throw ArgumentError.value(index);
     }

@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_app/store/providers.dart';
 import 'package:provider/provider.dart';
 
-import './ui/root.dart';
+import './ui/navigation/routers/auth.dart';
 import './ui/theme.dart';
 
 class App extends StatelessWidget {
@@ -21,7 +21,7 @@ class App extends StatelessWidget {
           FormBuilderLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: Root(),
+        home: AuthRouter(),
       ),
     );
   }
