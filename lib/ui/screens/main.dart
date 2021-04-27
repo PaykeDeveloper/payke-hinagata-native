@@ -23,7 +23,7 @@ class MainScreen extends StatelessWidget {
     ),
     const BottomNavigationBarItem(
       icon: Icon(Icons.book),
-      label: 'Books',
+      label: 'Projects',
     ),
   ];
 

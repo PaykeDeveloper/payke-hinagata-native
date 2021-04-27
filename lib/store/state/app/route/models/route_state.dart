@@ -29,7 +29,7 @@ enum BottomTab {
 }
 
 const _tabHome = 0;
-const _tabBooks = 1;
+const _tabProjects = 1;
 
 extension BottomTabExt on BottomTab {
   int getIndex() {
@@ -37,7 +37,7 @@ extension BottomTabExt on BottomTab {
       case BottomTab.home:
         return _tabHome;
       case BottomTab.projects:
-        return _tabBooks;
+        return _tabProjects;
     }
   }
 
@@ -45,7 +45,7 @@ extension BottomTabExt on BottomTab {
     switch (index) {
       case _tabHome:
         return BottomTab.home;
-      case _tabBooks:
+      case _tabProjects:
         return BottomTab.projects;
       default:
         throw ArgumentError.value(index);
