@@ -5,6 +5,7 @@ import 'package:native_app/store/state/domain/division/divisions/models/division
 import 'package:native_app/store/state/domain/division/divisions/models/division_url.dart';
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
+import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
@@ -73,15 +74,17 @@ class _DivisionEditScreenState extends ValidateFormState<DivisionEditScreen> {
     final division = context.select(divisionSelector);
     final error = context.select(divisionErrorSelector);
     final status = context.select(divisionStatusSelector);
+    final selectedId = context.select(divisionIdSelector);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit division'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            tooltip: 'Delete division',
-            onPressed: division == null ? null : _onPressedDelete,
-          ),
+          if (division?.id != selectedId)
+            IconButton(
+              icon: const Icon(Icons.delete),
+              tooltip: 'Delete division',
+              onPressed: division != null ? _onPressedDelete : null,
+            ),
         ],
       ),
       body: ErrorWrapper(

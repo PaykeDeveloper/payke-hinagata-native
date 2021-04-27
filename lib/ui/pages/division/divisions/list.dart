@@ -5,6 +5,7 @@ import 'package:native_app/store/state/domain/division/divisions/models/division
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/notifier.dart';
+import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
@@ -60,7 +61,7 @@ class _DivisionListScreenState extends State<DivisionListScreen> {
 
   Future _onTapSelect(DivisionId divisionId) async {
     await context.read<DivisionIdNotifier>().setDivisionId(divisionId);
-    Navigator.of(context).pop();
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   void _onPressedEdit(DivisionId divisionId) {
@@ -82,6 +83,7 @@ class _DivisionListScreenState extends State<DivisionListScreen> {
   Widget build(BuildContext context) {
     final divisions = context.select(divisionsSelector);
     final error = context.select(divisionsErrorSelector);
+    final selectedId = context.select(divisionIdSelector);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Divisions')),
@@ -105,6 +107,7 @@ class _DivisionListScreenState extends State<DivisionListScreen> {
                   division: division,
                   onTapItem: () => _onTapSelect(division.id),
                   onPressedEdit: () => _onPressedEdit(division.id),
+                  selected: division.id == selectedId,
                 );
               },
             ),
@@ -120,13 +123,16 @@ class _ListItem extends StatelessWidget {
     required Division division,
     required GestureTapCallback onTapItem,
     required VoidCallback onPressedEdit,
+    required bool selected,
   })   : _division = division,
         _onTapItem = onTapItem,
-        _onPressedEdit = onPressedEdit;
+        _onPressedEdit = onPressedEdit,
+        _selected = selected;
 
   final Division _division;
   final GestureTapCallback _onTapItem;
   final VoidCallback _onPressedEdit;
+  final bool _selected;
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +150,7 @@ class _ListItem extends StatelessWidget {
           icon: const Icon(Icons.edit),
           onPressed: _onPressedEdit,
         ),
+        selected: _selected,
       ),
     );
   }

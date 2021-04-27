@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import './pages/auth/login.dart';
 import './pages/common/loading.dart';
-import './pages/main.dart';
+import './pages/root_main.dart';
 
 class Root extends HookWidget {
   void _setLocale(BuildContext context) {
@@ -35,6 +35,6 @@ class Root extends HookWidget {
     if (token.data == null) {
       return LoginScreen();
     }
-    return MainScreen();
+    return RootMain();
   }
 }

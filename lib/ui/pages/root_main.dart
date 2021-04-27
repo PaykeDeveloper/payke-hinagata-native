@@ -39,7 +39,7 @@ class RootMain extends HookWidget {
     final division = divisionId != null
         ? divisions.firstWhereOrNull((element) => element.id == divisionId)
         : null;
-    if (division != null) {
+    if (division == null) {
       return const DivisionListScreen();
     }
 

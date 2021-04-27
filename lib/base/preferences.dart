@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // ignore: avoid_classes_with_only_static_members
 class Preferences {
   static final backendToken = StringPreference('backendToken');
+  static final divisionId = IntPreference('divisionId');
 }
 
 abstract class _Property<T> {
