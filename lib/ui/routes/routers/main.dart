@@ -11,7 +11,7 @@ import 'package:native_app/ui/pages/division/divisions/list.dart';
 import 'package:native_app/ui/pages/main.dart';
 import 'package:provider/provider.dart';
 
-class RootMain extends HookWidget {
+class MainRouter extends HookWidget {
   void _initState(BuildContext context) {
     context
         .read<DivisionsNotifier>()
