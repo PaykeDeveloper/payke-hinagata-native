@@ -5,7 +5,7 @@ import 'package:native_app/store/state/app/logout/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/constants.dart';
-import 'package:native_app/ui/pages/division/divisions/list.dart';
+import 'package:native_app/ui/screens/division/divisions/list.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 

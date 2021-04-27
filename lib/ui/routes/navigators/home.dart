@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/ui/pages/common/home.dart';
+import 'package:native_app/ui/screens/common/home.dart';
 import 'package:provider/provider.dart';
 
 class HomeNavigator extends StatelessWidget {

@@ -6,9 +6,9 @@ import 'package:native_app/store/state/domain/division/divisions/models/division
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
-import 'package:native_app/ui/pages/common/loading.dart';
-import 'package:native_app/ui/pages/division/divisions/list.dart';
-import 'package:native_app/ui/pages/main.dart';
+import 'package:native_app/ui/screens/common/loading.dart';
+import 'package:native_app/ui/screens/division/divisions/list.dart';
+import 'package:native_app/ui/screens/main.dart';
 import 'package:provider/provider.dart';
 
 class MainRouter extends HookWidget {

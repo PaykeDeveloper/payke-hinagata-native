@@ -4,8 +4,8 @@ import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_id.dart';
-import 'package:native_app/ui/pages/sample/projects/detail.dart';
-import 'package:native_app/ui/pages/sample/projects/edit.dart';
+import 'package:native_app/ui/screens/sample/projects/detail.dart';
+import 'package:native_app/ui/screens/sample/projects/edit.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends Page {

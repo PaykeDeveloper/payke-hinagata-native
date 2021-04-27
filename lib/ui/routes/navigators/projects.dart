@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
-import 'package:native_app/ui/pages/sample/projects/list.dart';
+import 'package:native_app/ui/screens/sample/projects/list.dart';
 import 'package:provider/provider.dart';
 
 class ProjectsNavigator extends StatelessWidget {

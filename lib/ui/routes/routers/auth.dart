@@ -5,8 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/locale/notifier.dart';
-import 'package:native_app/ui/pages/auth/login.dart';
-import 'package:native_app/ui/pages/common/loading.dart';
+import 'package:native_app/ui/screens/auth/login.dart';
+import 'package:native_app/ui/screens/common/loading.dart';
 import 'package:provider/provider.dart';
 
 import 'main.dart';
