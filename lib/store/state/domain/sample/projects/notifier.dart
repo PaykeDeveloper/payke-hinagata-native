@@ -7,11 +7,12 @@ import './models/project_input.dart';
 import './models/project_url.dart';
 import './models/projects_url.dart';
 
+typedef ProjectsState
+    = EntitiesState<Project, ProjectUrl, Project, ProjectsUrl>;
+
 class ProjectsNotifier extends EntitiesNotifier<Project, ProjectUrl, Project,
     ProjectsUrl, ProjectInput, ProjectInput> {
-  ProjectsNotifier(
-      EntitiesState<Project, ProjectUrl, Project, ProjectsUrl> state)
-      : super(state);
+  ProjectsNotifier(ProjectsState state) : super(state);
 
   @override
   String getEntitiesUrl(ProjectsUrl url) =>

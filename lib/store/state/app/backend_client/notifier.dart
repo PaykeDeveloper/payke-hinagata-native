@@ -1,7 +1,6 @@
 import 'dart:ui';
 
-import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
+import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import './models/backend_client.dart';
@@ -15,7 +14,7 @@ class BackendClientNotifier extends StateNotifier<BackendClient>
     super.update(watch);
     final locale = watch<Locale?>();
     state.setLocale(locale);
-    final token = watch<StoreState<BackendToken?>>().data;
+    final token = watch<BackendTokenState>().data;
     state.setToken(token);
   }
 }

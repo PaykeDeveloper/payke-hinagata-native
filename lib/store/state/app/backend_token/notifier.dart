@@ -4,7 +4,9 @@ import 'package:state_notifier/state_notifier.dart';
 
 import './models/backend_token.dart';
 
-class BackendTokenNotifier extends StateNotifier<StoreState<BackendToken?>>
+typedef BackendTokenState = StoreState<BackendToken?>;
+
+class BackendTokenNotifier extends StateNotifier<BackendTokenState>
     with LocatorMixin {
   BackendTokenNotifier() : super(const StoreState(null));
 

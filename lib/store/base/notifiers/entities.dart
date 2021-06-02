@@ -3,7 +3,7 @@ import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
-import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
+import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
@@ -25,7 +25,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   @override
   void update(Locator watch) {
     super.update(watch);
-    final token = watch<StoreState<BackendToken?>>().data;
+    final token = watch<BackendTokenState>().data;
     if (_reset && token == null) {
       resetAllIfNeeded();
     }

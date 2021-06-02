@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
+import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
@@ -14,7 +13,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
   @override
   void update(Locator watch) {
     super.update(watch);
-    final token = watch<StoreState<BackendToken?>>().data;
+    final token = watch<BackendTokenState>().data;
     if (token == null) {
       _resetAll();
     }

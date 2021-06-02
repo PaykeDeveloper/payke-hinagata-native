@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
+import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:native_app/store/state/app/locale/notifier.dart';
 import 'package:native_app/ui/screens/auth/login.dart';
 import 'package:native_app/ui/screens/common/loading.dart';
@@ -27,7 +27,7 @@ class AuthRouter extends HookWidget {
     }, []);
 
     final locale = context.watch<Locale?>();
-    final token = context.watch<StoreState<BackendToken?>>();
+    final token = context.watch<BackendTokenState>();
 
     if (locale == null || token.status != StateStatus.done) {
       return LoadingScreen();
