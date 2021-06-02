@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/ui/division_id/notifier.dart';
 import 'package:native_app/ui/screens/sample/projects/detail.dart';
 import 'package:native_app/ui/screens/sample/projects/edit.dart';
@@ -46,14 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Future _onPressedProjectDetail() async {
     final divisionId = context.read<DivisionIdState>().data;
     if (divisionId == null) return;
-    final projectId = ProjectId(int.tryParse(_textEditingController.text) ?? 0);
+    final projectSlug = ProjectSlug(_textEditingController.text);
 
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.projects);
     await notifier.replace(BottomTab.projects, [
       ProjectDetailPage(
         divisionId: divisionId,
-        projectId: projectId,
+        projectSlug: projectSlug,
       ),
     ]);
   }
@@ -61,13 +61,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Future _onPressedProjectEdit() async {
     final divisionId = context.read<DivisionIdState>().data;
     if (divisionId == null) return;
-    final projectId = ProjectId(int.tryParse(_textEditingController.text) ?? 0);
+    final projectSlug = ProjectSlug(_textEditingController.text);
 
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.projects);
     await notifier.replace(BottomTab.projects, [
-      ProjectDetailPage(divisionId: divisionId, projectId: projectId),
-      ProjectEditPage(divisionId: divisionId, projectId: projectId),
+      ProjectDetailPage(divisionId: divisionId, projectSlug: projectSlug),
+      ProjectEditPage(divisionId: divisionId, projectSlug: projectSlug),
     ]);
   }
 
@@ -94,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(10),
               child: TextField(
                 controller: _textEditingController,
-                decoration: const InputDecoration(labelText: 'Project Id'),
+                decoration: const InputDecoration(labelText: 'Project Slug'),
               ),
             ),
             ElevatedButton(

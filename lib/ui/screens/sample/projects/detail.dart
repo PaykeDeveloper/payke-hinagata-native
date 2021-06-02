@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
@@ -16,14 +16,14 @@ import './edit.dart';
 class ProjectDetailPage extends Page {
   ProjectDetailPage({
     required DivisionId divisionId,
-    required ProjectId projectId,
-  })   : _divisionId = divisionId,
-        _projectId = projectId,
+    required ProjectSlug projectSlug,
+  })  : _divisionId = divisionId,
+        _projectSlug = projectSlug,
         super(
             key: ValueKey(
-                "projectDetailPage-${divisionId.value}-${projectId.value}"));
+                "projectDetailPage-${divisionId.value}-${projectSlug.value}"));
   final DivisionId _divisionId;
-  final ProjectId _projectId;
+  final ProjectSlug _projectSlug;
 
   @override
   Route createRoute(BuildContext context) {
@@ -31,7 +31,7 @@ class ProjectDetailPage extends Page {
       settings: this,
       builder: (context) => ProjectDetailScreen(
         divisionId: _divisionId,
-        projectId: _projectId,
+        projectSlug: _projectSlug,
       ),
     );
   }
@@ -40,11 +40,11 @@ class ProjectDetailPage extends Page {
 class ProjectDetailScreen extends StatefulWidget {
   const ProjectDetailScreen({
     required DivisionId divisionId,
-    required ProjectId projectId,
-  })   : _divisionId = divisionId,
-        _projectId = projectId;
+    required ProjectSlug projectSlug,
+  })  : _divisionId = divisionId,
+        _projectSlug = projectSlug;
   final DivisionId _divisionId;
-  final ProjectId _projectId;
+  final ProjectSlug _projectSlug;
 
   @override
   _ProjectDetailScreenState createState() => _ProjectDetailScreenState();
@@ -53,7 +53,8 @@ class ProjectDetailScreen extends StatefulWidget {
 class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   Future _initState() async {
     await context.read<ProjectsNotifier>().fetchEntityIfNeeded(
-        url: ProjectUrl(divisionId: widget._divisionId, id: widget._projectId),
+        url: ProjectUrl(
+            divisionId: widget._divisionId, slug: widget._projectSlug),
         reset: true);
   }
 
@@ -62,7 +63,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           BottomTab.projects,
           ProjectEditPage(
             divisionId: widget._divisionId,
-            projectId: widget._projectId,
+            projectSlug: widget._projectSlug,
           ),
         );
   }

@@ -3,8 +3,8 @@ import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_input.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
@@ -18,14 +18,14 @@ import './widgets/form.dart';
 class ProjectEditPage extends Page {
   ProjectEditPage({
     required DivisionId divisionId,
-    required ProjectId projectId,
-  })   : _divisionId = divisionId,
-        _projectId = projectId,
+    required ProjectSlug projectSlug,
+  })  : _divisionId = divisionId,
+        _projectSlug = projectSlug,
         super(
             key: ValueKey(
-                "projectEditPage-${divisionId.value}-${projectId.value}"));
+                "projectEditPage-${divisionId.value}-${projectSlug.value}"));
   final DivisionId _divisionId;
-  final ProjectId _projectId;
+  final ProjectSlug _projectSlug;
 
   @override
   Route createRoute(BuildContext context) {
@@ -33,7 +33,7 @@ class ProjectEditPage extends Page {
       settings: this,
       builder: (context) => ProjectEditScreen(
         divisionId: _divisionId,
-        projectId: _projectId,
+        projectSlug: _projectSlug,
       ),
     );
   }
@@ -42,11 +42,11 @@ class ProjectEditPage extends Page {
 class ProjectEditScreen extends StatefulWidget {
   const ProjectEditScreen({
     required DivisionId divisionId,
-    required ProjectId projectId,
-  })   : _divisionId = divisionId,
-        _projectId = projectId;
+    required ProjectSlug projectSlug,
+  })  : _divisionId = divisionId,
+        _projectSlug = projectSlug;
   final DivisionId _divisionId;
-  final ProjectId _projectId;
+  final ProjectSlug _projectSlug;
 
   @override
   _ProjectEditScreenState createState() => _ProjectEditScreenState();
@@ -80,7 +80,7 @@ class _ProjectEditScreenState extends ValidateFormState<ProjectEditScreen> {
 
   ProjectUrl _getProjectUrl() => ProjectUrl(
         divisionId: widget._divisionId,
-        id: widget._projectId,
+        slug: widget._projectSlug,
       );
 
   @override

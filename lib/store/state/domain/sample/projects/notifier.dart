@@ -20,7 +20,7 @@ class ProjectsNotifier extends EntitiesNotifier<Project, ProjectUrl, Project,
 
   @override
   String getEntityUrl(ProjectUrl url) =>
-      'api/v1/divisions/${url.divisionId.value}/projects/${url.id.value}/';
+      'api/v1/divisions/${url.divisionId.value}/projects/${url.slug.value}/';
 
   @override
   Project decodeEntities(Map<String, dynamic> json) => Project.fromJson(json);

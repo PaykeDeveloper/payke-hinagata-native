@@ -3,7 +3,7 @@ import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/projects_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
@@ -19,7 +19,7 @@ class ProjectListPage extends Page {
   const ProjectListPage({
     required DivisionId divisionId,
     required VoidCallback openDrawer,
-  })   : _divisionId = divisionId,
+  })  : _divisionId = divisionId,
         _openDrawer = openDrawer,
         super(key: const ValueKey("projectListPage"));
   final DivisionId _divisionId;
@@ -41,7 +41,7 @@ class ProjectListScreen extends StatefulWidget {
   const ProjectListScreen({
     required DivisionId divisionId,
     required VoidCallback openDrawer,
-  })   : _divisionId = divisionId,
+  })  : _divisionId = divisionId,
         _openDrawer = openDrawer;
   final DivisionId _divisionId;
   final VoidCallback _openDrawer;
@@ -77,22 +77,22 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         BottomTab.projects, ProjectAddPage(divisionId: widget._divisionId));
   }
 
-  void _onTapShow(ProjectId projectId) {
+  void _onTapShow(ProjectSlug projectSlug) {
     context.read<RouteStateNotifier>().push(
           BottomTab.projects,
           ProjectDetailPage(
             divisionId: widget._divisionId,
-            projectId: projectId,
+            projectSlug: projectSlug,
           ),
         );
   }
 
-  void _onPressedEdit(ProjectId projectId) {
+  void _onPressedEdit(ProjectSlug projectSlug) {
     context.read<RouteStateNotifier>().push(
           BottomTab.projects,
           ProjectEditPage(
             divisionId: widget._divisionId,
-            projectId: projectId,
+            projectSlug: projectSlug,
           ),
         );
   }
@@ -144,8 +144,8 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
                 final project = projects[index];
                 return _ListItem(
                   project: project,
-                  onTapItem: () => _onTapShow(project.id),
-                  onPressedEdit: () => _onPressedEdit(project.id),
+                  onTapItem: () => _onTapShow(project.slug),
+                  onPressedEdit: () => _onPressedEdit(project.slug),
                 );
               },
             ),
@@ -161,7 +161,7 @@ class _ListItem extends StatelessWidget {
     required Project project,
     required GestureTapCallback onTapItem,
     required VoidCallback onPressedEdit,
-  })   : _project = project,
+  })  : _project = project,
         _onTapItem = onTapItem,
         _onPressedEdit = onPressedEdit;
 
