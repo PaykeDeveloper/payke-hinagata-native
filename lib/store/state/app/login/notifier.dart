@@ -16,7 +16,9 @@ class Login {}
 
 const _web = 'web';
 
-class LoginNotifier extends StateNotifier<StoreState<Login>> with LocatorMixin {
+typedef LoginState = StoreState<Login>;
+
+class LoginNotifier extends StateNotifier<LoginState> with LocatorMixin {
   LoginNotifier() : super(StoreState(Login()));
 
   Future<StoreResult<LoginOutput>> login(String email, String password) async {

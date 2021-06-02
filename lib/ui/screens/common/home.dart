@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_id.dart';
+import 'package:native_app/store/state/ui/division_id/notifier.dart';
 import 'package:native_app/ui/screens/sample/projects/detail.dart';
 import 'package:native_app/ui/screens/sample/projects/edit.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +10,7 @@ import 'package:provider/provider.dart';
 class HomePage extends Page {
   const HomePage({
     required VoidCallback openDrawer,
-  })   : _openDrawer = openDrawer,
+  })  : _openDrawer = openDrawer,
         super(key: const ValueKey("homePage"));
   final VoidCallback _openDrawer;
 
@@ -45,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future _onPressedProjectDetail() async {
-    final divisionId = context.read<StoreState<DivisionId?>>().data;
+    final divisionId = context.read<DivisionIdState>().data;
     if (divisionId == null) return;
     final projectId = ProjectId(int.tryParse(_textEditingController.text) ?? 0);
 
@@ -60,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future _onPressedProjectEdit() async {
-    final divisionId = context.read<StoreState<DivisionId?>>().data;
+    final divisionId = context.read<DivisionIdState>().data;
     if (divisionId == null) return;
     final projectId = ProjectId(int.tryParse(_textEditingController.text) ?? 0);
 
