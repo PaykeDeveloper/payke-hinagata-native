@@ -1,7 +1,8 @@
 // FIXME: SAMPLE CODE
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
+
+import './project_slug.dart';
 
 part 'project_url.freezed.dart';
 
