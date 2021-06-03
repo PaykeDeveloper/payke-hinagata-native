@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/priority.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_input.dart';
 import 'package:native_app/ui/widgets/atoms/submit_button.dart';
@@ -30,6 +31,10 @@ class ProjectForm extends StatefulWidget {
 }
 
 final items = [
+  const DropdownMenuItem(
+    value: null,
+    child: Text(''),
+  ),
   const DropdownMenuItem(
     value: Priority.high,
     child: Text('High'),

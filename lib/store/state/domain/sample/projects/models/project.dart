@@ -1,22 +1,14 @@
 // FIXME: SAMPLE CODE
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 
+import './priority.dart';
 import './project_id.dart';
+import './project_slug.dart';
 
 part 'project.freezed.dart';
 
 part 'project.g.dart';
-
-enum Priority {
-  @JsonValue('high')
-  high,
-  @JsonValue('middle')
-  middle,
-  @JsonValue('low')
-  low,
-}
 
 @freezed
 class Project with _$Project {
