@@ -1,40 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 
-class ValidateTextField<ParentWidget extends StatefulWidget>
+class ValidateImagePicker<ParentWidget extends StatefulWidget>
     extends StatelessWidget {
-  const ValidateTextField({
+  const ValidateImagePicker({
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
-    String? initialValue,
-    bool obscureText = false,
-    TextInputType? keyboardType,
-    double minHeight = 84,
-    int maxLines = 1,
-    List<FormFieldValidator<String>>? validators,
+    ImageProvider? placeholderImage,
+    List<FormFieldValidator<List<dynamic>>>? validators,
   })  : _parent = parent,
         _name = name,
         _labelText = labelText,
-        _initialValue = initialValue,
-        _obscureText = obscureText,
-        _keyboardType = keyboardType,
-        _minHeight = minHeight,
-        _maxLines = maxLines,
+        _placeholderImage = placeholderImage,
         _validators = validators;
 
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
-  final String? _initialValue;
-  final bool _obscureText;
-  final TextInputType? _keyboardType;
-  final double _minHeight;
-  final int _maxLines;
-  final List<FormFieldValidator<String>>? _validators;
+  final ImageProvider? _placeholderImage;
+  final List<FormFieldValidator<List<dynamic>>>? _validators;
 
-  String? _checkParentErrors(String? _) {
+  String? _checkParentErrors(List<dynamic>? _) {
     final error = _parent.errors?[_name];
     if (error == null || error.isEmpty) {
       return null;
@@ -43,7 +32,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     return error.join(' ');
   }
 
-  void _onChanged(String? _) {
+  void _onChanged(List<dynamic>? _) {
     final shouldRemove = _parent.errors?.containsKey(_name) == true &&
         _parent.errors?.isNotEmpty == true;
 
@@ -60,15 +49,12 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: _minHeight),
-      child: FormBuilderTextField(
+      constraints: const BoxConstraints(minHeight: 84),
+      child: FormBuilderImagePicker(
         name: _name,
-        initialValue: _initialValue,
+        placeholderImage: _placeholderImage,
         decoration: InputDecoration(labelText: _labelText),
         onChanged: _onChanged,
-        obscureText: _obscureText,
-        keyboardType: _keyboardType,
-        maxLines: _maxLines,
         validator: FormBuilderValidators.compose(
             [..._validators ?? [], _checkParentErrors]),
       ),
