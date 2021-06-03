@@ -1,3 +1,4 @@
+// FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -52,14 +53,18 @@ final items = [
 class _ProjectFormState extends ValidateFormState<ProjectForm> {
   @override
   Future<StoreResult?> onSubmit() async {
-    final input = ProjectInput.fromJson(formKey.currentState!.value);
+    final state = Map<String, dynamic>.from(formKey.currentState!.value);
+    state['lock_version'] = widget.project?.lockVersion;
+    final input = ProjectInput.fromJson(state);
     return widget.onSubmit(input);
   }
 
   @override
   Widget build(BuildContext context) {
     final project = widget.project;
-    final coverUrl = project?.coverUrl;
+    final placeholderImage = project?.coverUrl?.isNotEmpty == true
+        ? NetworkImage(project!.coverUrl!)
+        : null;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -93,6 +98,19 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                   labelText: 'Priority',
                   items: items,
                   initialValue: project?.priority,
+                  valueTransformer: (Priority? value) {
+                    if (value == null) {
+                      return value;
+                    }
+                    switch (value) {
+                      case Priority.high:
+                        return 'high';
+                      case Priority.middle:
+                        return 'middle';
+                      case Priority.low:
+                        return 'low';
+                    }
+                  },
                 ),
                 ValidateCheckbox(
                   parent: this,
@@ -102,16 +120,18 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                 ),
                 ValidateDateTimePicker(
                   parent: this,
-                  name: 'startDate',
+                  name: 'start_date',
                   labelText: 'Start date',
                   inputType: InputType.date,
                   initialValue: project?.startDate,
+                  valueTransformer: (value) => value?.toIso8601String(),
                 ),
                 ValidateDateTimePicker(
                   parent: this,
-                  name: 'finishedAt',
+                  name: 'finished_at',
                   labelText: 'Finished at',
-                  initialValue: project?.finishedAt,
+                  initialValue: project?.finishedAt?.toLocal(),
+                  valueTransformer: (value) => value?.toUtc().toIso8601String(),
                 ),
                 ValidateTextField(
                   parent: this,
@@ -119,6 +139,7 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                   labelText: 'Difficulty',
                   initialValue: project?.difficulty?.toString(),
                   keyboardType: TextInputType.number,
+                  valueTransformer: (value) => int.tryParse(value.toString()),
                 ),
                 ValidateTextField(
                   parent: this,
@@ -126,6 +147,7 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                   labelText: 'Coefficient',
                   initialValue: project?.coefficient?.toString(),
                   keyboardType: TextInputType.number,
+                  valueTransformer: (value) => num.tryParse(value.toString()),
                 ),
                 ValidateTextField(
                   parent: this,
@@ -133,13 +155,13 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                   labelText: 'Productivity',
                   initialValue: project?.productivity?.toString(),
                   keyboardType: TextInputType.number,
+                  valueTransformer: (value) => num.tryParse(value.toString()),
                 ),
                 ValidateImagePicker(
                   parent: this,
                   name: 'coverUrl',
                   labelText: 'Cover',
-                  placeholderImage:
-                      coverUrl != null ? NetworkImage(coverUrl) : null,
+                  placeholderImage: placeholderImage,
                 ),
               ],
             ),

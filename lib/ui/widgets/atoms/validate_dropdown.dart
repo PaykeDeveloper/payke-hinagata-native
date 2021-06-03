@@ -10,12 +10,14 @@ class ValidateDropdown<ParentWidget extends StatefulWidget, T>
     required String labelText,
     required List<DropdownMenuItem<T>> items,
     T? initialValue,
+    ValueTransformer<T>? valueTransformer,
     List<FormFieldValidator<T>>? validators,
   })  : _parent = parent,
         _name = name,
         _labelText = labelText,
         _items = items,
         _initialValue = initialValue,
+        _valueTransformer = valueTransformer,
         _validators = validators;
 
   final ValidateFormState<ParentWidget> _parent;
@@ -23,6 +25,7 @@ class ValidateDropdown<ParentWidget extends StatefulWidget, T>
   final String _labelText;
   final List<DropdownMenuItem<T>> _items;
   final T? _initialValue;
+  final ValueTransformer<T>? _valueTransformer;
   final List<FormFieldValidator<T>>? _validators;
 
   String? _checkParentErrors(T? _) {
@@ -58,6 +61,7 @@ class ValidateDropdown<ParentWidget extends StatefulWidget, T>
         decoration: InputDecoration(labelText: _labelText),
         items: _items,
         onChanged: _onChanged,
+        valueTransformer: _valueTransformer,
         validator: FormBuilderValidators.compose(
             [..._validators ?? [], _checkParentErrors]),
       ),

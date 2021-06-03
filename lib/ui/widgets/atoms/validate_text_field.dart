@@ -13,6 +13,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     TextInputType? keyboardType,
     double minHeight = 84,
     int maxLines = 1,
+    ValueTransformer<String?>? valueTransformer,
     List<FormFieldValidator<String>>? validators,
   })  : _parent = parent,
         _name = name,
@@ -22,6 +23,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
         _keyboardType = keyboardType,
         _minHeight = minHeight,
         _maxLines = maxLines,
+        _valueTransformer = valueTransformer,
         _validators = validators;
 
   final ValidateFormState<ParentWidget> _parent;
@@ -32,6 +34,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
   final TextInputType? _keyboardType;
   final double _minHeight;
   final int _maxLines;
+  final ValueTransformer<String?>? _valueTransformer;
   final List<FormFieldValidator<String>>? _validators;
 
   String? _checkParentErrors(String? _) {
@@ -69,6 +72,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
         obscureText: _obscureText,
         keyboardType: _keyboardType,
         maxLines: _maxLines,
+        valueTransformer: _valueTransformer,
         validator: FormBuilderValidators.compose(
             [..._validators ?? [], _checkParentErrors]),
       ),

@@ -12,6 +12,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.datetime,
     InputType inputType = InputType.both,
+    ValueTransformer<DateTime?>? valueTransformer,
     List<FormFieldValidator<DateTime>>? validators,
   })  : _parent = parent,
         _name = name,
@@ -20,6 +21,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
         _obscureText = obscureText,
         _keyboardType = keyboardType,
         _inputType = inputType,
+        _valueTransformer = valueTransformer,
         _validators = validators;
 
   final ValidateFormState<ParentWidget> _parent;
@@ -29,6 +31,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
   final bool _obscureText;
   final TextInputType _keyboardType;
   final InputType _inputType;
+  final ValueTransformer<DateTime?>? _valueTransformer;
   final List<FormFieldValidator<DateTime>>? _validators;
 
   String? _checkParentErrors(DateTime? _) {
@@ -66,6 +69,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
         obscureText: _obscureText,
         keyboardType: _keyboardType,
         inputType: _inputType,
+        valueTransformer: _valueTransformer,
         validator: FormBuilderValidators.compose(
             [..._validators ?? [], _checkParentErrors]),
       ),
