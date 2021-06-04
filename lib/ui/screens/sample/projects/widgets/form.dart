@@ -164,6 +164,7 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                 child: SubmitButton(
                   onPressed: validateAndSubmit,
                   status: widget.status,
+                  enabled: !loading,
                 ),
               ),
             ],

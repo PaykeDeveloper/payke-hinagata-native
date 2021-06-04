@@ -8,7 +8,6 @@ import 'package:native_app/store/state/domain/sample/projects/models/project_slu
 import 'package:native_app/store/state/domain/sample/projects/models/project_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
-import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +51,7 @@ class ProjectEditScreen extends StatefulWidget {
   _ProjectEditScreenState createState() => _ProjectEditScreenState();
 }
 
-class _ProjectEditScreenState extends ValidateFormState<ProjectEditScreen> {
+class _ProjectEditScreenState extends State<ProjectEditScreen> {
   Future _initState() async {
     await context
         .read<ProjectsNotifier>()

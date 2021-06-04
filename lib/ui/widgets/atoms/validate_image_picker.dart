@@ -11,6 +11,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
     required String name,
     required String labelText,
     List<dynamic>? initialValue,
+    bool? enabled,
     int maxImages = 1,
     ValueTransformer<List<dynamic>>? valueTransformer,
     List<FormFieldValidator<List<dynamic>>>? validators,
@@ -18,6 +19,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
         _name = name,
         _labelText = labelText,
         _initialValue = initialValue,
+        _enabled = enabled,
         _maxImages = maxImages,
         _valueTransformer = valueTransformer,
         _validators = validators;
@@ -26,6 +28,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
   final String _name;
   final String _labelText;
   final List<dynamic>? _initialValue;
+  final bool? _enabled;
   final int _maxImages;
   final ValueTransformer<List<dynamic>>? _valueTransformer;
   final List<FormFieldValidator<List<dynamic>>>? _validators;
@@ -64,6 +67,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
       child: FormBuilderImagePicker(
         name: _name,
         initialValue: _initialValue,
+        enabled: _enabled ?? !_parent.loading,
         decoration: InputDecoration(labelText: _labelText),
         onChanged: _onChanged,
         maxImages: _maxImages,

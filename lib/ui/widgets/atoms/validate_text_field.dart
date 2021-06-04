@@ -9,6 +9,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     required String name,
     required String labelText,
     String? initialValue,
+    bool? enabled,
     bool obscureText = false,
     TextInputType? keyboardType,
     double minHeight = 84,
@@ -19,6 +20,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
         _name = name,
         _labelText = labelText,
         _initialValue = initialValue,
+        _enabled = enabled,
         _obscureText = obscureText,
         _keyboardType = keyboardType,
         _minHeight = minHeight,
@@ -30,6 +32,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
   final String _name;
   final String _labelText;
   final String? _initialValue;
+  final bool? _enabled;
   final bool _obscureText;
   final TextInputType? _keyboardType;
   final double _minHeight;
@@ -67,6 +70,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
       child: FormBuilderTextField(
         name: _name,
         initialValue: _initialValue,
+        enabled: _enabled ?? !_parent.loading,
         decoration: InputDecoration(labelText: _labelText),
         onChanged: _onChanged,
         obscureText: _obscureText,

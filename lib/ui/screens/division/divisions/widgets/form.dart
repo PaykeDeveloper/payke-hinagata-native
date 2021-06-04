@@ -65,6 +65,7 @@ class _DivisionFormState extends ValidateFormState<DivisionForm> {
                 child: SubmitButton(
                   onPressed: validateAndSubmit,
                   status: widget.status,
+                  enabled: !loading,
                 ),
               ),
             ],

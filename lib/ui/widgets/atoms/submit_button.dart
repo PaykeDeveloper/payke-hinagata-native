@@ -7,13 +7,16 @@ class SubmitButton extends StatelessWidget {
     required VoidCallback? onPressed,
     StateStatus? status,
     String? label,
+    bool enabled = true,
   })  : _onPressed = onPressed,
         _status = status,
-        _label = label;
+        _label = label,
+        _enabled = enabled;
 
   final VoidCallback? _onPressed;
   final StateStatus? _status;
   final String? _label;
+  final bool _enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,8 @@ class SubmitButton extends StatelessWidget {
     return SizedBox(
       height: Theme.of(context).buttonTheme.height,
       child: ElevatedButton(
-        onPressed: _status == StateStatus.started ? null : _onPressed,
+        onPressed:
+            !_enabled || _status == StateStatus.started ? null : _onPressed,
         child: Text(label),
       ),
     );

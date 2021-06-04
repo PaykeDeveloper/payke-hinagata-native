@@ -9,6 +9,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
     required String name,
     required String labelText,
     DateTime? initialValue,
+    bool? enabled,
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.datetime,
     InputType inputType = InputType.both,
@@ -18,6 +19,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
         _name = name,
         _labelText = labelText,
         _initialValue = initialValue,
+        _enabled = enabled,
         _obscureText = obscureText,
         _keyboardType = keyboardType,
         _inputType = inputType,
@@ -28,6 +30,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
   final String _name;
   final String _labelText;
   final DateTime? _initialValue;
+  final bool? _enabled;
   final bool _obscureText;
   final TextInputType _keyboardType;
   final InputType _inputType;
@@ -64,6 +67,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
       child: FormBuilderDateTimePicker(
         name: _name,
         initialValue: _initialValue,
+        enabled: _enabled ?? !_parent.loading,
         decoration: InputDecoration(labelText: _labelText),
         onChanged: _onChanged,
         obscureText: _obscureText,

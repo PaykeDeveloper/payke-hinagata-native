@@ -9,17 +9,20 @@ class ValidateCheckbox<ParentWidget extends StatefulWidget>
     required String name,
     required String labelText,
     bool? initialValue,
+    bool? enabled,
     List<FormFieldValidator<bool>>? validators,
   })  : _parent = parent,
         _name = name,
         _labelText = labelText,
         _initialValue = initialValue,
+        _enabled = enabled,
         _validators = validators;
 
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
   final bool? _initialValue;
+  final bool? _enabled;
   final List<FormFieldValidator<bool>>? _validators;
 
   String? _checkParentErrors(bool? _) {
@@ -57,6 +60,7 @@ class ValidateCheckbox<ParentWidget extends StatefulWidget>
           contentPadding: const EdgeInsets.all(8),
         ),
         initialValue: _initialValue ?? false,
+        enabled: _enabled ?? !_parent.loading,
         onChanged: _onChanged,
         validator: FormBuilderValidators.compose(
             [..._validators ?? [], _checkParentErrors]),

@@ -79,6 +79,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
                   onPressed: validateAndSubmit,
                   status: status,
                   label: AppLocalizations.of(context)!.login,
+                  enabled: !loading,
                 ),
               ),
             ],
