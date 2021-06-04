@@ -35,33 +35,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _textEditingController = TextEditingController();
-
   Future _onPressedProjectList() async {
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.projects);
     await notifier.replace(BottomTab.projects, []);
   }
 
-  Future _onPressedProjectDetail() async {
-    final divisionId = context.read<DivisionIdState>().data;
-    if (divisionId == null) return;
-    final projectSlug = ProjectSlug(_textEditingController.text);
-
-    final notifier = context.read<RouteStateNotifier>();
-    await notifier.changeIndex(BottomTab.projects);
-    await notifier.replace(BottomTab.projects, [
-      ProjectDetailPage(
-        divisionId: divisionId,
-        projectSlug: projectSlug,
-      ),
-    ]);
-  }
-
   Future _onPressedProjectEdit() async {
     final divisionId = context.read<DivisionIdState>().data;
     if (divisionId == null) return;
-    final projectSlug = ProjectSlug(_textEditingController.text);
+    const projectSlug = ProjectSlug('6b42f759-0de1-45dd-bb1d-e82af6207a55');
 
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.projects);
@@ -90,17 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Text('Project list'),
             ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: _textEditingController,
-                decoration: const InputDecoration(labelText: 'Project Slug'),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: _onPressedProjectDetail,
-              child: const Text('Project detail'),
-            ),
             ElevatedButton(
               onPressed: _onPressedProjectEdit,
               child: const Text('Project edit'),
