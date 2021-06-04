@@ -113,7 +113,7 @@ class _ListItem extends StatelessWidget {
     required GestureTapCallback onTapItem,
     required VoidCallback onPressedEdit,
     required bool selected,
-  })   : _division = division,
+  })  : _division = division,
         _onTapItem = onTapItem,
         _onPressedEdit = onPressedEdit,
         _selected = selected;

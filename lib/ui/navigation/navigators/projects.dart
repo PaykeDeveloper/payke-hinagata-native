@@ -10,7 +10,7 @@ class ProjectsNavigator extends StatelessWidget {
   const ProjectsNavigator({
     required GlobalKey<NavigatorState>? navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
-  })   : _navigatorKey = navigatorKey,
+  })  : _navigatorKey = navigatorKey,
         _scaffoldKey = scaffoldKey;
   final GlobalKey<NavigatorState>? _navigatorKey;
   final GlobalKey<ScaffoldState> _scaffoldKey;
