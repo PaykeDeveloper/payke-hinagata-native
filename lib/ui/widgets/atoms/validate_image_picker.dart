@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
@@ -53,7 +54,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
   }
 
   dynamic _singleTransfer(List<dynamic>? value) {
-    return value?.first;
+    return value?.firstOrNull;
   }
 
   @override

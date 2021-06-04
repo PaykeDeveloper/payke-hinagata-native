@@ -54,12 +54,14 @@ class BackendClient {
     required String path,
     Map<String, dynamic>? data,
     bool useFormData = false,
+    bool containNull = true,
   }) async {
     return _call(
       request: _client.post(
         path: path,
         data: data ?? {},
         useFormData: useFormData,
+        containNull: containNull,
       ),
       decode: decode,
     );
@@ -84,12 +86,14 @@ class BackendClient {
     required String path,
     Map<String, dynamic>? data,
     bool useFormData = false,
+    bool containNull = true,
   }) async {
     return _call(
       request: _client.patch(
         path: path,
         data: data ?? {},
         useFormData: useFormData,
+        containNull: containNull,
       ),
       decode: decode,
     );
