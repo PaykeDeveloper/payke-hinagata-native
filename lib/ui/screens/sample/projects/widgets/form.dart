@@ -174,13 +174,3 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
     );
   }
 }
-
-class Input {
-  String? name;
-
-  Input({this.name});
-
-  Input.fromJson(Map<String, dynamic> json) : name = json['name'] as String?;
-
-  Map<String, dynamic> toJson() => {'name': name};
-}

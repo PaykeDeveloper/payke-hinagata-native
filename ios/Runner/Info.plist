@@ -42,12 +42,12 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 
+    <!-- image_picker -->
 	<key>NSPhotoLibraryUsageDescription</key>
     <string>FIXME: SAMPLE CODE</string>
 	<key>NSCameraUsageDescription</key>
     <string>FIXME: SAMPLE CODE</string>
 	<key>NSMicrophoneUsageDescription</key>
     <string>FIXME: SAMPLE CODE</string>
-
 </dict>
 </plist>
