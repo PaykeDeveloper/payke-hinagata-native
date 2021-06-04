@@ -9,18 +9,24 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
-    ImageProvider? placeholderImage,
+    List<dynamic>? initialValue,
+    int maxImages = 1,
+    ValueTransformer<List<dynamic>>? valueTransformer,
     List<FormFieldValidator<List<dynamic>>>? validators,
   })  : _parent = parent,
         _name = name,
         _labelText = labelText,
-        _placeholderImage = placeholderImage,
+        _initialValue = initialValue,
+        _maxImages = maxImages,
+        _valueTransformer = valueTransformer,
         _validators = validators;
 
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
-  final ImageProvider? _placeholderImage;
+  final List<dynamic>? _initialValue;
+  final int _maxImages;
+  final ValueTransformer<List<dynamic>>? _valueTransformer;
   final List<FormFieldValidator<List<dynamic>>>? _validators;
 
   String? _checkParentErrors(List<dynamic>? _) {
@@ -46,15 +52,22 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
     });
   }
 
+  dynamic _singleTransfer(List<dynamic>? value) {
+    return value?.first;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderImagePicker(
         name: _name,
-        placeholderImage: _placeholderImage,
+        initialValue: _initialValue,
         decoration: InputDecoration(labelText: _labelText),
         onChanged: _onChanged,
+        maxImages: _maxImages,
+        valueTransformer:
+            _valueTransformer ?? (_maxImages == 1 ? _singleTransfer : null),
         validator: FormBuilderValidators.compose(
             [..._validators ?? [], _checkParentErrors]),
       ),

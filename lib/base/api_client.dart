@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
@@ -35,7 +37,7 @@ class ApiClient {
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
-    final convertedData = useFormData ? FormData.fromMap(data) : data;
+    final convertedData = useFormData ? await _toFormData(data) : data;
     final response = await _dio.post<Result>(
       path,
       data: convertedData,
@@ -53,7 +55,7 @@ class ApiClient {
   }) async {
     final options = await _getOptions();
     options.headers?['X-HTTP-Method-Override'] = 'PATCH';
-    final convertedData = useFormData ? FormData.fromMap(data) : data;
+    final convertedData = useFormData ? await _toFormData(data) : data;
     final response = await _dio.post<Result>(
       path,
       data: convertedData,
@@ -106,5 +108,18 @@ class ApiClient {
     }
 
     return Options(headers: headers);
+  }
+
+  Future<FormData> _toFormData(Map<String, dynamic> data) async {
+    final convertedData = Map<String, dynamic>.from(data);
+    for (final entry in data.entries) {
+      final value = entry.value;
+      if (value is File) {
+        final filename = value.path.split('/').last;
+        convertedData[entry.key] =
+            await MultipartFile.fromFile(value.path, filename: filename);
+      }
+    }
+    return FormData.fromMap(convertedData);
   }
 }

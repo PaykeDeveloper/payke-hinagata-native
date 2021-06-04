@@ -79,7 +79,7 @@ class BackendClient {
     );
   }
 
-  Future<StoreResult<Result>> patch<Result, Data extends JsonGenerator>({
+  Future<StoreResult<Result>> patch<Result>({
     required Result Function(dynamic) decode,
     required String path,
     Map<String, dynamic>? data,

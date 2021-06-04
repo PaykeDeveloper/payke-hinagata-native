@@ -4,7 +4,6 @@ import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_input.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
@@ -60,10 +59,10 @@ class _ProjectEditScreenState extends ValidateFormState<ProjectEditScreen> {
         .fetchEntityIfNeeded(url: _getProjectUrl(), reset: true);
   }
 
-  Future<StoreResult?> _onSubmit(ProjectInput input) async {
+  Future<StoreResult?> _onSubmit(Map<String, dynamic> input) async {
     final result = await context
         .read<ProjectsNotifier>()
-        .mergeEntity(urlParams: _getProjectUrl(), data: input);
+        .merge(urlParams: _getProjectUrl(), data: input, useFormData: true);
     if (result is Success) {
       Navigator.of(context).pop();
     }

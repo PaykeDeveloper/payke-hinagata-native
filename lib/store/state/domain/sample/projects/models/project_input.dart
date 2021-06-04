@@ -1,4 +1,6 @@
 // FIXME: SAMPLE CODE
+import 'dart:io';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 
@@ -20,7 +22,7 @@ class ProjectInput extends JsonGenerator with _$ProjectInput {
     int? difficulty,
     double? coefficient,
     double? productivity,
-    @JsonKey(name: 'cover_url') String? coverUrl,
+    @JsonKey(ignore: true) File? cover,
     @JsonKey(name: 'lock_version') int? lockVersion,
   }) = _ProjectInput;
 

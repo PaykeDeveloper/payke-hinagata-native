@@ -1,11 +1,11 @@
 // FIXME: SAMPLE CODE
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/priority.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_input.dart';
 import 'package:native_app/ui/widgets/atoms/submit_button.dart';
 import 'package:native_app/ui/widgets/atoms/validate_checkbox.dart';
 import 'package:native_app/ui/widgets/atoms/validate_date_time_picker.dart';
@@ -14,7 +14,8 @@ import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 import 'package:native_app/ui/widgets/atoms/validate_image_picker.dart';
 import 'package:native_app/ui/widgets/atoms/validate_text_field.dart';
 
-typedef ProjectFormCallBack = Future<StoreResult?> Function(ProjectInput input);
+typedef ProjectFormCallBack = Future<StoreResult?> Function(
+    Map<String, dynamic> input);
 
 class ProjectForm extends StatefulWidget {
   const ProjectForm({
@@ -53,18 +54,20 @@ final items = [
 class _ProjectFormState extends ValidateFormState<ProjectForm> {
   @override
   Future<StoreResult?> onSubmit() async {
-    final state = Map<String, dynamic>.from(formKey.currentState!.value);
-    state['lock_version'] = widget.project?.lockVersion;
-    final input = ProjectInput.fromJson(state);
+    final input = Map<String, dynamic>.from(formKey.currentState!.value);
+    input['lock_version'] = widget.project?.lockVersion;
+    final cover = input['cover'];
+    if (cover is String) {
+      input.remove('cover');
+    }
     return widget.onSubmit(input);
   }
 
   @override
   Widget build(BuildContext context) {
     final project = widget.project;
-    final placeholderImage = project?.coverUrl?.isNotEmpty == true
-        ? NetworkImage(project!.coverUrl!)
-        : null;
+    final coverUrl =
+        project?.coverUrl?.isNotEmpty == true ? project!.coverUrl : null;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -98,19 +101,7 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                   labelText: 'Priority',
                   items: items,
                   initialValue: project?.priority,
-                  valueTransformer: (Priority? value) {
-                    if (value == null) {
-                      return value;
-                    }
-                    switch (value) {
-                      case Priority.high:
-                        return 'high';
-                      case Priority.middle:
-                        return 'middle';
-                      case Priority.low:
-                        return 'low';
-                    }
-                  },
+                  valueTransformer: (Priority? value) => value?.getValue(),
                 ),
                 ValidateCheckbox(
                   parent: this,
@@ -159,9 +150,9 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                 ),
                 ValidateImagePicker(
                   parent: this,
-                  name: 'coverUrl',
+                  name: 'cover',
                   labelText: 'Cover',
-                  placeholderImage: placeholderImage,
+                  initialValue: coverUrl != null ? [coverUrl] : null,
                 ),
               ],
             ),
@@ -181,4 +172,14 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
       ),
     );
   }
+}
+
+class Input {
+  String? name;
+
+  Input({this.name});
+
+  Input.fromJson(Map<String, dynamic> json) : name = json['name'] as String?;
+
+  Map<String, dynamic> toJson() => {'name': name};
 }

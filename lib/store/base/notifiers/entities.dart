@@ -120,6 +120,25 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return result;
   }
 
+  Future<StoreResult<Entity>> add({
+    required EntitiesUrl urlParams,
+    required Map<String, dynamic> data,
+    bool useFormData = false,
+  }) async {
+    final result = await read<BackendClient>().post(
+      decode: (data) => decodeEntity(data as Map<String, dynamic>),
+      path: getEntitiesUrl(urlParams),
+      data: data,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
+      }
+    }
+    return result;
+  }
+
   Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
     required CreateInput data,
@@ -127,6 +146,31 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   }) async {
     final result = await read<BackendClient>().patchObject(
       decode: decodeEntity,
+      path: getEntityUrl(urlParams),
+      data: data,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
+      }
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
+      }
+    }
+    return result;
+  }
+
+  Future<StoreResult<Entity>> merge({
+    required EntityUrl urlParams,
+    required Map<String, dynamic> data,
+    bool useFormData = false,
+  }) async {
+    final result = await read<BackendClient>().patch(
+      decode: (data) => decodeEntity(data as Map<String, dynamic>),
       path: getEntityUrl(urlParams),
       data: data,
       useFormData: useFormData,
