@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:native_app/base/api_client.dart';
 import 'package:native_app/base/constants.dart';
+import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -54,12 +55,14 @@ class BackendClient {
     required String path,
     Map<String, dynamic>? data,
     bool useFormData = false,
+    bool containNull = true,
   }) async {
     return _call(
       request: _client.post(
         path: path,
         data: data ?? {},
         useFormData: useFormData,
+        containNull: containNull,
       ),
       decode: decode,
     );
@@ -79,17 +82,19 @@ class BackendClient {
     );
   }
 
-  Future<StoreResult<Result>> patch<Result, Data extends JsonGenerator>({
+  Future<StoreResult<Result>> patch<Result>({
     required Result Function(dynamic) decode,
     required String path,
     Map<String, dynamic>? data,
     bool useFormData = false,
+    bool containNull = true,
   }) async {
     return _call(
       request: _client.patch(
         path: path,
         data: data ?? {},
         useFormData: useFormData,
+        containNull: containNull,
       ),
       decode: decode,
     );
@@ -122,8 +127,14 @@ class BackendClient {
     try {
       final data = await request.then((result) => result.data);
       return StoreResult.success(decode(data));
-    } on Exception catch (error) {
-      return StoreResult.failure(getStateError(error));
+    } catch (error, stackTrace) {
+      if (error is Exception) {
+        logger.w('An exception occurred!', error, stackTrace);
+        return StoreResult.failure(getStateError(error));
+      } else {
+        logger.e('An unexpected error occurred!', error, stackTrace);
+        return const StoreResult.failure(StoreError.unexpectedError());
+      }
     }
   }
 }

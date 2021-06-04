@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
+import 'package:native_app/store/state/ui/division_id/notifier.dart';
 import 'package:native_app/ui/screens/sample/projects/detail.dart';
 import 'package:native_app/ui/screens/sample/projects/edit.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +10,7 @@ import 'package:provider/provider.dart';
 class HomePage extends Page {
   const HomePage({
     required VoidCallback openDrawer,
-  })   : _openDrawer = openDrawer,
+  })  : _openDrawer = openDrawer,
         super(key: const ValueKey("homePage"));
   final VoidCallback _openDrawer;
 
@@ -36,39 +35,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _textEditingController = TextEditingController();
-
   Future _onPressedProjectList() async {
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.projects);
     await notifier.replace(BottomTab.projects, []);
   }
 
-  Future _onPressedProjectDetail() async {
-    final divisionId = context.read<StoreState<DivisionId?>>().data;
-    if (divisionId == null) return;
-    final projectId = ProjectId(int.tryParse(_textEditingController.text) ?? 0);
-
-    final notifier = context.read<RouteStateNotifier>();
-    await notifier.changeIndex(BottomTab.projects);
-    await notifier.replace(BottomTab.projects, [
-      ProjectDetailPage(
-        divisionId: divisionId,
-        projectId: projectId,
-      ),
-    ]);
-  }
-
   Future _onPressedProjectEdit() async {
-    final divisionId = context.read<StoreState<DivisionId?>>().data;
+    final divisionId = context.read<DivisionIdState>().data;
     if (divisionId == null) return;
-    final projectId = ProjectId(int.tryParse(_textEditingController.text) ?? 0);
+    const projectSlug = ProjectSlug('6b42f759-0de1-45dd-bb1d-e82af6207a55');
 
     final notifier = context.read<RouteStateNotifier>();
     await notifier.changeIndex(BottomTab.projects);
     await notifier.replace(BottomTab.projects, [
-      ProjectDetailPage(divisionId: divisionId, projectId: projectId),
-      ProjectEditPage(divisionId: divisionId, projectId: projectId),
+      ProjectDetailPage(divisionId: divisionId, projectSlug: projectSlug),
+      ProjectEditPage(divisionId: divisionId, projectSlug: projectSlug),
     ]);
   }
 
@@ -91,17 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Text('Project list'),
             ),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: _textEditingController,
-                decoration: const InputDecoration(labelText: 'Project Id'),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: _onPressedProjectDetail,
-              child: const Text('Project detail'),
-            ),
             ElevatedButton(
               onPressed: _onPressedProjectEdit,
               child: const Text('Project edit'),

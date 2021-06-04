@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
@@ -32,10 +34,13 @@ class ApiClient {
     required String path,
     required Map<String, dynamic> data,
     required bool useFormData,
+    required bool containNull,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
-    final convertedData = useFormData ? FormData.fromMap(data) : data;
+    final convertedData = useFormData
+        ? await _toFormData(data, containNull: containNull)
+        : _toMapData(data, containNull: containNull);
     final response = await _dio.post<Result>(
       path,
       data: convertedData,
@@ -49,11 +54,14 @@ class ApiClient {
     required String path,
     required Map<String, dynamic> data,
     required bool useFormData,
+    required bool containNull,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
     options.headers?['X-HTTP-Method-Override'] = 'PATCH';
-    final convertedData = useFormData ? FormData.fromMap(data) : data;
+    final convertedData = useFormData
+        ? await _toFormData(data, containNull: containNull)
+        : _toMapData(data, containNull: containNull);
     final response = await _dio.post<Result>(
       path,
       data: convertedData,
@@ -106,5 +114,36 @@ class ApiClient {
     }
 
     return Options(headers: headers);
+  }
+
+  Future<FormData> _toFormData(Map<String, dynamic> data,
+      {required bool containNull}) async {
+    final convertedData = Map<String, dynamic>.from(data);
+    for (final entry in data.entries) {
+      final value = entry.value;
+      if (containNull && value == null) {
+        convertedData[entry.key] = '';
+      } else if (value is File) {
+        final filename = value.path.split('/').last;
+        convertedData[entry.key] =
+            await MultipartFile.fromFile(value.path, filename: filename);
+      }
+    }
+    return FormData.fromMap(convertedData);
+  }
+
+  Map<String, dynamic> _toMapData(Map<String, dynamic> data,
+      {required bool containNull}) {
+    if (containNull) {
+      return data;
+    }
+    final convertedData = Map<String, dynamic>.from(data);
+    for (final entry in data.entries) {
+      final value = entry.value;
+      if (!containNull && value == null) {
+        convertedData.remove(entry.key);
+      }
+    }
+    return convertedData;
   }
 }

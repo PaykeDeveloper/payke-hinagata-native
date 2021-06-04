@@ -1,7 +1,7 @@
+// FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_input.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/projects_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
@@ -36,9 +36,11 @@ class ProjectAddScreen extends StatefulWidget {
 }
 
 class _ProjectAddScreenState extends State<ProjectAddScreen> {
-  Future<StoreResult?> _onSubmit(ProjectInput input) async {
-    final result = await context.read<ProjectsNotifier>().addEntity(
-        urlParams: ProjectsUrl(divisionId: widget._divisionId), data: input);
+  Future<StoreResult?> _onSubmit(Map<String, dynamic> input) async {
+    final result = await context.read<ProjectsNotifier>().add(
+        urlParams: ProjectsUrl(divisionId: widget._divisionId),
+        data: input,
+        useFormData: true);
     if (result is Success) {
       Navigator.of(context).pop();
     }

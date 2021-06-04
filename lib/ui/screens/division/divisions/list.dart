@@ -1,3 +1,4 @@
+// FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
@@ -112,7 +113,7 @@ class _ListItem extends StatelessWidget {
     required GestureTapCallback onTapItem,
     required VoidCallback onPressedEdit,
     required bool selected,
-  })   : _division = division,
+  })  : _division = division,
         _onTapItem = onTapItem,
         _onPressedEdit = onPressedEdit,
         _selected = selected;

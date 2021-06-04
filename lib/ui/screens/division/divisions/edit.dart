@@ -1,3 +1,4 @@
+// FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
@@ -6,7 +7,6 @@ import 'package:native_app/store/state/domain/division/divisions/models/division
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
-import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +22,7 @@ class DivisionEditScreen extends StatefulWidget {
   _DivisionEditScreenState createState() => _DivisionEditScreenState();
 }
 
-class _DivisionEditScreenState extends ValidateFormState<DivisionEditScreen> {
+class _DivisionEditScreenState extends State<DivisionEditScreen> {
   Future _initState() async {
     await context.read<DivisionsNotifier>().fetchEntityIfNeeded(
         url: DivisionUrl(id: widget._divisionId), reset: true);

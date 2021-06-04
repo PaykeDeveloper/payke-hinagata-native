@@ -8,6 +8,7 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
   final formKey = GlobalKey<FormBuilderState>();
 
   Map<String, List<String>>? errors;
+  bool loading = false;
 
   Future<StoreResult?> onSubmit() async {}
 
@@ -29,10 +30,12 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
   }
 
   Future _handleSubmit() async {
+    _setLoading(true);
     final result = await onSubmit();
     if (result != null) {
       _reflectResult(result);
     }
+    _setLoading(false);
   }
 
   void _reflectResult(StoreResult result) {
@@ -68,5 +71,15 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
       return error.result.errors;
     }
     return null;
+  }
+
+  void _setLoading(bool value) {
+    if (loading == value) {
+      return;
+    }
+
+    setState(() {
+      loading = value;
+    });
   }
 }

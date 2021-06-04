@@ -7,11 +7,12 @@ import './models/division_input.dart';
 import './models/division_url.dart';
 import './models/divisions_url.dart';
 
+typedef DivisionsState
+    = EntitiesState<Division, DivisionUrl, Division, DivisionsUrl>;
+
 class DivisionsNotifier extends EntitiesNotifier<Division, DivisionUrl,
     Division, DivisionsUrl, DivisionInput, DivisionInput> {
-  DivisionsNotifier(
-      EntitiesState<Division, DivisionUrl, Division, DivisionsUrl> state)
-      : super(state);
+  DivisionsNotifier(DivisionsState state) : super(state);
 
   @override
   String getEntitiesUrl(DivisionsUrl url) => 'api/v1/divisions/';

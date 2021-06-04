@@ -5,8 +5,9 @@ import 'package:state_notifier/state_notifier.dart';
 
 class Logout {}
 
-class LogoutNotifier extends StateNotifier<StoreState<Logout>>
-    with LocatorMixin {
+typedef LogoutState = StoreState<Logout>;
+
+class LogoutNotifier extends StateNotifier<LogoutState> with LocatorMixin {
   LogoutNotifier() : super(StoreState(Logout()));
 
   Future logout() async {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:native_app/store/base/models/store_result.dart';
-import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
 import 'package:native_app/ui/widgets/atoms/logo.dart';
 import 'package:native_app/ui/widgets/atoms/submit_button.dart';
@@ -33,7 +32,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    final status = context.select((StoreState<Login> state) => state.status);
+    final status = context.select((LoginState state) => state.status);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -80,6 +79,7 @@ class _LoginFormState extends ValidateFormState<LoginForm> {
                   onPressed: validateAndSubmit,
                   status: status,
                   label: AppLocalizations.of(context)!.login,
+                  enabled: !loading,
                 ),
               ),
             ],
