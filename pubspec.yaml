@@ -39,21 +39,22 @@ dependencies:
   shared_preferences: ^2.0.5
   dio: ^4.0.0
   json_serializable: ^4.1.0
-  freezed_annotation:
+  freezed_annotation: ^0.14.2
   flutter_form_builder: ^6.0.0
   form_builder_image_picker: ^1.0.0-nullsafety.0
   package_info: ^2.0.0
   device_info: ^2.0.0
   logger: ^1.0.0
   uni_links: ^0.5.1
+  dartx: ^0.7.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   lint: ^1.0.0
-  build_runner:
-  freezed:
+  build_runner: ^2.0.4
+  freezed: ^0.14.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

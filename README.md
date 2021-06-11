@@ -21,6 +21,18 @@
 % flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
+### Deep linking
+
+#### iOS
+```shell script
+% xcrun simctl openurl booted unilinks://app.example.com/divisions/1/projects/6b42f759-0de1-45dd-bb1d-e82af6207a55/
+```
+
+#### Android
+```shell script
+$ adb shell am start -d "unilinks://app.example.com/divisions/1/projects/6b42f759-0de1-45dd-bb1d-e82af6207a55/" -a android.intent.action.VIEW -c android.intent.category.BROWSABLE
+```
+
 ### 何故かビルドエラーになる時
 Dart Analysisの再実行
 ![再実行](https://user-images.githubusercontent.com/22732544/103027860-69783180-4535-11eb-98b0-b9631f59a531.png)
