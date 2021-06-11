@@ -1,13 +1,22 @@
 import 'dart:ui';
 
+import 'package:dartx/dartx.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:native_app/store/state/app/locale/notifier.dart';
+import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
+import 'package:native_app/store/state/ui/division_id/notifier.dart';
 import 'package:native_app/ui/screens/auth/login.dart';
 import 'package:native_app/ui/screens/common/loading.dart';
+import 'package:native_app/ui/screens/sample/projects/detail.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_links/uni_links.dart';
 
 import 'main.dart';
 
@@ -18,12 +27,55 @@ class AuthRouter extends HookWidget {
     notifier.setLocale(locale);
   }
 
+  Future<void> _handleUri(BuildContext context, Uri? uri) async {
+    if (uri == null || uri.path.isEmpty) {
+      return;
+    }
+    if (uri.pathSegments.elementAtOrNull(0) == 'divisions') {
+      final _divisionId = uri.pathSegments.elementAtOrNull(1)?.toIntOrNull();
+      if (_divisionId != null) {
+        final divisionId = DivisionId(_divisionId);
+        await context.read<DivisionIdNotifier>().setDivisionId(divisionId);
+
+        if (uri.pathSegments.elementAtOrNull(2) == 'projects') {
+          final notifier = context.read<RouteStateNotifier>();
+          await notifier.changeIndex(BottomTab.projects);
+
+          final _projectSlug = uri.pathSegments.elementAtOrNull(3);
+          if (_projectSlug != null) {
+            final projectSlug = ProjectSlug(_projectSlug);
+            await notifier.replace(BottomTab.projects, [
+              ProjectDetailPage(
+                divisionId: divisionId,
+                projectSlug: projectSlug,
+              ),
+            ]);
+          } else {
+            await notifier.replace(BottomTab.projects, []);
+          }
+        }
+      }
+    }
+  }
+
+  Future<void> _handleInitialUri(BuildContext context) async {
+    final uri = await getInitialUri();
+    await _handleUri(context, uri);
+  }
+
   @override
   Widget build(BuildContext context) {
     useEffect(() {
       Future.delayed(Duration.zero, () {
         _setLocale(context);
       });
+    }, []);
+    useEffect(() {
+      _handleInitialUri(context);
+      if (!kIsWeb) {
+        final sub = uriLinkStream.listen((uri) => _handleUri(context, uri));
+        return sub.cancel;
+      }
     }, []);
 
     final locale = context.watch<Locale?>();
