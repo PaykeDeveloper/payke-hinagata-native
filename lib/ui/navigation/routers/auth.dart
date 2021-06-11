@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:dartx/dartx.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:native_app/store/state/app/locale/notifier.dart';
@@ -31,7 +31,6 @@ class AuthRouter extends HookWidget {
     if (uri == null || uri.path.isEmpty) {
       return;
     }
-    logger.d(uri.pathSegments.toString());
     if (uri.pathSegments.elementAtOrNull(0) == 'divisions') {
       final _divisionId = uri.pathSegments.elementAtOrNull(1)?.toIntOrNull();
       if (_divisionId != null) {
@@ -73,8 +72,10 @@ class AuthRouter extends HookWidget {
     }, []);
     useEffect(() {
       _handleInitialUri(context);
-      final sub = uriLinkStream.listen((uri) => _handleUri(context, uri));
-      return sub.cancel;
+      if (!kIsWeb) {
+        final sub = uriLinkStream.listen((uri) => _handleUri(context, uri));
+        return sub.cancel;
+      }
     }, []);
 
     final locale = context.watch<Locale?>();
