@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/domain/common/roles/notifier.dart';
+import 'package:native_app/store/state/domain/common/users/notifier.dart';
+import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:provider/single_child_widget.dart';
 
 import './base/models/entities_state.dart';
@@ -30,12 +33,18 @@ List<SingleChildWidget> getProviders() {
         create: (context) => LogoutNotifier()),
     StateNotifierProvider<RouteStateNotifier, RouteState>(
         create: (context) => RouteStateNotifier()),
+    StateNotifierProvider<RolesNotifier, RolesState>(
+        create: (context) => RolesNotifier(const EntitiesState())),
 
     // FIXME: SAMPLE CODE
     StateNotifierProvider<DivisionIdNotifier, DivisionIdState>(
         create: (context) => DivisionIdNotifier()),
     StateNotifierProvider<DivisionsNotifier, DivisionsState>(
         create: (context) => DivisionsNotifier(const EntitiesState())),
+    StateNotifierProvider<UsersNotifier, UsersState>(
+        create: (context) => UsersNotifier(const EntitiesState())),
+    StateNotifierProvider<MembersNotifier, MembersState>(
+        create: (context) => MembersNotifier(const EntitiesState())),
     StateNotifierProvider<ProjectsNotifier, ProjectsState>(
         create: (context) => ProjectsNotifier(const EntitiesState())),
   ];

@@ -19,3 +19,16 @@ enum StateStatus {
   done,
   failed,
 }
+
+extension IsLoading on StateStatus {
+  bool isLoading() {
+    switch (this) {
+      case StateStatus.started:
+      case StateStatus.initial:
+        return true;
+      case StateStatus.done:
+      case StateStatus.failed:
+        return false;
+    }
+  }
+}

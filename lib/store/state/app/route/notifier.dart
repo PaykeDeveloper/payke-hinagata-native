@@ -37,6 +37,11 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
           projectPages: [...state.projectPages, page],
         );
         break;
+      case BottomTab.members:
+        state = state.copyWith(
+          memberPages: [...state.memberPages, page],
+        );
+        break;
     }
   }
 
@@ -52,6 +57,11 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
           projectPages: state.projectPages.toList()..removeLast(),
         );
         break;
+      case BottomTab.members:
+        state = state.copyWith(
+          memberPages: state.memberPages.toList()..removeLast(),
+        );
+        break;
     }
   }
 
@@ -65,6 +75,11 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
       case BottomTab.projects:
         state = state.copyWith(
           projectPages: pages,
+        );
+        break;
+      case BottomTab.members:
+        state = state.copyWith(
+          memberPages: pages,
         );
         break;
     }
@@ -88,6 +103,8 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
         return state.homePages;
       case BottomTab.projects:
         return state.projectPages;
+      case BottomTab.members:
+        return state.memberPages;
     }
   }
 }

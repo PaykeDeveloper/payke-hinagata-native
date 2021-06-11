@@ -3,6 +3,7 @@ import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/ui/navigation/navigators/home.dart';
 import 'package:native_app/ui/navigation/navigators/projects.dart';
+import 'package:native_app/ui/navigation/navigators/members.dart';
 import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,7 @@ class MainScreen extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _navigatorKeys = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
   ];
@@ -25,9 +27,14 @@ class MainScreen extends StatelessWidget {
       icon: Icon(Icons.book),
       label: 'Projects',
     ),
+    const BottomNavigationBarItem(
+      icon: Icon(Icons.book),
+      label: 'Members',
+    ),
   ];
 
   final _children = <Widget>[
+    LoadingScreen(),
     LoadingScreen(),
     LoadingScreen(),
   ];
@@ -42,6 +49,11 @@ class MainScreen extends StatelessWidget {
         );
       case BottomTab.projects:
         return ProjectsNavigator(
+          navigatorKey: _navigatorKeys[index],
+          scaffoldKey: _scaffoldKey,
+        );
+      case BottomTab.members:
+        return MembersNavigator(
           navigatorKey: _navigatorKeys[index],
           scaffoldKey: _scaffoldKey,
         );
