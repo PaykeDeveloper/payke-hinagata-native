@@ -13,5 +13,6 @@
   "requestTimeout": "リクエストがタイムアウトしました。",
   "serviceUnavailable": "サービスが一時利用できません。",
   "noInternetConnection": "インターネットに接続できません。",
-  "unexpectedError": "予期せぬエラーが発生しました。"
+  "unexpectedError": "予期せぬエラーが発生しました。",
+  "noRoleSelected": "ロールを選択してください"
 }

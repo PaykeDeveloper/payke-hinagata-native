@@ -4,12 +4,15 @@ import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/common/roles/models/role.dart';
+import 'package:native_app/store/state/domain/common/roles/models/role_id.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
+import 'package:native_app/store/state/domain/common/users/models/user_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/priority.dart';
 import 'package:native_app/ui/widgets/atoms/submit_button.dart';
 import 'package:native_app/ui/widgets/atoms/validate_dropdown.dart';
+import 'package:native_app/ui/widgets/atoms/validate_filter_chip.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef MemberFormCallBack = Future<StoreResult?> Function(
     Map<String, dynamic> input);
@@ -45,23 +48,25 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
     final member = widget.member;
     final List<User?> users = widget.users;
     final List<Role> roles = widget.roles;
-    final initialUserValue = users.firstWhere((element) => element?.id == member?.userId, orElse: () => null);
+    final rolesMap = convertListToMap(roles, (Role role) => role.id.value);
+    final initialUserValue = users.firstWhere(
+        (element) => element?.id == member?.userId,
+        orElse: () => null);
 
     final List<DropdownMenuItem> userNameItems = [
       const DropdownMenuItem(child: Text('')),
-      ...users.map((user) => DropdownMenuItem(
-          value: user?.id,
-          child: Text(user!.name)
-        )
-      ).toList()
+      ...users
+          .map((user) =>
+              DropdownMenuItem(value: user?.id, child: Text(user!.name)))
+          .toList()
     ];
 
-    final List<DropdownMenuItem> roleItems = [
-      const DropdownMenuItem(child: Text('')),
-      ...roles.map((role) => DropdownMenuItem(
-        value: role.id,
-        child: Text(role.name),
-      ))
+    final roleItems = [
+      ...roles.map((role) => FormBuilderFieldOption(
+            key: Key('${role.id}'),
+            value: rolesMap[role.id.value]!.name,
+            child: Text(role.name),
+          ))
     ];
 
     return SingleChildScrollView(
@@ -75,22 +80,31 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
               children: [
                 ValidateDropdown(
                   parent: this,
-                  name: 'name',
+                  name: 'user_id',
                   labelText: 'Name',
                   items: userNameItems,
-                  initialValue: initialUserValue
+                  initialValue: initialUserValue,
+                  valueTransformer: (value) => (value as UserId?)?.value,
+                  validators: [
+                    FormBuilderValidators.required(context),
+                  ],
                 ),
-                // TODO: 複数選択
-                // ValidateDropdown(
-                //   parent: this,
-                //   name: 'role',
-                //   labelText: 'Role',
-                //   items: roleItems,
-                //   initialValue: null
-                // ),
-                FormBuilderChoiceChip(name: "hoge", options: [
-                  FormBuilderFieldOption(value: 'Test', child: Text('Test'),)
-                ])
+                ValidateFilterChip(
+                  parent: this,
+                  name: 'roles',
+                  labelText: 'Roles',
+                  options: roleItems,
+                  validators: [
+                    (List<String>? selected) {
+                      if (selected == null || selected.isEmpty) {
+                        return AppLocalizations.of(context)!.noRoleSelected;
+                      }
+                      return null;
+                    }
+                  ],
+                  spacing: 5,
+                  runSpacing: 5,
+                ),
               ],
             ),
           ),
