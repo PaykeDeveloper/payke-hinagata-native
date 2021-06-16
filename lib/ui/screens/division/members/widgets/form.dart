@@ -4,7 +4,6 @@ import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/common/roles/models/role.dart';
-import 'package:native_app/store/state/domain/common/roles/models/role_id.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/models/user_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member.dart';

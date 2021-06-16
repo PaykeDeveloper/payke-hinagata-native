@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_result.dart';
-import 'package:native_app/store/state/domain/common/roles/models/role.dart';
 import 'package:native_app/store/state/domain/common/roles/selectors.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';

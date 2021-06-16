@@ -66,6 +66,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
         name: _name,
         initialValue: _initialValue,
         enabled: _enabled ?? !_parent.loading,
+        decoration: InputDecoration(labelText: _labelText),
         options: _options,
         onChanged: _onChanged,
         valueTransformer: _valueTransformer,
