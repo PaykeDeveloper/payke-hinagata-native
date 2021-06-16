@@ -42,7 +42,7 @@ class _MemberAddScreenState extends State<MemberAddScreen> {
     final result = await context.read<MembersNotifier>().add(
         urlParams: MembersUrl(divisionId: widget._divisionId),
         data: input,
-        useFormData: true);
+        useFormData: false);
     if (result is Success) {
       Navigator.of(context).pop();
     }

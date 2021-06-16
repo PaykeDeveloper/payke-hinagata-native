@@ -62,7 +62,7 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
   Future<StoreResult?> _onSubmit(Map<String, dynamic> input) async {
     final result = await context
         .read<MembersNotifier>()
-        .merge(urlParams: _getMemberUrl(), data: input, useFormData: true);
+        .merge(urlParams: _getMemberUrl(), data: input, useFormData: false);
     if (result is Success) {
       Navigator.of(context).pop();
     }

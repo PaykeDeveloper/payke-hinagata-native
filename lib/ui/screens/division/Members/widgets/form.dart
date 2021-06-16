@@ -49,9 +49,12 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
     final List<User?> users = widget.users;
     final List<Role> roles = widget.roles;
     final rolesMap = convertListToMap(roles, (Role role) => role.id.value);
+
     final initialUserValue = users.firstWhere(
         (element) => element?.id == member?.userId,
-        orElse: () => null);
+        orElse: () => null)?.id;
+
+    final initialRolesValue = member?.roleNames ?? [];
 
     final List<DropdownMenuItem> userNameItems = [
       const DropdownMenuItem(child: Text('')),
@@ -91,9 +94,11 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
                 ),
                 ValidateFilterChip(
                   parent: this,
-                  name: 'roles',
+                  name: 'role_names',
                   labelText: 'Roles',
                   options: roleItems,
+                  initialValue: initialRolesValue,
+                  // valueTransformer: (value) => (value as List<String>,
                   validators: [
                     (List<String>? selected) {
                       if (selected == null || selected.isEmpty) {

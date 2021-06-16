@@ -4,6 +4,8 @@ import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/common/roles/selectors.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
+import 'package:native_app/store/state/domain/common/users/models/users_url.dart';
+import 'package:native_app/store/state/domain/common/users/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
@@ -65,20 +67,29 @@ class _MemberListScreenState extends State<MemberListScreen> {
           url: MembersUrl(divisionId: widget._divisionId),
           reset: true,
         );
+    await context
+        .read<UsersNotifier>()
+        .fetchEntitiesIfNeeded(url: const UsersUrl());
     setState(() {
       _loading = false;
     });
   }
 
   Future _onRefresh() async {
-    await context
-        .read<MembersNotifier>()
-        .fetchEntities(url: MembersUrl(divisionId: widget._divisionId));
+    await Future.wait([
+      context
+          .read<MembersNotifier>()
+          .fetchEntities(url: MembersUrl(divisionId: widget._divisionId)),
+      context
+          .read<UsersNotifier>()
+          .fetchEntitiesIfNeeded(url: const UsersUrl()),
+    ]);
   }
 
   void _onPressedNew() {
-    context.read<RouteStateNotifier>().push(
-        BottomTab.members, MemberAddPage(divisionId: widget._divisionId));
+    context
+        .read<RouteStateNotifier>()
+        .push(BottomTab.members, MemberAddPage(divisionId: widget._divisionId));
   }
 
   void _onTapShow(MemberId memberId) {
