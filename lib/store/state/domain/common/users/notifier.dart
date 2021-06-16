@@ -1,4 +1,3 @@
-// FIXME: SAMPLE CODE
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
 

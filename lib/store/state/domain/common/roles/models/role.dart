@@ -1,4 +1,3 @@
-// FIXME: SAMPLE CODE
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import './role_id.dart';
