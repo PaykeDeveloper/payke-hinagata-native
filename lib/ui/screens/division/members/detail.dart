@@ -53,8 +53,7 @@ class MemberDetailScreen extends StatefulWidget {
 class _MemberDetailScreenState extends State<MemberDetailScreen> {
   Future _initState() async {
     await context.read<MembersNotifier>().fetchEntityIfNeeded(
-        url: MemberUrl(
-            divisionId: widget._divisionId, id: widget._memberId),
+        url: MemberUrl(divisionId: widget._divisionId, id: widget._memberId),
         reset: true);
   }
 

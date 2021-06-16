@@ -49,9 +49,10 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
     final List<Role> roles = widget.roles;
     final rolesMap = convertListToMap(roles, (Role role) => role.id.value);
 
-    final initialUserValue = users.firstWhere(
-        (element) => element?.id == member?.userId,
-        orElse: () => null)?.id;
+    final initialUserValue = users
+        .firstWhere((element) => element?.id == member?.userId,
+            orElse: () => null)
+        ?.id;
 
     final initialRolesValue = member?.roleNames ?? [];
 

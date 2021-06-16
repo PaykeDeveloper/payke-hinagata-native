@@ -19,6 +19,5 @@ class Member with _$Member {
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _Member;
 
-  factory Member.fromJson(Map<String, dynamic> json) =>
-      _$MemberFromJson(json);
+  factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
 }

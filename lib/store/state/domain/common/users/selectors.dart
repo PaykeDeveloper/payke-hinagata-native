@@ -6,8 +6,7 @@ import './notifier.dart';
 
 List<User> usersSelector(UsersState state) => state.entities;
 
-StateStatus usersStatusSelector(UsersState state) =>
-    state.entitiesStatus;
+StateStatus usersStatusSelector(UsersState state) => state.entitiesStatus;
 
 StoreError? usersErrorSelector(UsersState state) => state.entitiesError;
 

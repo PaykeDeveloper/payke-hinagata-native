@@ -6,11 +6,10 @@ import './models/user_input.dart';
 import './models/user_url.dart';
 import './models/users_url.dart';
 
-typedef UsersState
-= EntitiesState<User, UserUrl, User, UsersUrl>;
+typedef UsersState = EntitiesState<User, UserUrl, User, UsersUrl>;
 
-class UsersNotifier extends EntitiesNotifier<User, UserUrl,
-    User, UsersUrl, UserInput, UserInput> {
+class UsersNotifier extends EntitiesNotifier<User, UserUrl, User, UsersUrl,
+    UserInput, UserInput> {
   UsersNotifier(UsersState state) : super(state);
 
   @override

@@ -6,11 +6,10 @@ import './models/role_input.dart';
 import './models/role_url.dart';
 import './models/roles_url.dart';
 
-typedef RolesState
-= EntitiesState<Role, RoleUrl, Role, RolesUrl>;
+typedef RolesState = EntitiesState<Role, RoleUrl, Role, RolesUrl>;
 
-class RolesNotifier extends EntitiesNotifier<Role, RoleUrl,
-    Role, RolesUrl, RoleInput, RoleInput> {
+class RolesNotifier extends EntitiesNotifier<Role, RoleUrl, Role, RolesUrl,
+    RoleInput, RoleInput> {
   RolesNotifier(RolesState state) : super(state);
 
   @override

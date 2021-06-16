@@ -15,6 +15,5 @@ class Role with _$Role {
     required String type,
   }) = _Role;
 
-  factory Role.fromJson(Map<String, dynamic> json) =>
-      _$RoleFromJson(json);
+  factory Role.fromJson(Map<String, dynamic> json) => _$RoleFromJson(json);
 }

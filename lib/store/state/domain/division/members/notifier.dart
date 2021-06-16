@@ -6,8 +6,7 @@ import './models/member_input.dart';
 import './models/member_url.dart';
 import './models/members_url.dart';
 
-typedef MembersState
-    = EntitiesState<Member, MemberUrl, Member, MembersUrl>;
+typedef MembersState = EntitiesState<Member, MemberUrl, Member, MembersUrl>;
 
 class MembersNotifier extends EntitiesNotifier<Member, MemberUrl, Member,
     MembersUrl, MemberInput, MemberInput> {

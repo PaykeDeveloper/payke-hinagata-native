@@ -71,8 +71,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
         onChanged: _onChanged,
         valueTransformer: _valueTransformer,
         validator: FormBuilderValidators.compose(
-          [..._validators ?? [], _checkParentErrors]
-        ),
+            [..._validators ?? [], _checkParentErrors]),
         runSpacing: runSpacing,
         spacing: spacing,
       ),

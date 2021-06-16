@@ -6,10 +6,10 @@ import './notifier.dart';
 
 List<Role> rolesSelector(RolesState state) => state.entities;
 
-List<Role> memberRolesSelector(RolesState state) => state.entities.where((element) => element.type == 'member').toList();
+List<Role> memberRolesSelector(RolesState state) =>
+    state.entities.where((element) => element.type == 'member').toList();
 
-StateStatus rolesStatusSelector(RolesState state) =>
-    state.entitiesStatus;
+StateStatus rolesStatusSelector(RolesState state) => state.entitiesStatus;
 
 StoreError? rolesErrorSelector(RolesState state) => state.entitiesError;
 

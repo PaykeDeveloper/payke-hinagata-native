@@ -20,12 +20,8 @@ class MainRouter extends HookWidget {
     context
         .read<DivisionsNotifier>()
         .fetchEntitiesIfNeeded(url: const DivisionsUrl());
-    context
-        .read<UsersNotifier>()
-        .fetchEntitiesIfNeeded(url: const UsersUrl());
-    context
-        .read<RolesNotifier>()
-        .fetchEntitiesIfNeeded(url: const RolesUrl());
+    context.read<UsersNotifier>().fetchEntitiesIfNeeded(url: const UsersUrl());
+    context.read<RolesNotifier>().fetchEntitiesIfNeeded(url: const RolesUrl());
   }
 
   @override
