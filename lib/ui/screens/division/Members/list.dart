@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/domain/common/roles/selectors.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/models/users_url.dart';
 import 'package:native_app/store/state/domain/common/users/notifier.dart';
@@ -15,7 +14,6 @@ import 'package:native_app/store/state/domain/division/members/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
-import 'package:native_app/store/base/models/store_state.dart';
 
 import './add.dart';
 import './detail.dart';
@@ -82,7 +80,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
           .fetchEntities(url: MembersUrl(divisionId: widget._divisionId)),
       context
           .read<UsersNotifier>()
-          .fetchEntitiesIfNeeded(url: const UsersUrl()),
+          .fetchEntitiesIfNeeded(url: const UsersUrl(), reset: true),
     ]);
   }
 
@@ -133,7 +131,6 @@ class _MemberListScreenState extends State<MemberListScreen> {
     final members = context.select(membersSelector);
     final error = context.select(membersErrorSelector);
     final users = context.select(usersSelector);
-    final isUsersLoading = context.select(usersStatusSelector).isLoading();
     final usersMap = convertListToMap(users, (User user) => user.id.value);
 
     return Scaffold(
@@ -152,7 +149,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
         error: error,
         onPressedReload: _initState,
         child: Loader(
-          loading: _loading && isUsersLoading,
+          loading: _loading,
           child: RefreshIndicator(
             onRefresh: _onRefresh,
             child: ListView.builder(
