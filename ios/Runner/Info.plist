@@ -42,12 +42,28 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 
+    <!-- FIXME: SAMPLE CODE start -->
     <!-- image_picker -->
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>FIXME: SAMPLE CODE</string>
+    <string>Used to upload project images.</string>
 	<key>NSCameraUsageDescription</key>
-    <string>FIXME: SAMPLE CODE</string>
+    <string>Used to upload project images.</string>
 	<key>NSMicrophoneUsageDescription</key>
-    <string>FIXME: SAMPLE CODE</string>
+    <string>Used to upload project images.</string>
+    <!-- uni_links -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>app.example.com</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>unilinks</string>
+            </array>
+        </dict>
+    </array>
+    <!-- FIXME: SAMPLE CODE end -->
 </dict>
 </plist>
