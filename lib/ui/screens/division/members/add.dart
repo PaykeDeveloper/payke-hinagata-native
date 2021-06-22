@@ -39,12 +39,8 @@ class MemberAddScreen extends StatefulWidget {
 
 class _MemberAddScreenState extends State<MemberAddScreen> {
   Future<StoreResult?> _onSubmit(MemberInput input) async {
-    final result = await context
-        .read<MembersNotifier>()
-        .addEntity(
-          urlParams: MembersUrl(divisionId: widget._divisionId),
-          data: input
-        );
+    final result = await context.read<MembersNotifier>().addEntity(
+        urlParams: MembersUrl(divisionId: widget._divisionId), data: input);
     if (result is Success) {
       Navigator.of(context).pop();
     }

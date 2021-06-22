@@ -58,11 +58,13 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
           .toList()
     ];
 
-    final roleItems = roles.map((role) => FormBuilderFieldOption(
-      key: Key('${role.id}'),
-      value: role.name,
-      child: Text(role.name),
-    )).toList();
+    final roleItems = roles
+        .map((role) => FormBuilderFieldOption(
+              key: Key('${role.id}'),
+              value: role.name,
+              child: Text(role.name),
+            ))
+        .toList();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),

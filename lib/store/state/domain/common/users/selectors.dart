@@ -17,4 +17,5 @@ StateStatus userStatusSelector(UsersState state) => state.entityStatus;
 
 StoreError? userErrorSelector(UsersState state) => state.entityError;
 
-Map<int, User> usersMapSelector(UsersState state) => convertListToMap(state.entities, (User user) => user.id.value);
+Map<int, User> usersMapSelector(UsersState state) =>
+    convertListToMap(state.entities, (User user) => user.id.value);
