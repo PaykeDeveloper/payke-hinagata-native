@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
