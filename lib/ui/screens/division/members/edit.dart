@@ -6,6 +6,7 @@ import 'package:native_app/store/state/domain/common/roles/selectors.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
+import 'package:native_app/store/state/domain/division/members/models/member_input.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
@@ -59,10 +60,10 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
         .fetchEntityIfNeeded(url: _getMemberUrl(), reset: true);
   }
 
-  Future<StoreResult?> _onSubmit(Map<String, dynamic> input) async {
+  Future<StoreResult?> _onSubmit(MemberInput input) async {
     final result = await context
         .read<MembersNotifier>()
-        .merge(urlParams: _getMemberUrl(), data: input, useFormData: false);
+        .mergeEntity(urlParams: _getMemberUrl(), data: input);
     if (result is Success) {
       Navigator.of(context).pop();
     }

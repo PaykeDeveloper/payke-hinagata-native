@@ -130,8 +130,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
   Widget build(BuildContext context) {
     final members = context.select(membersSelector);
     final error = context.select(membersErrorSelector);
-    final users = context.select(usersSelector);
-    final usersMap = convertListToMap(users, (User user) => user.id.value);
+    final usersMap = context.select(usersMapSelector);
 
     return Scaffold(
       appBar: AppBar(
@@ -157,7 +156,7 @@ class _MemberListScreenState extends State<MemberListScreen> {
               itemCount: members.length,
               itemBuilder: (context, index) {
                 final member = members[index];
-                final user = usersMap[member.id.value]!;
+                final user = usersMap[member.userId.value]!;
                 return _ListItem(
                   user: user,
                   onTapItem: () => _onTapShow(member.id),

@@ -1,5 +1,6 @@
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/base/utils.dart';
 
 import './models/user.dart';
 import './notifier.dart';
@@ -15,3 +16,5 @@ User? userSelector(UsersState state) => state.entity;
 StateStatus userStatusSelector(UsersState state) => state.entityStatus;
 
 StoreError? userErrorSelector(UsersState state) => state.entityError;
+
+Map<int, User> usersMapSelector(UsersState state) => convertListToMap(state.entities, (User user) => user.id.value);

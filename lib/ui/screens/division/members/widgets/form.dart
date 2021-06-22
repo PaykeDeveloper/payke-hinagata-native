@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/common/roles/models/role.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/models/user_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member.dart';
+import 'package:native_app/store/state/domain/division/members/models/member_input.dart';
 import 'package:native_app/ui/widgets/atoms/submit_button.dart';
 import 'package:native_app/ui/widgets/atoms/validate_dropdown.dart';
 import 'package:native_app/ui/widgets/atoms/validate_filter_chip.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-typedef MemberFormCallBack = Future<StoreResult?> Function(
-    Map<String, dynamic> input);
+typedef MemberFormCallBack = Future<StoreResult?> Function(MemberInput input);
 
 class MemberForm extends StatefulWidget {
   const MemberForm({
@@ -38,21 +36,17 @@ class MemberForm extends StatefulWidget {
 class _MemberFormState extends ValidateFormState<MemberForm> {
   @override
   Future<StoreResult?> onSubmit() async {
-    final input = Map<String, dynamic>.from(formKey.currentState!.value);
+    final input = MemberInput.fromJson(formKey.currentState!.value);
     return widget.onSubmit(input);
   }
 
   @override
   Widget build(BuildContext context) {
     final member = widget.member;
-    final List<User?> users = widget.users;
-    final List<Role> roles = widget.roles;
-    final rolesMap = convertListToMap(roles, (Role role) => role.id.value);
+    final users = widget.users;
+    final roles = widget.roles;
 
-    final initialUserValue = users
-        .firstWhere((element) => element?.id == member?.userId,
-            orElse: () => null)
-        ?.id;
+    final initialUserValue = member?.userId;
 
     final initialRolesValue = member?.roleNames ?? [];
 
@@ -60,17 +54,15 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
       const DropdownMenuItem(child: Text('')),
       ...users
           .map((user) =>
-              DropdownMenuItem(value: user?.id, child: Text(user!.name)))
+              DropdownMenuItem(value: user.id, child: Text(user.name)))
           .toList()
     ];
 
-    final roleItems = [
-      ...roles.map((role) => FormBuilderFieldOption(
-            key: Key('${role.id}'),
-            value: rolesMap[role.id.value]!.name,
-            child: Text(role.name),
-          ))
-    ];
+    final roleItems = roles.map((role) => FormBuilderFieldOption(
+      key: Key('${role.id}'),
+      value: role.name,
+      child: Text(role.name),
+    )).toList();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -84,7 +76,7 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
                 ValidateDropdown(
                   parent: this,
                   name: 'user_id',
-                  labelText: 'Name',
+                  labelText: 'User',
                   items: userNameItems,
                   initialValue: initialUserValue,
                   valueTransformer: (value) => (value as UserId?)?.value,
@@ -98,14 +90,8 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
                   labelText: 'Roles',
                   options: roleItems,
                   initialValue: initialRolesValue,
-                  // valueTransformer: (value) => (value as List<String>,
                   validators: [
-                    (List<String>? selected) {
-                      if (selected == null || selected.isEmpty) {
-                        return AppLocalizations.of(context)!.noRoleSelected;
-                      }
-                      return null;
-                    }
+                    FormBuilderValidators.required<List<String>>(context),
                   ],
                   spacing: 5,
                   runSpacing: 5,

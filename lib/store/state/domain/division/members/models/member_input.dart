@@ -8,8 +8,10 @@ part 'member_input.g.dart';
 
 @freezed
 class MemberInput extends JsonGenerator with _$MemberInput {
-  const factory MemberInput(
-      {@JsonKey(name: "user_id") required UserId userId}) = _MemberInput;
+  const factory MemberInput({
+    @JsonKey(name: "user_id") required int userId,
+    @JsonKey(name: 'role_names') required List<String> roleNames,
+  }) = _MemberInput;
 
   factory MemberInput.fromJson(Map<String, dynamic> json) =>
       _$MemberInputFromJson(json);
