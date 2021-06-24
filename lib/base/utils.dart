@@ -17,3 +17,13 @@ extension MapExt on Map {
     return parse(value);
   }
 }
+
+Map<K, T> convertListToMap<T, K>(List<T> values, K Function(T value) key) {
+  final Map<K, T> result = {};
+
+  for (final value in values) {
+    result[key(value)] = value;
+  }
+
+  return result;
+}
