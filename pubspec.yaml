@@ -35,7 +35,7 @@ dependencies:
   provider: ^5.0.0
   state_notifier: ^0.7.0
   flutter_state_notifier: ^0.7.0
-  flutter_hooks: ^0.17.0
+  flutter_hooks: ^0.18.0
   shared_preferences: ^2.0.5
   dio: ^4.0.0
   json_serializable: ^4.1.0
