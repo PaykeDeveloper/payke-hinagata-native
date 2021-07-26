@@ -46,7 +46,7 @@ class MainRouter extends HookWidget {
         ? divisions.firstWhereOrNull((element) => element.id == divisionId)
         : null;
     if (division == null) {
-      return const DivisionListScreen();
+      return DivisionListScreen();
     }
 
     return MainScreen();

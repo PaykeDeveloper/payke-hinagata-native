@@ -1,7 +1,10 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/projects_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
@@ -26,43 +29,63 @@ class ProjectAddPage extends Page {
   }
 }
 
-class ProjectAddScreen extends StatefulWidget {
+class ProjectAddScreen extends StatelessWidget {
   const ProjectAddScreen({required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
-  _ProjectAddScreenState createState() => _ProjectAddScreenState();
+  Widget build(BuildContext context) {
+    final urlParams = ProjectsUrl(divisionId: _divisionId);
+    Future<StoreResult<Project>> onSubmit(Map<String, dynamic> data) async {
+      final result = await context
+          .read<ProjectsNotifier>()
+          .add(urlParams: urlParams, data: data, useFormData: true);
+      if (result is Success) {
+        Navigator.of(context).pop();
+      }
+      return result;
+    }
+
+    final status = context.select(projectsStatusSelector);
+    final error = context.select(projectsErrorSelector);
+    return ProjectAdd(onSubmit: onSubmit, status: status, error: error);
+  }
 }
 
-class _ProjectAddScreenState extends State<ProjectAddScreen> {
-  Future<StoreResult?> _onSubmit(Map<String, dynamic> input) async {
-    final result = await context.read<ProjectsNotifier>().add(
-        urlParams: ProjectsUrl(divisionId: widget._divisionId),
-        data: input,
-        useFormData: true);
-    if (result is Success) {
-      Navigator.of(context).pop();
-    }
-    return result;
-  }
+typedef _OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
+
+class ProjectAdd extends StatefulWidget {
+  const ProjectAdd({
+    required _OnSubmit onSubmit,
+    required StateStatus status,
+    required StoreError? error,
+  })  : _onSubmit = onSubmit,
+        _status = status,
+        _error = error;
+  final _OnSubmit _onSubmit;
+  final StateStatus _status;
+  final StoreError? _error;
 
   @override
+  _ProjectAddState createState() => _ProjectAddState();
+}
+
+class _ProjectAddState extends State<ProjectAdd> {
+  @override
   Widget build(BuildContext context) {
-    final error = context.select(projectsErrorSelector);
-    final status = context.select(projectsStatusSelector);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add project'),
       ),
       body: ErrorWrapper(
-        error: error,
+        error: widget._error,
         child: Loader(
-          status: status,
+          status: widget._status,
           child: ProjectForm(
             project: null,
-            status: status,
-            onSubmit: _onSubmit,
+            status: widget._status,
+            onSubmit: widget._onSubmit,
           ),
         ),
       ),

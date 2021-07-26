@@ -1,15 +1,60 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/ui/navigation/navigators/home.dart';
-import 'package:native_app/ui/navigation/navigators/projects.dart';
 import 'package:native_app/ui/navigation/navigators/members.dart';
+import 'package:native_app/ui/navigation/navigators/projects.dart';
 import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
 import 'package:provider/provider.dart';
 
 import './common/loading.dart';
 
 class MainScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    void onTap(int index) {
+      final tab = BottomTabExt.getTab(index);
+      final notifier = context.read<RouteStateNotifier>();
+      if (tab != context.read<RouteState>().tab) {
+        notifier.changeIndex(tab);
+      } else {
+        notifier.replace(tab, []);
+      }
+    }
+
+    Future changeTab(BottomTab tab) async {
+      await context.read<RouteStateNotifier>().changeIndex(initialTab);
+    }
+
+    final tab = context.select((RouteState state) => state.tab);
+    final isFirst = context.select((RouteState state) => state.isFirstTab);
+
+    return Main(
+      onTap: onTap,
+      changeTab: changeTab,
+      tab: tab,
+      isFirst: isFirst,
+    );
+  }
+}
+
+class Main extends StatelessWidget {
+  Main({
+    required Function1<int, void> onTap,
+    required Function1<BottomTab, Future> changeTab,
+    required BottomTab tab,
+    required bool isFirst,
+  })  : _onTap = onTap,
+        _changeTab = changeTab,
+        _tab = tab,
+        _isFirst = isFirst;
+
+  final Function1<int, void> _onTap;
+  final Function1<BottomTab, Future> _changeTab;
+  final BottomTab _tab;
+  final bool _isFirst;
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _navigatorKeys = [
@@ -62,11 +107,9 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tab = context.select((RouteState state) => state.tab);
-    final index = tab.getIndex();
-    final isFirst = context.select((RouteState state) => state.isFirstTab);
+    final index = _tab.getIndex();
     if (_children[index] is LoadingScreen) {
-      _children[index] = _getWidget(tab);
+      _children[index] = _getWidget(_tab);
     }
     return WillPopScope(
       onWillPop: () async {
@@ -80,8 +123,8 @@ class MainScreen extends StatelessWidget {
           return false;
         }
 
-        if (tab != initialTab) {
-          context.read<RouteStateNotifier>().changeIndex(initialTab);
+        if (_tab != initialTab) {
+          await _changeTab(initialTab);
           return false;
         }
 
@@ -90,7 +133,7 @@ class MainScreen extends StatelessWidget {
       child: Scaffold(
         key: _scaffoldKey,
         drawer: MainDrawer(),
-        drawerEnableOpenDragGesture: isFirst,
+        drawerEnableOpenDragGesture: _isFirst,
         body: IndexedStack(
           index: index,
           children: _children,
@@ -98,15 +141,7 @@ class MainScreen extends StatelessWidget {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: index,
           items: _tabItems,
-          onTap: (int index) {
-            final tab = BottomTabExt.getTab(index);
-            final notifier = context.read<RouteStateNotifier>();
-            if (tab != context.read<RouteState>().tab) {
-              notifier.changeIndex(tab);
-            } else {
-              notifier.replace(tab, []);
-            }
-          },
+          onTap: _onTap,
         ),
       ),
     );

@@ -1,6 +1,11 @@
 // FIXME: SAMPLE CODE
+
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/domain/division/divisions/models/division.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_input.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_url.dart';
@@ -13,74 +18,118 @@ import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
-class DivisionEditScreen extends StatefulWidget {
+class DivisionEditScreen extends StatelessWidget {
   const DivisionEditScreen({required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
-  _DivisionEditScreenState createState() => _DivisionEditScreenState();
+  Widget build(BuildContext context) {
+    void initState() {
+      context
+          .read<DivisionsNotifier>()
+          .fetchEntityIfNeeded(url: DivisionUrl(id: _divisionId), reset: true);
+    }
+
+    Future<StoreResult?> onSubmit(DivisionInput input) async {
+      final result = await context
+          .read<DivisionsNotifier>()
+          .mergeEntity(urlParams: DivisionUrl(id: _divisionId), data: input);
+      if (result is Success) {
+        Navigator.of(context).pop();
+      }
+      return result;
+    }
+
+    Future onPressedDelete() async {
+      final result = await context
+          .read<DivisionsNotifier>()
+          .deleteEntity(urlParams: DivisionUrl(id: _divisionId));
+      if (result is Success) {
+        Navigator.of(context).pop();
+      }
+    }
+
+    final status = context.select(divisionStatusSelector);
+    final error = context.select(divisionErrorSelector);
+    final division = context.select(divisionSelector);
+    final selectedId = context.select(divisionIdSelector);
+
+    return DivisionEdit(
+      initState: initState,
+      onSubmit: onSubmit,
+      onPressedDelete: onPressedDelete,
+      status: status,
+      error: error,
+      division: division,
+      selectedId: selectedId,
+    );
+  }
 }
 
-class _DivisionEditScreenState extends State<DivisionEditScreen> {
-  Future _initState() async {
-    await context.read<DivisionsNotifier>().fetchEntityIfNeeded(
-        url: DivisionUrl(id: widget._divisionId), reset: true);
-  }
+typedef _OnSubmit = Future<StoreResult?> Function(DivisionInput input);
 
-  Future<StoreResult?> _onSubmit(DivisionInput input) async {
-    final result = await context.read<DivisionsNotifier>().mergeEntity(
-        urlParams: DivisionUrl(id: widget._divisionId), data: input);
-    if (result is Success) {
-      Navigator.of(context).pop();
-    }
-    return result;
-  }
+class DivisionEdit extends StatefulWidget {
+  const DivisionEdit({
+    required VoidCallback initState,
+    required _OnSubmit onSubmit,
+    required Function0<Future> onPressedDelete,
+    required StateStatus status,
+    required StoreError? error,
+    required Division? division,
+    required DivisionId? selectedId,
+  })  : _initState = initState,
+        _onSubmit = onSubmit,
+        _onPressedDelete = onPressedDelete,
+        _status = status,
+        _error = error,
+        _division = division,
+        _selectedId = selectedId;
+  final VoidCallback _initState;
+  final _OnSubmit _onSubmit;
+  final Function0<Future> _onPressedDelete;
+  final StateStatus _status;
+  final StoreError? _error;
+  final Division? _division;
+  final DivisionId? _selectedId;
 
-  Future _onPressedDelete() async {
-    final result = await context
-        .read<DivisionsNotifier>()
-        .deleteEntity(urlParams: DivisionUrl(id: widget._divisionId));
-    if (result is Success) {
-      Navigator.of(context).pop();
-    }
-  }
+  @override
+  _DivisionEditState createState() => _DivisionEditState();
+}
 
+class _DivisionEditState extends State<DivisionEdit> {
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      _initState();
+      widget._initState();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final division = context.select(divisionSelector);
-    final error = context.select(divisionErrorSelector);
-    final status = context.select(divisionStatusSelector);
-    final selectedId = context.select(divisionIdSelector);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit division'),
         actions: [
-          if (division?.id != selectedId)
+          if (widget._division?.id != widget._selectedId)
             IconButton(
               icon: const Icon(Icons.delete),
               tooltip: 'Delete division',
-              onPressed: division != null ? _onPressedDelete : null,
+              onPressed:
+                  widget._division != null ? widget._onPressedDelete : null,
             ),
         ],
       ),
       body: ErrorWrapper(
-        error: error,
-        onPressedReload: _initState,
+        error: widget._error,
+        onPressedReload: widget._initState,
         child: Loader(
-          status: status,
+          status: widget._status,
           child: DivisionForm(
-            division: division,
-            status: status,
-            onSubmit: _onSubmit,
+            division: widget._division,
+            status: widget._status,
+            onSubmit: widget._onSubmit,
           ),
         ),
       ),

@@ -32,7 +32,7 @@ class MainDrawer extends StatelessWidget {
             title: Text(division?.name ?? 'Divisions'),
             onTap: () async {
               Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                  builder: (context) => const DivisionListScreen()));
+                  builder: (context) => DivisionListScreen()));
             },
           ),
           ListTile(

@@ -1,4 +1,6 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
@@ -6,6 +8,7 @@ import 'package:native_app/store/state/domain/common/users/models/users_url.dart
 import 'package:native_app/store/state/domain/common/users/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:native_app/store/state/domain/division/members/models/member.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/members_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
@@ -40,7 +43,7 @@ class MemberListPage extends Page {
   }
 }
 
-class MemberListScreen extends StatefulWidget {
+class MemberListScreen extends StatelessWidget {
   const MemberListScreen({
     required DivisionId divisionId,
     required VoidCallback openDrawer,
@@ -50,63 +53,117 @@ class MemberListScreen extends StatefulWidget {
   final VoidCallback _openDrawer;
 
   @override
-  _MemberListScreenState createState() => _MemberListScreenState();
+  Widget build(BuildContext context) {
+    final memberUrl = MembersUrl(divisionId: _divisionId);
+    Future initState() async {
+      await Future.wait([
+        context
+            .read<MembersNotifier>()
+            .fetchEntitiesIfNeeded(url: memberUrl, reset: true),
+        context
+            .read<UsersNotifier>()
+            .fetchEntitiesIfNeeded(url: const UsersUrl())
+      ]);
+    }
+
+    Future onRefresh() async {
+      await Future.wait([
+        context.read<MembersNotifier>().fetchEntities(url: memberUrl),
+        context
+            .read<UsersNotifier>()
+            .fetchEntitiesIfNeeded(url: const UsersUrl(), reset: true),
+      ]);
+    }
+
+    void onPressedNew() {
+      context
+          .read<RouteStateNotifier>()
+          .push(BottomTab.members, MemberAddPage(divisionId: _divisionId));
+    }
+
+    void onTapShow(MemberId memberId) {
+      context.read<RouteStateNotifier>().push(
+            BottomTab.members,
+            MemberDetailPage(divisionId: _divisionId, memberId: memberId),
+          );
+    }
+
+    void onPressedEdit(MemberId memberId) {
+      context.read<RouteStateNotifier>().push(
+            BottomTab.members,
+            MemberEditPage(divisionId: _divisionId, memberId: memberId),
+          );
+    }
+
+    bool checkRouteEmpty() => context.read<RouteState>().memberPages.isEmpty;
+
+    final error = context.select(membersErrorSelector);
+    final members = context.select(membersSelector);
+    final usersMap = context.select(usersMapSelector);
+
+    return MemberList(
+      openDrawer: _openDrawer,
+      initState: initState,
+      onRefresh: onRefresh,
+      onPressedNew: onPressedNew,
+      onTapShow: onTapShow,
+      onPressedEdit: onPressedEdit,
+      checkRouteEmpty: checkRouteEmpty,
+      error: error,
+      members: members,
+      usersMap: usersMap,
+    );
+  }
 }
 
-class _MemberListScreenState extends State<MemberListScreen> {
+class MemberList extends StatefulWidget {
+  const MemberList({
+    required VoidCallback openDrawer,
+    required Function0<Future> initState,
+    required Function0<Future> onRefresh,
+    required VoidCallback onPressedNew,
+    required Function1<MemberId, void> onTapShow,
+    required Function1<MemberId, void> onPressedEdit,
+    required Function0<bool> checkRouteEmpty,
+    required StoreError? error,
+    required List<Member> members,
+    required Map<int, User> usersMap,
+  })  : _openDrawer = openDrawer,
+        _initState = initState,
+        _onRefresh = onRefresh,
+        _onPressedNew = onPressedNew,
+        _onTapShow = onTapShow,
+        _onPressedEdit = onPressedEdit,
+        _checkRouteEmpty = checkRouteEmpty,
+        _error = error,
+        _members = members,
+        _usersMap = usersMap;
+  final VoidCallback _openDrawer;
+  final Function0<Future> _initState;
+  final Function0<Future> _onRefresh;
+  final VoidCallback _onPressedNew;
+  final Function1<MemberId, void> _onTapShow;
+  final Function1<MemberId, void> _onPressedEdit;
+  final Function0<bool> _checkRouteEmpty;
+  final StoreError? _error;
+  final List<Member> _members;
+  final Map<int, User> _usersMap;
+
+  @override
+  _MemberListState createState() => _MemberListState();
+}
+
+class _MemberListState extends State<MemberList> {
   bool _loading = false;
 
   Future _initState() async {
     setState(() {
       _loading = true;
     });
-    await context.read<MembersNotifier>().fetchEntitiesIfNeeded(
-          url: MembersUrl(divisionId: widget._divisionId),
-          reset: true,
-        );
-    await context
-        .read<UsersNotifier>()
-        .fetchEntitiesIfNeeded(url: const UsersUrl());
+    await widget._initState();
     setState(() {
       _loading = false;
     });
-  }
-
-  Future _onRefresh() async {
-    await Future.wait([
-      context
-          .read<MembersNotifier>()
-          .fetchEntities(url: MembersUrl(divisionId: widget._divisionId)),
-      context
-          .read<UsersNotifier>()
-          .fetchEntitiesIfNeeded(url: const UsersUrl(), reset: true),
-    ]);
-  }
-
-  void _onPressedNew() {
-    context
-        .read<RouteStateNotifier>()
-        .push(BottomTab.members, MemberAddPage(divisionId: widget._divisionId));
-  }
-
-  void _onTapShow(MemberId memberId) {
-    context.read<RouteStateNotifier>().push(
-          BottomTab.members,
-          MemberDetailPage(
-            divisionId: widget._divisionId,
-            memberId: memberId,
-          ),
-        );
-  }
-
-  void _onPressedEdit(MemberId memberId) {
-    context.read<RouteStateNotifier>().push(
-          BottomTab.members,
-          MemberEditPage(
-            divisionId: widget._divisionId,
-            memberId: memberId,
-          ),
-        );
   }
 
   @override
@@ -118,19 +175,15 @@ class _MemberListScreenState extends State<MemberListScreen> {
   }
 
   @override
-  void didUpdateWidget(covariant MemberListScreen oldWidget) {
+  void didUpdateWidget(covariant MemberList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (context.read<RouteState>().memberPages.isEmpty) {
+    if (widget._checkRouteEmpty()) {
       _initState();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final members = context.select(membersSelector);
-    final error = context.select(membersErrorSelector);
-    final usersMap = context.select(usersMapSelector);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Members'),
@@ -140,26 +193,26 @@ class _MemberListScreenState extends State<MemberListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _onPressedNew,
+        onPressed: widget._onPressedNew,
         child: const Icon(Icons.add),
       ),
       body: ErrorWrapper(
-        error: error,
+        error: widget._error,
         onPressedReload: _initState,
         child: Loader(
           loading: _loading,
           child: RefreshIndicator(
-            onRefresh: _onRefresh,
+            onRefresh: widget._onRefresh,
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: members.length,
+              itemCount: widget._members.length,
               itemBuilder: (context, index) {
-                final member = members[index];
-                final user = usersMap[member.userId.value]!;
+                final member = widget._members[index];
+                final user = widget._usersMap[member.userId.value]!;
                 return _ListItem(
                   user: user,
-                  onTapItem: () => _onTapShow(member.id),
-                  onPressedEdit: () => _onPressedEdit(member.id),
+                  onTapItem: () => widget._onTapShow(member.id),
+                  onPressedEdit: () => widget._onPressedEdit(member.id),
                 );
               },
             ),
