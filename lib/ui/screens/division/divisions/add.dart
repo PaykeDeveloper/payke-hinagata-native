@@ -1,6 +1,8 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_input.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/divisions_url.dart';
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
@@ -11,38 +13,62 @@ import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
-class DivisionAddScreen extends StatefulWidget {
-  @override
-  _DivisionAddScreenState createState() => _DivisionAddScreenState();
-}
-
-class _DivisionAddScreenState extends State<DivisionAddScreen> {
-  Future<StoreResult?> _onSubmit(DivisionInput input) async {
-    final result = await context
-        .read<DivisionsNotifier>()
-        .addEntity(urlParams: const DivisionsUrl(), data: input);
-    if (result is Success) {
-      Navigator.of(context).pop();
-    }
-    return result;
-  }
-
+class DivisionAddScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final error = context.select(divisionsErrorSelector);
+    Future<StoreResult?> onSubmit(DivisionInput input) async {
+      final result = await context
+          .read<DivisionsNotifier>()
+          .addEntity(urlParams: const DivisionsUrl(), data: input);
+      if (result is Success) {
+        Navigator.of(context).pop();
+      }
+      return result;
+    }
+
     final status = context.select(divisionsStatusSelector);
+    final error = context.select(divisionsErrorSelector);
+    return DivisionAdd(
+      onSubmit: onSubmit,
+      status: status,
+      error: error,
+    );
+  }
+}
+
+typedef _OnSubmit = Future<StoreResult?> Function(DivisionInput input);
+
+class DivisionAdd extends StatefulWidget {
+  const DivisionAdd({
+    required _OnSubmit onSubmit,
+    required StateStatus status,
+    required StoreError? error,
+  })  : _onSubmit = onSubmit,
+        _status = status,
+        _error = error;
+  final _OnSubmit _onSubmit;
+  final StateStatus _status;
+  final StoreError? _error;
+
+  @override
+  _DivisionAddState createState() => _DivisionAddState();
+}
+
+class _DivisionAddState extends State<DivisionAdd> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add division'),
       ),
       body: ErrorWrapper(
-        error: error,
+        error: widget._error,
         child: Loader(
-          status: status,
+          status: widget._status,
           child: DivisionForm(
             division: null,
-            status: status,
-            onSubmit: _onSubmit,
+            status: widget._status,
+            onSubmit: widget._onSubmit,
           ),
         ),
       ),

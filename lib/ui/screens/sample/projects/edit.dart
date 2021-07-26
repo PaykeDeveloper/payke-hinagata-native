@@ -1,9 +1,12 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
@@ -38,7 +41,7 @@ class ProjectEditPage extends Page {
   }
 }
 
-class ProjectEditScreen extends StatefulWidget {
+class ProjectEditScreen extends StatelessWidget {
   const ProjectEditScreen({
     required DivisionId divisionId,
     required ProjectSlug projectSlug,
@@ -48,53 +51,88 @@ class ProjectEditScreen extends StatefulWidget {
   final ProjectSlug _projectSlug;
 
   @override
-  _ProjectEditScreenState createState() => _ProjectEditScreenState();
+  Widget build(BuildContext context) {
+    final projectUrl = ProjectUrl(divisionId: _divisionId, slug: _projectSlug);
+    Future<StoreResult?> onSubmit(Map<String, dynamic> input) async {
+      final result = await context
+          .read<ProjectsNotifier>()
+          .merge(urlParams: projectUrl, data: input, useFormData: true);
+      if (result is Success) {
+        Navigator.of(context).pop();
+      }
+      return result;
+    }
+
+    void initState() {
+      context
+          .read<ProjectsNotifier>()
+          .fetchEntityIfNeeded(url: projectUrl, reset: true);
+    }
+
+    Future onPressedDelete() async {
+      final result = await context
+          .read<ProjectsNotifier>()
+          .deleteEntity(urlParams: projectUrl);
+      if (result is Success) {
+        await context
+            .read<RouteStateNotifier>()
+            .replace(BottomTab.projects, []);
+      }
+    }
+
+    final status = context.select(projectStatusSelector);
+    final error = context.select(projectErrorSelector);
+    final project = context.select(projectSelector);
+
+    return ProjectEdit(
+      onSubmit: onSubmit,
+      initState: initState,
+      onPressedDelete: onPressedDelete,
+      status: status,
+      error: error,
+      project: project,
+    );
+  }
 }
 
-class _ProjectEditScreenState extends State<ProjectEditScreen> {
-  Future _initState() async {
-    await context
-        .read<ProjectsNotifier>()
-        .fetchEntityIfNeeded(url: _getProjectUrl(), reset: true);
-  }
+typedef _OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
-  Future<StoreResult?> _onSubmit(Map<String, dynamic> input) async {
-    final result = await context
-        .read<ProjectsNotifier>()
-        .merge(urlParams: _getProjectUrl(), data: input, useFormData: true);
-    if (result is Success) {
-      Navigator.of(context).pop();
-    }
-    return result;
-  }
+class ProjectEdit extends StatefulWidget {
+  const ProjectEdit({
+    required _OnSubmit onSubmit,
+    required VoidCallback initState,
+    required VoidCallback onPressedDelete,
+    required StateStatus status,
+    required StoreError? error,
+    required Project? project,
+  })  : _onSubmit = onSubmit,
+        _initState = initState,
+        _onPressedDelete = onPressedDelete,
+        _status = status,
+        _error = error,
+        _project = project;
+  final _OnSubmit _onSubmit;
+  final VoidCallback _initState;
+  final VoidCallback _onPressedDelete;
+  final StateStatus _status;
+  final StoreError? _error;
+  final Project? _project;
 
-  Future _onPressedDelete() async {
-    final result = await context
-        .read<ProjectsNotifier>()
-        .deleteEntity(urlParams: _getProjectUrl());
-    if (result is Success) {
-      await context.read<RouteStateNotifier>().replace(BottomTab.projects, []);
-    }
-  }
+  @override
+  _ProjectEditState createState() => _ProjectEditState();
+}
 
-  ProjectUrl _getProjectUrl() => ProjectUrl(
-        divisionId: widget._divisionId,
-        slug: widget._projectSlug,
-      );
-
+class _ProjectEditState extends State<ProjectEdit> {
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      _initState();
+      widget._initState();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final project = context.select(projectSelector);
-    final error = context.select(projectErrorSelector);
-    final status = context.select(projectStatusSelector);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit project'),
@@ -102,19 +140,19 @@ class _ProjectEditScreenState extends State<ProjectEditScreen> {
           IconButton(
             icon: const Icon(Icons.delete),
             tooltip: 'Delete project',
-            onPressed: project == null ? null : _onPressedDelete,
+            onPressed: widget._project == null ? null : widget._onPressedDelete,
           ),
         ],
       ),
       body: ErrorWrapper(
-        error: error,
-        onPressedReload: _initState,
+        error: widget._error,
+        onPressedReload: widget._initState,
         child: Loader(
-          status: status,
+          status: widget._status,
           child: ProjectForm(
-            project: project,
-            status: status,
-            onSubmit: _onSubmit,
+            project: widget._project,
+            status: widget._status,
+            onSubmit: widget._onSubmit,
           ),
         ),
       ),

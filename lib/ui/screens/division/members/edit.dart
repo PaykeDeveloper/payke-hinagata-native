@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/domain/common/roles/models/role.dart';
 import 'package:native_app/store/state/domain/common/roles/selectors.dart';
+import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:native_app/store/state/domain/division/members/models/member.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_input.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_url.dart';
@@ -40,7 +45,7 @@ class MemberEditPage extends Page {
   }
 }
 
-class MemberEditScreen extends StatefulWidget {
+class MemberEditScreen extends StatelessWidget {
   const MemberEditScreen({
     required DivisionId divisionId,
     required MemberId memberId,
@@ -50,56 +55,97 @@ class MemberEditScreen extends StatefulWidget {
   final MemberId _memberId;
 
   @override
-  _MemberEditScreenState createState() => _MemberEditScreenState();
+  Widget build(BuildContext context) {
+    final memberUrl = MemberUrl(divisionId: _divisionId, id: _memberId);
+
+    Future<StoreResult?> onSubmit(MemberInput input) async {
+      final result = await context
+          .read<MembersNotifier>()
+          .mergeEntity(urlParams: memberUrl, data: input);
+      if (result is Success) {
+        Navigator.of(context).pop();
+      }
+      return result;
+    }
+
+    void initState() {
+      context
+          .read<MembersNotifier>()
+          .fetchEntityIfNeeded(url: memberUrl, reset: true);
+    }
+
+    Future onPressedDelete() async {
+      final result = await context
+          .read<MembersNotifier>()
+          .deleteEntity(urlParams: memberUrl);
+      if (result is Success) {
+        await context.read<RouteStateNotifier>().replace(BottomTab.members, []);
+      }
+    }
+
+    final status = context.select(memberStatusSelector);
+    final error = context.select(memberErrorSelector);
+    final member = context.select(memberSelector);
+    final users = context.select(usersSelector);
+    final roles = context.select(memberRolesSelector);
+
+    return MemberEdit(
+      onSubmit: onSubmit,
+      initState: initState,
+      onPressedDelete: onPressedDelete,
+      status: status,
+      error: error,
+      member: member,
+      users: users,
+      roles: roles,
+    );
+  }
 }
 
-class _MemberEditScreenState extends State<MemberEditScreen> {
-  Future _initState() async {
-    await context
-        .read<MembersNotifier>()
-        .fetchEntityIfNeeded(url: _getMemberUrl(), reset: true);
-  }
+typedef _OnSubmit = Future<StoreResult?> Function(MemberInput input);
 
-  Future<StoreResult?> _onSubmit(MemberInput input) async {
-    final result = await context
-        .read<MembersNotifier>()
-        .mergeEntity(urlParams: _getMemberUrl(), data: input);
-    if (result is Success) {
-      Navigator.of(context).pop();
-    }
-    return result;
-  }
+class MemberEdit extends StatefulWidget {
+  const MemberEdit({
+    required _OnSubmit onSubmit,
+    required VoidCallback initState,
+    required VoidCallback onPressedDelete,
+    required StateStatus status,
+    required StoreError? error,
+    required Member? member,
+    required List<User> users,
+    required List<Role> roles,
+  })  : _onSubmit = onSubmit,
+        _initState = initState,
+        _onPressedDelete = onPressedDelete,
+        _status = status,
+        _error = error,
+        _member = member,
+        _users = users,
+        _roles = roles;
+  final _OnSubmit _onSubmit;
+  final VoidCallback _initState;
+  final VoidCallback _onPressedDelete;
+  final StateStatus _status;
+  final StoreError? _error;
+  final Member? _member;
+  final List<User> _users;
+  final List<Role> _roles;
 
-  Future _onPressedDelete() async {
-    final result = await context
-        .read<MembersNotifier>()
-        .deleteEntity(urlParams: _getMemberUrl());
-    if (result is Success) {
-      await context.read<RouteStateNotifier>().replace(BottomTab.members, []);
-    }
-  }
+  @override
+  _MemberEditState createState() => _MemberEditState();
+}
 
-  MemberUrl _getMemberUrl() => MemberUrl(
-        divisionId: widget._divisionId,
-        id: widget._memberId,
-      );
-
+class _MemberEditState extends State<MemberEdit> {
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      _initState();
+      widget._initState();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final member = context.select(memberSelector);
-    final error = context.select(memberErrorSelector);
-    final status = context.select(memberStatusSelector);
-    final users = context.select(usersSelector);
-    final roles = context.select(memberRolesSelector);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit member'),
@@ -107,21 +153,21 @@ class _MemberEditScreenState extends State<MemberEditScreen> {
           IconButton(
             icon: const Icon(Icons.delete),
             tooltip: 'Delete member',
-            onPressed: member == null ? null : _onPressedDelete,
+            onPressed: widget._member == null ? null : widget._onPressedDelete,
           ),
         ],
       ),
       body: ErrorWrapper(
-        error: error,
-        onPressedReload: _initState,
+        error: widget._error,
+        onPressedReload: widget._initState,
         child: Loader(
-          status: status,
+          status: widget._status,
           child: MemberForm(
-            member: member,
-            users: users,
-            roles: roles,
-            status: status,
-            onSubmit: _onSubmit,
+            member: widget._member,
+            users: widget._users,
+            roles: widget._roles,
+            status: widget._status,
+            onSubmit: widget._onSubmit,
           ),
         ),
       ),

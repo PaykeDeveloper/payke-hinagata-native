@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/domain/common/roles/models/role.dart';
 import 'package:native_app/store/state/domain/common/roles/selectors.dart';
+import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_input.dart';
@@ -28,46 +32,78 @@ class MemberAddPage extends Page {
   }
 }
 
-class MemberAddScreen extends StatefulWidget {
+class MemberAddScreen extends StatelessWidget {
   const MemberAddScreen({required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
-  _MemberAddScreenState createState() => _MemberAddScreenState();
-}
-
-class _MemberAddScreenState extends State<MemberAddScreen> {
-  Future<StoreResult?> _onSubmit(MemberInput input) async {
-    final result = await context.read<MembersNotifier>().addEntity(
-        urlParams: MembersUrl(divisionId: widget._divisionId), data: input);
-    if (result is Success) {
-      Navigator.of(context).pop();
-    }
-    return result;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final error = context.select(membersErrorSelector);
+    Future<StoreResult?> onSubmit(MemberInput input) async {
+      final result = await context.read<MembersNotifier>().addEntity(
+          urlParams: MembersUrl(divisionId: _divisionId), data: input);
+      if (result is Success) {
+        Navigator.of(context).pop();
+      }
+      return result;
+    }
+
     final status = context.select(membersStatusSelector);
+    final error = context.select(membersErrorSelector);
     final users = context.select(usersSelector);
     final roles = context.select(memberRolesSelector);
 
+    return MemberAdd(
+      onSubmit: onSubmit,
+      status: status,
+      error: error,
+      users: users,
+      roles: roles,
+    );
+  }
+}
+
+typedef _OnSubmit = Future<StoreResult?> Function(MemberInput input);
+
+class MemberAdd extends StatefulWidget {
+  const MemberAdd({
+    required _OnSubmit onSubmit,
+    required StateStatus status,
+    required StoreError? error,
+    required List<User> users,
+    required List<Role> roles,
+  })  : _onSubmit = onSubmit,
+        _status = status,
+        _error = error,
+        _users = users,
+        _roles = roles;
+  final _OnSubmit _onSubmit;
+  final StateStatus _status;
+  final StoreError? _error;
+  final List<User> _users;
+  final List<Role> _roles;
+
+  @override
+  _MemberAddState createState() => _MemberAddState();
+}
+
+class _MemberAddState extends State<MemberAdd> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add member'),
       ),
       body: ErrorWrapper(
-        error: error,
+        error: widget._error,
         child: Loader(
-          status: status,
+          status: widget._status,
           child: MemberForm(
             member: null,
-            users: users,
-            roles: roles,
-            status: status,
-            onSubmit: _onSubmit,
+            users: widget._users,
+            roles: widget._roles,
+            status: widget._status,
+            onSubmit: widget._onSubmit,
           ),
         ),
       ),

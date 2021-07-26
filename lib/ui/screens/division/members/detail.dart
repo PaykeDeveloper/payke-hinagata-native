@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:native_app/store/state/domain/division/members/models/member.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
@@ -37,7 +40,7 @@ class MemberDetailPage extends Page {
   }
 }
 
-class MemberDetailScreen extends StatefulWidget {
+class MemberDetailScreen extends StatelessWidget {
   const MemberDetailScreen({
     required DivisionId divisionId,
     required MemberId memberId,
@@ -47,39 +50,66 @@ class MemberDetailScreen extends StatefulWidget {
   final MemberId _memberId;
 
   @override
-  _MemberDetailScreenState createState() => _MemberDetailScreenState();
+  Widget build(BuildContext context) {
+    void initState() {
+      context.read<MembersNotifier>().fetchEntityIfNeeded(
+          url: MemberUrl(divisionId: _divisionId, id: _memberId), reset: true);
+    }
+
+    void onPressedEdit() {
+      context.read<RouteStateNotifier>().push(
+            BottomTab.members,
+            MemberEditPage(divisionId: _divisionId, memberId: _memberId),
+          );
+    }
+
+    final status = context.select(memberStatusSelector);
+    final error = context.select(memberErrorSelector);
+    final member = context.select(memberSelector);
+
+    return MemberDetail(
+      initState: initState,
+      onPressedEdit: onPressedEdit,
+      status: status,
+      error: error,
+      member: member,
+    );
+  }
 }
 
-class _MemberDetailScreenState extends State<MemberDetailScreen> {
-  Future _initState() async {
-    await context.read<MembersNotifier>().fetchEntityIfNeeded(
-        url: MemberUrl(divisionId: widget._divisionId, id: widget._memberId),
-        reset: true);
-  }
+class MemberDetail extends StatefulWidget {
+  const MemberDetail({
+    required VoidCallback initState,
+    required VoidCallback onPressedEdit,
+    required StateStatus status,
+    required StoreError? error,
+    required Member? member,
+  })  : _initState = initState,
+        _onPressedEdit = onPressedEdit,
+        _status = status,
+        _error = error,
+        _member = member;
+  final VoidCallback _initState;
+  final VoidCallback _onPressedEdit;
+  final StateStatus _status;
+  final StoreError? _error;
+  final Member? _member;
 
-  void _onPressedEdit() {
-    context.read<RouteStateNotifier>().push(
-          BottomTab.members,
-          MemberEditPage(
-            divisionId: widget._divisionId,
-            memberId: widget._memberId,
-          ),
-        );
-  }
+  @override
+  _MemberDetailState createState() => _MemberDetailState();
+}
 
+class _MemberDetailState extends State<MemberDetail> {
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      _initState();
+      widget._initState();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final member = context.select(memberSelector);
-    final error = context.select(memberErrorSelector);
-    final status = context.select(memberStatusSelector);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Member detail'),
@@ -87,17 +117,17 @@ class _MemberDetailScreenState extends State<MemberDetailScreen> {
           IconButton(
             icon: const Icon(Icons.edit),
             tooltip: 'Edit member',
-            onPressed: member == null ? null : _onPressedEdit,
+            onPressed: widget._member == null ? null : widget._onPressedEdit,
           ),
         ],
       ),
       body: ErrorWrapper(
-        error: error,
-        onPressedReload: _initState,
+        error: widget._error,
+        onPressedReload: widget._initState,
         child: Loader(
-          status: status,
+          status: widget._status,
           child: Center(
-            child: Text('Name: ${member?.id.value}'),
+            child: Text('Name: ${widget._member?.id.value}'),
           ),
         ),
       ),

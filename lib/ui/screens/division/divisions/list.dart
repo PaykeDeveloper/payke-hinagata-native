@@ -1,5 +1,7 @@
 // FIXME: SAMPLE CODE
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/divisions_url.dart';
@@ -14,32 +16,77 @@ import 'package:provider/provider.dart';
 import './add.dart';
 import './edit.dart';
 
-class DivisionListScreen extends StatefulWidget {
-  const DivisionListScreen();
-
+class DivisionListScreen extends StatelessWidget {
   @override
-  _DivisionListScreenState createState() => _DivisionListScreenState();
+  Widget build(BuildContext context) {
+    Future initState() async {
+      await context
+          .read<DivisionsNotifier>()
+          .fetchEntitiesIfNeeded(url: const DivisionsUrl(), reset: true);
+    }
+
+    Future onRefresh() async {
+      await context
+          .read<DivisionsNotifier>()
+          .fetchEntities(url: const DivisionsUrl());
+    }
+
+    Future setDivisionId(DivisionId divisionId) async {
+      await context.read<DivisionIdNotifier>().setDivisionId(divisionId);
+    }
+
+    final error = context.select(divisionsErrorSelector);
+    final divisions = context.select(divisionsSelector);
+    final selectedId = context.select(divisionIdSelector);
+
+    return DivisionList(
+      initState: initState,
+      onRefresh: onRefresh,
+      setDivisionId: setDivisionId,
+      error: error,
+      divisions: divisions,
+      selectedId: selectedId,
+    );
+  }
 }
 
-class _DivisionListScreenState extends State<DivisionListScreen> {
+class DivisionList extends StatefulWidget {
+  const DivisionList({
+    required Function0<Future> initState,
+    required Function0<Future> onRefresh,
+    required Function1<DivisionId, Future> setDivisionId,
+    required StoreError? error,
+    required List<Division> divisions,
+    required DivisionId? selectedId,
+  })  : _initState = initState,
+        _onRefresh = onRefresh,
+        _setDivisionId = setDivisionId,
+        _error = error,
+        _divisions = divisions,
+        _selectedId = selectedId;
+
+  final Function0<Future> _initState;
+  final Function0<Future> _onRefresh;
+  final Function1<DivisionId, Future> _setDivisionId;
+  final StoreError? _error;
+  final List<Division> _divisions;
+  final DivisionId? _selectedId;
+
+  @override
+  _DivisionListState createState() => _DivisionListState();
+}
+
+class _DivisionListState extends State<DivisionList> {
   bool _loading = false;
 
   Future _initState() async {
     setState(() {
       _loading = true;
     });
-    await context
-        .read<DivisionsNotifier>()
-        .fetchEntitiesIfNeeded(url: const DivisionsUrl(), reset: true);
+    await widget._initState();
     setState(() {
       _loading = false;
     });
-  }
-
-  Future _onRefresh() async {
-    await context
-        .read<DivisionsNotifier>()
-        .fetchEntities(url: const DivisionsUrl());
   }
 
   void _onPressedNew() {
@@ -49,7 +96,7 @@ class _DivisionListScreenState extends State<DivisionListScreen> {
   }
 
   Future _onTapSelect(DivisionId divisionId) async {
-    await context.read<DivisionIdNotifier>().setDivisionId(divisionId);
+    await widget._setDivisionId(divisionId);
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
@@ -70,10 +117,6 @@ class _DivisionListScreenState extends State<DivisionListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final divisions = context.select(divisionsSelector);
-    final error = context.select(divisionsErrorSelector);
-    final selectedId = context.select(divisionIdSelector);
-
     return Scaffold(
       appBar: AppBar(title: const Text('Divisions')),
       floatingActionButton: FloatingActionButton(
@@ -81,22 +124,22 @@ class _DivisionListScreenState extends State<DivisionListScreen> {
         child: const Icon(Icons.add),
       ),
       body: ErrorWrapper(
-        error: error,
+        error: widget._error,
         onPressedReload: _initState,
         child: Loader(
           loading: _loading,
           child: RefreshIndicator(
-            onRefresh: _onRefresh,
+            onRefresh: widget._onRefresh,
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: divisions.length,
+              itemCount: widget._divisions.length,
               itemBuilder: (context, index) {
-                final division = divisions[index];
+                final division = widget._divisions[index];
                 return _ListItem(
                   division: division,
                   onTapItem: () => _onTapSelect(division.id),
                   onPressedEdit: () => _onPressedEdit(division.id),
-                  selected: division.id == selectedId,
+                  selected: division.id == widget._selectedId,
                 );
               },
             ),

@@ -1,8 +1,11 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
@@ -38,7 +41,7 @@ class ProjectDetailPage extends Page {
   }
 }
 
-class ProjectDetailScreen extends StatefulWidget {
+class ProjectDetailScreen extends StatelessWidget {
   const ProjectDetailScreen({
     required DivisionId divisionId,
     required ProjectSlug projectSlug,
@@ -48,40 +51,66 @@ class ProjectDetailScreen extends StatefulWidget {
   final ProjectSlug _projectSlug;
 
   @override
-  _ProjectDetailScreenState createState() => _ProjectDetailScreenState();
+  Widget build(BuildContext context) {
+    void initState() {
+      context.read<ProjectsNotifier>().fetchEntityIfNeeded(
+          url: ProjectUrl(divisionId: _divisionId, slug: _projectSlug),
+          reset: true);
+    }
+
+    void onPressedEdit() {
+      context.read<RouteStateNotifier>().push(
+            BottomTab.projects,
+            ProjectEditPage(divisionId: _divisionId, projectSlug: _projectSlug),
+          );
+    }
+
+    final status = context.select(projectStatusSelector);
+    final error = context.select(projectErrorSelector);
+    final project = context.select(projectSelector);
+    return ProjectDetail(
+      initState: initState,
+      onPressedEdit: onPressedEdit,
+      status: status,
+      error: error,
+      project: project,
+    );
+  }
 }
 
-class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
-  Future _initState() async {
-    await context.read<ProjectsNotifier>().fetchEntityIfNeeded(
-        url: ProjectUrl(
-            divisionId: widget._divisionId, slug: widget._projectSlug),
-        reset: true);
-  }
+class ProjectDetail extends StatefulWidget {
+  const ProjectDetail({
+    required VoidCallback initState,
+    required VoidCallback onPressedEdit,
+    required StateStatus status,
+    required StoreError? error,
+    required Project? project,
+  })  : _initState = initState,
+        _onPressedEdit = onPressedEdit,
+        _status = status,
+        _error = error,
+        _project = project;
+  final VoidCallback _initState;
+  final VoidCallback _onPressedEdit;
+  final StateStatus _status;
+  final StoreError? _error;
+  final Project? _project;
 
-  void _onPressedEdit() {
-    context.read<RouteStateNotifier>().push(
-          BottomTab.projects,
-          ProjectEditPage(
-            divisionId: widget._divisionId,
-            projectSlug: widget._projectSlug,
-          ),
-        );
-  }
+  @override
+  _ProjectDetailState createState() => _ProjectDetailState();
+}
 
+class _ProjectDetailState extends State<ProjectDetail> {
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () {
-      _initState();
+      widget._initState();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final project = context.select(projectSelector);
-    final error = context.select(projectErrorSelector);
-    final status = context.select(projectStatusSelector);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Project detail'),
@@ -89,17 +118,17 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
           IconButton(
             icon: const Icon(Icons.edit),
             tooltip: 'Edit project',
-            onPressed: project == null ? null : _onPressedEdit,
+            onPressed: widget._project == null ? null : widget._onPressedEdit,
           ),
         ],
       ),
       body: ErrorWrapper(
-        error: error,
-        onPressedReload: _initState,
+        error: widget._error,
+        onPressedReload: widget._initState,
         child: Loader(
-          status: status,
+          status: widget._status,
           child: Center(
-            child: Text('Name: ${project?.name}'),
+            child: Text('Name: ${widget._project?.name}'),
           ),
         ),
       ),

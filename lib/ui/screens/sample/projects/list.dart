@@ -1,5 +1,7 @@
 // FIXME: SAMPLE CODE
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
@@ -38,7 +40,7 @@ class ProjectListPage extends Page {
   }
 }
 
-class ProjectListScreen extends StatefulWidget {
+class ProjectListScreen extends StatelessWidget {
   const ProjectListScreen({
     required DivisionId divisionId,
     required VoidCallback openDrawer,
@@ -48,54 +50,108 @@ class ProjectListScreen extends StatefulWidget {
   final VoidCallback _openDrawer;
 
   @override
-  _ProjectListScreenState createState() => _ProjectListScreenState();
+  Widget build(BuildContext context) {
+    Future initState() async {
+      await context.read<ProjectsNotifier>().fetchEntitiesIfNeeded(
+            url: ProjectsUrl(divisionId: _divisionId),
+            reset: true,
+          );
+    }
+
+    Future onRefresh() async {
+      await context
+          .read<ProjectsNotifier>()
+          .fetchEntities(url: ProjectsUrl(divisionId: _divisionId));
+    }
+
+    void onPressedNew() {
+      context
+          .read<RouteStateNotifier>()
+          .push(BottomTab.projects, ProjectAddPage(divisionId: _divisionId));
+    }
+
+    void onTapShow(ProjectSlug projectSlug) {
+      context.read<RouteStateNotifier>().push(
+            BottomTab.projects,
+            ProjectDetailPage(
+                divisionId: _divisionId, projectSlug: projectSlug),
+          );
+    }
+
+    void onPressedEdit(ProjectSlug projectSlug) {
+      context.read<RouteStateNotifier>().push(
+            BottomTab.projects,
+            ProjectEditPage(
+              divisionId: _divisionId,
+              projectSlug: projectSlug,
+            ),
+          );
+    }
+
+    bool checkRouteEmpty() => context.read<RouteState>().projectPages.isEmpty;
+
+    final error = context.select(projectsErrorSelector);
+    final projects = context.select(projectsSelector);
+
+    return ProjectList(
+      openDrawer: _openDrawer,
+      initState: initState,
+      onRefresh: onRefresh,
+      onPressedNew: onPressedNew,
+      onTapShow: onTapShow,
+      onPressedEdit: onPressedEdit,
+      checkRouteEmpty: checkRouteEmpty,
+      error: error,
+      projects: projects,
+    );
+  }
 }
 
-class _ProjectListScreenState extends State<ProjectListScreen> {
+class ProjectList extends StatefulWidget {
+  const ProjectList({
+    required VoidCallback openDrawer,
+    required Function0<Future> initState,
+    required Function0<Future> onRefresh,
+    required VoidCallback onPressedNew,
+    required Function1<ProjectSlug, void> onTapShow,
+    required Function1<ProjectSlug, void> onPressedEdit,
+    required Function0<bool> checkRouteEmpty,
+    required StoreError? error,
+    required List<Project> projects,
+  })  : _openDrawer = openDrawer,
+        _initState = initState,
+        _onRefresh = onRefresh,
+        _onPressedNew = onPressedNew,
+        _onTapShow = onTapShow,
+        _onPressedEdit = onPressedEdit,
+        _checkRouteEmpty = checkRouteEmpty,
+        _error = error,
+        _projects = projects;
+  final VoidCallback _openDrawer;
+  final Function0<Future> _initState;
+  final Function0<Future> _onRefresh;
+  final VoidCallback _onPressedNew;
+  final Function1<ProjectSlug, void> _onTapShow;
+  final Function1<ProjectSlug, void> _onPressedEdit;
+  final Function0<bool> _checkRouteEmpty;
+  final StoreError? _error;
+  final List<Project> _projects;
+
+  @override
+  _ProjectListState createState() => _ProjectListState();
+}
+
+class _ProjectListState extends State<ProjectList> {
   bool _loading = false;
 
   Future _initState() async {
     setState(() {
       _loading = true;
     });
-    await context.read<ProjectsNotifier>().fetchEntitiesIfNeeded(
-          url: ProjectsUrl(divisionId: widget._divisionId),
-          reset: true,
-        );
+    await widget._initState();
     setState(() {
       _loading = false;
     });
-  }
-
-  Future _onRefresh() async {
-    await context
-        .read<ProjectsNotifier>()
-        .fetchEntities(url: ProjectsUrl(divisionId: widget._divisionId));
-  }
-
-  void _onPressedNew() {
-    context.read<RouteStateNotifier>().push(
-        BottomTab.projects, ProjectAddPage(divisionId: widget._divisionId));
-  }
-
-  void _onTapShow(ProjectSlug projectSlug) {
-    context.read<RouteStateNotifier>().push(
-          BottomTab.projects,
-          ProjectDetailPage(
-            divisionId: widget._divisionId,
-            projectSlug: projectSlug,
-          ),
-        );
-  }
-
-  void _onPressedEdit(ProjectSlug projectSlug) {
-    context.read<RouteStateNotifier>().push(
-          BottomTab.projects,
-          ProjectEditPage(
-            divisionId: widget._divisionId,
-            projectSlug: projectSlug,
-          ),
-        );
   }
 
   @override
@@ -107,18 +163,15 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
   }
 
   @override
-  void didUpdateWidget(covariant ProjectListScreen oldWidget) {
+  void didUpdateWidget(covariant ProjectList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (context.read<RouteState>().projectPages.isEmpty) {
+    if (widget._checkRouteEmpty()) {
       _initState();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final projects = context.select(projectsSelector);
-    final error = context.select(projectsErrorSelector);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Projects'),
@@ -128,25 +181,25 @@ class _ProjectListScreenState extends State<ProjectListScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _onPressedNew,
+        onPressed: widget._onPressedNew,
         child: const Icon(Icons.add),
       ),
       body: ErrorWrapper(
-        error: error,
+        error: widget._error,
         onPressedReload: _initState,
         child: Loader(
           loading: _loading,
           child: RefreshIndicator(
-            onRefresh: _onRefresh,
+            onRefresh: widget._onRefresh,
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: projects.length,
+              itemCount: widget._projects.length,
               itemBuilder: (context, index) {
-                final project = projects[index];
+                final project = widget._projects[index];
                 return _ListItem(
                   project: project,
-                  onTapItem: () => _onTapShow(project.slug),
-                  onPressedEdit: () => _onPressedEdit(project.slug),
+                  onTapItem: () => widget._onTapShow(project.slug),
+                  onPressedEdit: () => widget._onPressedEdit(project.slug),
                 );
               },
             ),
