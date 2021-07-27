@@ -16,6 +16,11 @@
 % flutter test --dart-define=BACKEND_ORIGIN=http://localhost:8000
 ```
 
+### 実機テストの実行
+```shell script
+% flutter drive --target=test_driver/main.dart --keep-app-running --dart-define=BACKEND_ORIGIN=http://localhost:8000
+```
+
 ### freezedの生成ファイル作成
 ```shell script
 % flutter pub run build_runner build --delete-conflicting-outputs

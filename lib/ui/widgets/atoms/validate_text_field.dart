@@ -5,6 +5,7 @@ import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 class ValidateTextField<ParentWidget extends StatefulWidget>
     extends StatelessWidget {
   const ValidateTextField({
+    Key? key,
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
@@ -16,7 +17,8 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     int maxLines = 1,
     ValueTransformer<String?>? valueTransformer,
     List<FormFieldValidator<String>>? validators,
-  })  : _parent = parent,
+  })  : _key = key,
+        _parent = parent,
         _name = name,
         _labelText = labelText,
         _initialValue = initialValue,
@@ -27,7 +29,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
         _maxLines = maxLines,
         _valueTransformer = valueTransformer,
         _validators = validators;
-
+  final Key? _key;
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
@@ -68,6 +70,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: _minHeight),
       child: FormBuilderTextField(
+        key: _key ?? Key(_name),
         name: _name,
         initialValue: _initialValue,
         enabled: _enabled ?? !_parent.loading,

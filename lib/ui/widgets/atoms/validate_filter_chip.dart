@@ -5,6 +5,7 @@ import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
     extends StatelessWidget {
   const ValidateFilterChip({
+    Key? key,
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
@@ -15,7 +16,8 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
     List<FormFieldValidator<List<T>>>? validators,
     this.runSpacing = 0.0,
     this.spacing = 0.0,
-  })  : _parent = parent,
+  })  : _key = key,
+        _parent = parent,
         _name = name,
         _labelText = labelText,
         _options = options,
@@ -23,7 +25,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
         _enabled = enabled,
         _valueTransformer = valueTransformer,
         _validators = validators;
-
+  final Key? _key;
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
@@ -62,6 +64,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderFilterChip<T>(
+        key: _key ?? Key(_name),
         name: _name,
         initialValue: _initialValue,
         enabled: _enabled ?? !_parent.loading,

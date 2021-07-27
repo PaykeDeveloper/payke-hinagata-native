@@ -5,19 +5,21 @@ import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 class ValidateCheckbox<ParentWidget extends StatefulWidget>
     extends StatelessWidget {
   const ValidateCheckbox({
+    Key? key,
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
     bool? initialValue,
     bool? enabled,
     List<FormFieldValidator<bool>>? validators,
-  })  : _parent = parent,
+  })  : _key = key,
+        _parent = parent,
         _name = name,
         _labelText = labelText,
         _initialValue = initialValue,
         _enabled = enabled,
         _validators = validators;
-
+  final Key? _key;
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
@@ -53,6 +55,7 @@ class ValidateCheckbox<ParentWidget extends StatefulWidget>
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderCheckbox(
+        key: _key ?? Key(_name),
         name: _name,
         title: Text(_labelText),
         decoration: InputDecoration(
