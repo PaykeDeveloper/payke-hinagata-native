@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:dartx/dartx.dart';
 import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
+typedef DioInspector = Function1<Dio, Dio>;
+
 class ApiClient {
-  ApiClient(String baseUrl) {
-    _dio = _getDio(baseUrl);
+  ApiClient({required String url, DioInspector? inspector}) {
+    final dio = _getDio(url);
+    _dio = inspector != null ? inspector(dio) : dio;
   }
 
   late final Dio _dio;

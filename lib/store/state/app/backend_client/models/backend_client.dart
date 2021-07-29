@@ -9,7 +9,11 @@ import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 
 class BackendClient {
-  final _client = ApiClient(backendBaseUrl);
+  BackendClient({DioInspector? inspector}) {
+    _client = ApiClient(url: backendBaseUrl, inspector: inspector);
+  }
+
+  late final ApiClient _client;
 
   bool get authenticated => _client.token != null;
 

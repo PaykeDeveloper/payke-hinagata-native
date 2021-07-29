@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
+import 'package:native_app/base/api_client.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/common/roles/notifier.dart';
@@ -19,14 +20,15 @@ import './state/domain/division/divisions/notifier.dart';
 import './state/domain/sample/projects/notifier.dart';
 import './state/ui/division_id/notifier.dart';
 
-List<SingleChildWidget> getProviders() {
+List<SingleChildWidget> getProviders({DioInspector? backendInspector}) {
   return [
     StateNotifierProvider<LocaleNotifier, Locale?>(
         create: (context) => LocaleNotifier()),
     StateNotifierProvider<BackendTokenNotifier, BackendTokenState>(
         create: (context) => BackendTokenNotifier()),
     StateNotifierProvider<BackendClientNotifier, BackendClient>(
-        create: (context) => BackendClientNotifier()),
+        create: (context) =>
+            BackendClientNotifier(inspector: backendInspector)),
     StateNotifierProvider<LoginNotifier, LoginState>(
         create: (context) => LoginNotifier()),
     StateNotifierProvider<LogoutNotifier, LogoutState>(

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:native_app/base/api_client.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
@@ -7,7 +8,8 @@ import './models/backend_client.dart';
 
 class BackendClientNotifier extends StateNotifier<BackendClient>
     with LocatorMixin {
-  BackendClientNotifier() : super(BackendClient());
+  BackendClientNotifier({DioInspector? inspector})
+      : super(BackendClient(inspector: inspector));
 
   @override
   void update(Locator watch) {
