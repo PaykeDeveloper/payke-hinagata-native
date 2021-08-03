@@ -40,7 +40,6 @@ void main() {
 
       await tester.tap(find.text(_divisionName));
       await tester.pump(const Duration(seconds: 2));
-      expect(find.text('Home'), findsWidgets);
       await tester.tap(find.text('Projects'));
       await tester.pump(const Duration(seconds: 2));
       await tester.tap(find.text(_projectName));
