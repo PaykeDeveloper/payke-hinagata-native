@@ -5,44 +5,60 @@ import 'package:integration_test/integration_test.dart';
 import 'package:native_app/base/preferences.dart';
 import 'package:native_app/main.dart' as app;
 
+const _divisionName = 'Division1';
+const _projectName = 'Project1';
+const _projectNewName = 'NewProject1';
+
 void main() {
   group('Device test', () {
     IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-    testWidgets("login", (tester) async {
+    testWidgets("New user", (tester) async {
       app.run(backendInspector: (dio) {
         final adapter = DioAdapter(dio: dio);
-        inspect(adapter);
+        _inspect(adapter);
         return dio;
       });
       await tester.pumpAndSettle();
 
       await tester.enterText(
-          find.byKey(const Key('email')), 'admin@example.com');
-      await tester.enterText(find.byKey(const Key('password')), 'payke123');
+          find.byKey(const Key('email')), 'test@example.com');
+      await tester.enterText(find.byKey(const Key('password')), 'password');
       await tester.tap(find.text('ログイン'));
       await tester.pumpAndSettle();
       expect(find.text('Divisions'), findsOneWidget);
     });
 
-    testWidgets("After login", (tester) async {
+    testWidgets("Existing user", (tester) async {
       await Preferences.backendToken.set("test");
       app.run(backendInspector: (dio) {
         final adapter = DioAdapter(dio: dio);
-        inspect(adapter);
+        _inspect(adapter);
         return dio;
       });
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Test1'));
-      await Future.delayed(const Duration(seconds: 3));
+
+      await tester.tap(find.text(_divisionName));
+      await tester.pump(const Duration(seconds: 2));
       expect(find.text('Home'), findsWidgets);
+      await tester.tap(find.text('Projects'));
+      await tester.pump(const Duration(seconds: 2));
+      await tester.tap(find.text(_projectName));
+      await tester.pump(const Duration(seconds: 2));
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pump(const Duration(seconds: 2));
+      await tester.enterText(find.byKey(const Key('name')), _projectNewName);
+      await tester.ensureVisible(find.text('送信'));
+      await tester.tap(find.text('送信'));
+      await tester.pump(const Duration(seconds: 2));
+      expect(find.textContaining(_projectNewName), findsOneWidget);
     });
   });
 }
 
-void inspect(DioAdapter adapter) => adapter
+void _inspect(DioAdapter adapter) => adapter
   ..onPost(
-    'api/v1/login',
+    'api/v1/login/',
     (server) => server.reply(200, {"token": "test"}),
     data: Matchers.any,
   )
@@ -73,7 +89,7 @@ void inspect(DioAdapter adapter) => adapter
     (server) => server.reply(200, [
       {
         "id": 1,
-        "name": "Test1",
+        "name": _divisionName,
         "created_at": "2021-05-26T07:52:11.000000Z",
         "updated_at": "2021-07-21T06:28:05.000000Z",
         "request_member_id": 1,
@@ -93,4 +109,70 @@ void inspect(DioAdapter adapter) => adapter
         ]
       }
     ]),
-  );
+  )
+  ..onGet(
+      'api/v1/divisions/1/projects/',
+      (server) => server.reply(200, [
+            {
+              "id": 1,
+              "division_id": 1,
+              "slug": "d5095f7e-eb63-40b5-a641-2e672d167384",
+              "name": _projectName,
+              "description": "ABV",
+              "priority": "high",
+              "approved": true,
+              "start_date": "2021-06-01",
+              "finished_at": "2021-06-03T03:09:00.000000Z",
+              "difficulty": 1,
+              "coefficient": 2.3,
+              "productivity": 4.5,
+              "lock_version": 17,
+              "created_at": "2021-06-02T07:04:03.000000Z",
+              "updated_at": "2021-06-04T03:51:17.000000Z",
+              "deleted_at": null,
+              "cover_url": "https://placehold.jp/150x150.png"
+            }
+          ]))
+  ..onGet(
+      'api/v1/divisions/1/projects/d5095f7e-eb63-40b5-a641-2e672d167384/',
+      (server) => server.reply(200, {
+            "id": 1,
+            "division_id": 1,
+            "slug": "6b42f759-0de1-45dd-bb1d-e82af6207a55",
+            "name": _projectName,
+            "description": "",
+            "priority": null,
+            "approved": false,
+            "start_date": null,
+            "finished_at": null,
+            "difficulty": null,
+            "coefficient": null,
+            "productivity": null,
+            "lock_version": 3,
+            "created_at": "2021-06-02T05:05:13.000000Z",
+            "updated_at": "2021-07-21T03:59:27.000000Z",
+            "deleted_at": null,
+            "cover_url": ""
+          }))
+  ..onPost(
+      'api/v1/divisions/1/projects/d5095f7e-eb63-40b5-a641-2e672d167384/',
+      (server) => server.reply(200, {
+            "id": 1,
+            "division_id": 1,
+            "slug": "6b42f759-0de1-45dd-bb1d-e82af6207a55",
+            "name": _projectNewName,
+            "description": "",
+            "priority": null,
+            "approved": false,
+            "start_date": null,
+            "finished_at": null,
+            "difficulty": null,
+            "coefficient": null,
+            "productivity": null,
+            "lock_version": 3,
+            "created_at": "2021-06-02T05:05:13.000000Z",
+            "updated_at": "2021-07-21T03:59:27.000000Z",
+            "deleted_at": null,
+            "cover_url": ""
+          }),
+      data: Matchers.any);
