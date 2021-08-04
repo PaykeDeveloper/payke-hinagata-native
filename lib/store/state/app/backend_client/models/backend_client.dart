@@ -7,9 +7,10 @@ import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
+import 'package:native_app/ui/utils.dart';
 
 class BackendClient {
-  final _client = ApiClient(backendBaseUrl);
+  final _client = getIt<ApiClient>(param1: backendBaseUrl);
 
   bool get authenticated => _client.token != null;
 

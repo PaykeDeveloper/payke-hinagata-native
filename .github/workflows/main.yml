@@ -10,12 +10,12 @@ on:
     types:
       - published
 env:
-  java_version: '12.x'
-  flutter_version: '2.2.1'
+  java_version: '15.x'
+  flutter_version: '2.2.3'
 jobs:
   test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: macos-latest
+    timeout-minutes: 20
     env:
       BACKEND_ORIGIN: https://example.com
     steps:
@@ -31,6 +31,9 @@ jobs:
       - run: flutter analyze
       - run: flutter format . --set-exit-if-changed
       - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN
+      - run: xcrun xctrace list devices
+      - run: xcrun simctl boot "7337B6F6-C353-4581-859E-CE00188F8BCE"
+      - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN integration_test
   deploy-staging:
     needs: test
     if: github.ref == 'refs/heads/main'

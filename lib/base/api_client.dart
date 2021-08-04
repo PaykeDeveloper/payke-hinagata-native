@@ -3,16 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
-class ApiClient {
-  ApiClient(String baseUrl) {
-    _dio = _getDio(baseUrl);
-  }
-
-  late final Dio _dio;
-  final _cancelToken = CancelToken();
-
-  CancelToken get cancelToken => _cancelToken;
-
+abstract class ApiClient {
   String? token;
 
   String? language;
@@ -20,9 +11,47 @@ class ApiClient {
   Future<Response<Result>> get<Result>({
     required String path,
     CancelToken? cancelToken,
+  });
+
+  Future<Response<Result>> post<Result>({
+    required String path,
+    required Map<String, dynamic> data,
+    required bool useFormData,
+    required bool containNull,
+    CancelToken? cancelToken,
+  });
+
+  Future<Response<Result>> patch<Result>({
+    required String path,
+    required Map<String, dynamic> data,
+    required bool useFormData,
+    required bool containNull,
+    CancelToken? cancelToken,
+  });
+
+  Future<Response<Result>> delete<Result>({
+    required String path,
+    CancelToken? cancelToken,
+  });
+}
+
+class ApiClientImpl extends ApiClient {
+  ApiClientImpl({required String url}) {
+    dio = _getDio(url);
+  }
+
+  late final Dio dio;
+  final _cancelToken = CancelToken();
+
+  CancelToken get cancelToken => _cancelToken;
+
+  @override
+  Future<Response<Result>> get<Result>({
+    required String path,
+    CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
-    final response = await _dio.get<Result>(
+    final response = await dio.get<Result>(
       path,
       options: options,
       cancelToken: cancelToken ?? _cancelToken,
@@ -30,6 +59,7 @@ class ApiClient {
     return response;
   }
 
+  @override
   Future<Response<Result>> post<Result>({
     required String path,
     required Map<String, dynamic> data,
@@ -41,7 +71,7 @@ class ApiClient {
     final convertedData = useFormData
         ? await _toFormData(data, containNull: containNull)
         : _toMapData(data, containNull: containNull);
-    final response = await _dio.post<Result>(
+    final response = await dio.post<Result>(
       path,
       data: convertedData,
       options: options,
@@ -50,6 +80,7 @@ class ApiClient {
     return response;
   }
 
+  @override
   Future<Response<Result>> patch<Result>({
     required String path,
     required Map<String, dynamic> data,
@@ -62,7 +93,7 @@ class ApiClient {
     final convertedData = useFormData
         ? await _toFormData(data, containNull: containNull)
         : _toMapData(data, containNull: containNull);
-    final response = await _dio.post<Result>(
+    final response = await dio.post<Result>(
       path,
       data: convertedData,
       options: options,
@@ -71,12 +102,13 @@ class ApiClient {
     return response;
   }
 
+  @override
   Future<Response<Result>> delete<Result>({
     required String path,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
-    final response = await _dio.delete<Result>(
+    final response = await dio.delete<Result>(
       path,
       options: options,
       cancelToken: cancelToken ?? _cancelToken,

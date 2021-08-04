@@ -16,6 +16,12 @@
 % flutter test --dart-define=BACKEND_ORIGIN=http://localhost:8000
 ```
 
+### 端末テストの実行
+Android/iOSのエミュレーターを起動した状態で、
+```shell script
+% flutter test --dart-define=BACKEND_ORIGIN=http://localhost:8000 integration_test
+```
+
 ### freezedの生成ファイル作成
 ```shell script
 % flutter pub run build_runner build --delete-conflicting-outputs

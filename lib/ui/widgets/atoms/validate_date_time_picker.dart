@@ -5,6 +5,7 @@ import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
     extends StatelessWidget {
   const ValidateDateTimePicker({
+    Key? key,
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
@@ -15,7 +16,8 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
     InputType inputType = InputType.both,
     ValueTransformer<DateTime?>? valueTransformer,
     List<FormFieldValidator<DateTime>>? validators,
-  })  : _parent = parent,
+  })  : _key = key,
+        _parent = parent,
         _name = name,
         _labelText = labelText,
         _initialValue = initialValue,
@@ -25,7 +27,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
         _inputType = inputType,
         _valueTransformer = valueTransformer,
         _validators = validators;
-
+  final Key? _key;
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
@@ -65,6 +67,7 @@ class ValidateDateTimePicker<ParentWidget extends StatefulWidget>
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderDateTimePicker(
+        key: _key ?? ValueKey(_name),
         name: _name,
         initialValue: _initialValue,
         enabled: _enabled ?? !_parent.loading,
