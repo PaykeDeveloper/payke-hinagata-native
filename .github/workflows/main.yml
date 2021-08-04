@@ -15,7 +15,7 @@ env:
 jobs:
   test:
     runs-on: macos-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
       BACKEND_ORIGIN: https://example.com
     steps:
