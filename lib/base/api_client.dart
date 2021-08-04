@@ -37,7 +37,7 @@ abstract class ApiClient {
 
 class ApiClientImpl extends ApiClient {
   ApiClientImpl({required String url}) {
-    dio = getDio(url);
+    dio = _getDio(url);
   }
 
   late final Dio dio;
@@ -116,7 +116,7 @@ class ApiClientImpl extends ApiClient {
     return response;
   }
 
-  static Dio getDio(String baseUrl) {
+  static Dio _getDio(String baseUrl) {
     final options = BaseOptions(
       baseUrl: baseUrl,
       connectTimeout: 30000,
