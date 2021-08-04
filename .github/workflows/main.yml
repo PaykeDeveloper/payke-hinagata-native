@@ -32,13 +32,7 @@ jobs:
       - run: flutter format . --set-exit-if-changed
       - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN
       - run: |
-          UDID=$(
-            xcrun instruments -s |
-            awk \
-              -F ' *[][]' \
-              -v 'device=iPhone 8 (14.4)' \
-              '$1 == device { print $2 }'
-          )
+          UDID=$(xcrun xctrace list devices | grep "iPhone 11 (14.5)" | awk '{print substr($4, 2, length($4)-2)}')
           xcrun simctl boot "${UDID:?No Simulator with this name found}
       - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN integration_test
   deploy-staging:
