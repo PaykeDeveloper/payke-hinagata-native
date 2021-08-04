@@ -10,11 +10,7 @@ import 'package:native_app/store/state/app/backend_token/models/backend_token.da
 import 'package:native_app/ui/utils.dart';
 
 class BackendClient {
-  BackendClient() {
-    _client = getIt<ApiClient>(param1: backendBaseUrl);
-  }
-
-  late final ApiClient _client;
+  final _client = getIt<ApiClient>(param1: backendBaseUrl);
 
   bool get authenticated => _client.token != null;
 
