@@ -31,10 +31,16 @@ jobs:
       - run: flutter analyze
       - run: flutter format . --set-exit-if-changed
       - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN
-      - uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          script: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN integration_test
+      - run: |
+          UDID=$(
+            xcrun instruments -s |
+            awk \
+              -F ' *[][]' \
+              -v 'device=iPhone 8 (14.4)' \
+              '$1 == device { print $2 }'
+          )
+          xcrun simctl boot "${UDID:?No Simulator with this name found}
+      - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN integration_test
   deploy-staging:
     needs: test
     if: github.ref == 'refs/heads/main'
