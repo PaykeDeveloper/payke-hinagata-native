@@ -10,7 +10,7 @@ on:
     types:
       - published
 env:
-  java_version: '12.x'
+  java_version: '15.x'
   flutter_version: '2.2.3'
 jobs:
   test:
