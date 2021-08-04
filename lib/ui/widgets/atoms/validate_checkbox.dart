@@ -55,7 +55,7 @@ class ValidateCheckbox<ParentWidget extends StatefulWidget>
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderCheckbox(
-        key: _key ?? Key(_name),
+        key: _key ?? ValueKey(_name),
         name: _name,
         title: Text(_labelText),
         decoration: InputDecoration(

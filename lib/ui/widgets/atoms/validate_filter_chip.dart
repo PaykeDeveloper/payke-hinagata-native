@@ -64,7 +64,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderFilterChip<T>(
-        key: _key ?? Key(_name),
+        key: _key ?? ValueKey(_name),
         name: _name,
         initialValue: _initialValue,
         enabled: _enabled ?? !_parent.loading,

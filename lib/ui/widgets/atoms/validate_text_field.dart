@@ -70,7 +70,7 @@ class ValidateTextField<ParentWidget extends StatefulWidget>
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: _minHeight),
       child: FormBuilderTextField(
-        key: _key ?? Key(_name),
+        key: _key ?? ValueKey(_name),
         name: _name,
         initialValue: _initialValue,
         enabled: _enabled ?? !_parent.loading,

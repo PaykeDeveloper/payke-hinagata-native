@@ -25,8 +25,9 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.enterText(
-          find.byKey(const Key('email')), 'test@example.com');
-      await tester.enterText(find.byKey(const Key('password')), 'password');
+          find.byKey(const ValueKey('email')), 'test@example.com');
+      await tester.enterText(
+          find.byKey(const ValueKey('password')), 'password');
       await tester.tap(find.text('ログイン'));
       await tester.pumpAndSettle();
       expect(find.text('Divisions'), findsOneWidget);
@@ -45,7 +46,8 @@ void main() {
       await tester.pump(const Duration(seconds: 3));
       await tester.tap(find.byIcon(Icons.edit));
       await tester.pump(const Duration(seconds: 3));
-      await tester.enterText(find.byKey(const Key('name')), _projectNewName);
+      await tester.enterText(
+          find.byKey(const ValueKey('name')), _projectNewName);
       await tester.ensureVisible(find.text('送信'));
       await tester.tap(find.text('送信'));
       await tester.pump(const Duration(seconds: 3));
