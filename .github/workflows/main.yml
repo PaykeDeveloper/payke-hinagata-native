@@ -11,7 +11,7 @@ on:
       - published
 env:
   java_version: '12.x'
-  flutter_version: '2.2.1'
+  flutter_version: '2.2.3'
 jobs:
   test:
     runs-on: macos-latest
@@ -33,7 +33,7 @@ jobs:
       - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN
       - uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 30
           script: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN integration_test
   deploy-staging:
     needs: test

@@ -38,17 +38,17 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text(_divisionName));
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 3));
       await tester.tap(find.text('Projects'));
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 3));
       await tester.tap(find.text(_projectName));
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 3));
       await tester.tap(find.byIcon(Icons.edit));
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 3));
       await tester.enterText(find.byKey(const Key('name')), _projectNewName);
       await tester.ensureVisible(find.text('送信'));
       await tester.tap(find.text('送信'));
-      await tester.pump(const Duration(seconds: 2));
+      await tester.pump(const Duration(seconds: 3));
       expect(find.textContaining(_projectNewName), findsOneWidget);
     });
   });
