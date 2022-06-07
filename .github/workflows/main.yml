@@ -8,7 +8,7 @@ on:
       - main
 env:
   java_version: '11'
-  java_distribution: 'temurin'
+  java_distribution: 'zulu'
   flutter_version: '3.0.1'
 jobs:
   test:
@@ -22,6 +22,7 @@ jobs:
         with:
           distribution: ${{ env.java_distribution }}
           java-version: ${{ env.java_version }}
+          cache: 'gradle'
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.flutter_version }}
@@ -44,6 +45,7 @@ jobs:
         with:
           distribution: ${{ env.java_distribution }}
           java-version: ${{ env.java_version }}
+          cache: 'gradle'
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.flutter_version }}
