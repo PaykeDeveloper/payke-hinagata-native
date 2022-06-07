@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'backend_token.freezed.dart';
-
 part 'backend_token.g.dart';
 
 @freezed
