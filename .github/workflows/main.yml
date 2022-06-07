@@ -6,12 +6,9 @@ on:
   pull_request:
     branches:
       - main
-  release:
-    types:
-      - published
 env:
   java_version: '15.x'
-  flutter_version: '2.2.3'
+  flutter_version: '3.0.1'
 jobs:
   test:
     runs-on: macos-latest
@@ -34,7 +31,7 @@ jobs:
       - run: xcrun xctrace list devices
       - run: xcrun simctl boot "7337B6F6-C353-4581-859E-CE00188F8BCE"
       - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN integration_test
-  deploy-staging:
+  deploy:
     needs: test
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -54,18 +51,10 @@ jobs:
           BACKEND_ORIGIN: ${{ secrets.BACKEND_ORIGIN }}
       - uses: actions/setup-node@v2
         with:
-          node-version: 14.15.5
+          node-version: 14.18.0
       - run: npm update -g
       - run: npm install -g firebase-tools
       - run: firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk --app $FIREBASE_APP --token $FIREBASE_TOKEN
         env:
           FIREBASE_APP: ${{ secrets.FIREBASE_APP }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-  deploy-production:
-    needs: test
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v2
-      - run: echo TODO
