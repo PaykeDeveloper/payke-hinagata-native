@@ -2,7 +2,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'project_slug.freezed.dart';
-
 part 'project_slug.g.dart';
 
 @freezed

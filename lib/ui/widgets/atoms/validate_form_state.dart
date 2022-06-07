@@ -10,7 +10,9 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
   Map<String, List<String>>? errors;
   bool loading = false;
 
-  Future<StoreResult?> onSubmit() async {}
+  Future<StoreResult?> onSubmit() async {
+    return null;
+  }
 
   void validateAndSubmit() {
     _resetError();

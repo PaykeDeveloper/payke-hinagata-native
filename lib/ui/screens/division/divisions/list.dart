@@ -73,7 +73,7 @@ class DivisionList extends StatefulWidget {
   final DivisionId? _selectedId;
 
   @override
-  _DivisionListState createState() => _DivisionListState();
+  State<DivisionList> createState() => _DivisionListState();
 }
 
 class _DivisionListState extends State<DivisionList> {

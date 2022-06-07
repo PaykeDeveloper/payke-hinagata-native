@@ -63,11 +63,11 @@ class MemberAddScreen extends StatelessWidget {
   }
 }
 
-typedef _OnSubmit = Future<StoreResult?> Function(MemberInput input);
+typedef OnSubmit = Future<StoreResult?> Function(MemberInput input);
 
 class MemberAdd extends StatefulWidget {
   const MemberAdd({
-    required _OnSubmit onSubmit,
+    required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,
     required List<User> users,
@@ -77,14 +77,14 @@ class MemberAdd extends StatefulWidget {
         _error = error,
         _users = users,
         _roles = roles;
-  final _OnSubmit _onSubmit;
+  final OnSubmit _onSubmit;
   final StateStatus _status;
   final StoreError? _error;
   final List<User> _users;
   final List<Role> _roles;
 
   @override
-  _MemberAddState createState() => _MemberAddState();
+  State<MemberAdd> createState() => _MemberAddState();
 }
 
 class _MemberAddState extends State<MemberAdd> {

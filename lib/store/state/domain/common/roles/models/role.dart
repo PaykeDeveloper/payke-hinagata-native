@@ -3,7 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import './role_id.dart';
 
 part 'role.freezed.dart';
-
 part 'role.g.dart';
 
 @freezed

@@ -102,11 +102,11 @@ class MemberEditScreen extends StatelessWidget {
   }
 }
 
-typedef _OnSubmit = Future<StoreResult?> Function(MemberInput input);
+typedef OnSubmit = Future<StoreResult?> Function(MemberInput input);
 
 class MemberEdit extends StatefulWidget {
   const MemberEdit({
-    required _OnSubmit onSubmit,
+    required OnSubmit onSubmit,
     required VoidCallback initState,
     required VoidCallback onPressedDelete,
     required StateStatus status,
@@ -122,7 +122,7 @@ class MemberEdit extends StatefulWidget {
         _member = member,
         _users = users,
         _roles = roles;
-  final _OnSubmit _onSubmit;
+  final OnSubmit _onSubmit;
   final VoidCallback _initState;
   final VoidCallback _onPressedDelete;
   final StateStatus _status;
@@ -132,7 +132,7 @@ class MemberEdit extends StatefulWidget {
   final List<Role> _roles;
 
   @override
-  _MemberEditState createState() => _MemberEditState();
+  State<MemberEdit> createState() => _MemberEditState();
 }
 
 class _MemberEditState extends State<MemberEdit> {

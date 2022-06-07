@@ -5,7 +5,6 @@ import 'package:native_app/store/state/domain/division/divisions/models/division
 import './member_id.dart';
 
 part 'member.freezed.dart';
-
 part 'member.g.dart';
 
 @freezed

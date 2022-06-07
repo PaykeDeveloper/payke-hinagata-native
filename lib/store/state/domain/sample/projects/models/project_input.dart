@@ -7,7 +7,6 @@ import 'package:native_app/store/base/models/json_generator.dart';
 import './priority.dart';
 
 part 'project_input.freezed.dart';
-
 part 'project_input.g.dart';
 
 @freezed

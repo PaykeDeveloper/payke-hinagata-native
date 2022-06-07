@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,18 +30,18 @@ class AuthRouter extends HookWidget {
       return;
     }
     if (uri.pathSegments.elementAtOrNull(0) == 'divisions') {
-      final _divisionId = uri.pathSegments.elementAtOrNull(1)?.toIntOrNull();
-      if (_divisionId != null) {
-        final divisionId = DivisionId(_divisionId);
+      final id = uri.pathSegments.elementAtOrNull(1)?.toIntOrNull();
+      if (id != null) {
+        final divisionId = DivisionId(id);
         await context.read<DivisionIdNotifier>().setDivisionId(divisionId);
 
         if (uri.pathSegments.elementAtOrNull(2) == 'projects') {
           final notifier = context.read<RouteStateNotifier>();
           await notifier.changeIndex(BottomTab.projects);
 
-          final _projectSlug = uri.pathSegments.elementAtOrNull(3);
-          if (_projectSlug != null) {
-            final projectSlug = ProjectSlug(_projectSlug);
+          final slug = uri.pathSegments.elementAtOrNull(3);
+          if (slug != null) {
+            final projectSlug = ProjectSlug(slug);
             await notifier.replace(BottomTab.projects, [
               ProjectDetailPage(
                 divisionId: divisionId,
@@ -69,6 +67,7 @@ class AuthRouter extends HookWidget {
       Future.delayed(Duration.zero, () {
         _setLocale(context);
       });
+      return null;
     }, []);
     useEffect(() {
       _handleInitialUri(context);
@@ -76,6 +75,7 @@ class AuthRouter extends HookWidget {
         final sub = uriLinkStream.listen((uri) => _handleUri(context, uri));
         return sub.cancel;
       }
+      return null;
     }, []);
 
     final locale = context.watch<Locale?>();

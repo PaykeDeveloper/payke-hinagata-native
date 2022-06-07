@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 
 class ValidateDropdown<ParentWidget extends StatefulWidget, T>
@@ -12,7 +13,7 @@ class ValidateDropdown<ParentWidget extends StatefulWidget, T>
     required List<DropdownMenuItem<T>> items,
     T? initialValue,
     bool? enabled,
-    ValueTransformer<T>? valueTransformer,
+    ValueTransformer<T?>? valueTransformer,
     List<FormFieldValidator<T>>? validators,
   })  : _key = key,
         _parent = parent,
@@ -30,7 +31,7 @@ class ValidateDropdown<ParentWidget extends StatefulWidget, T>
   final List<DropdownMenuItem<T>> _items;
   final T? _initialValue;
   final bool? _enabled;
-  final ValueTransformer<T>? _valueTransformer;
+  final ValueTransformer<T?>? _valueTransformer;
   final List<FormFieldValidator<T>>? _validators;
 
   String? _checkParentErrors(T? _) {

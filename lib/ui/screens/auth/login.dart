@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
@@ -29,19 +30,19 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-typedef _OnSubmit = Future<StoreResult> Function(String email, String password);
+typedef OnSubmit = Future<StoreResult> Function(String email, String password);
 
 class Login extends StatefulWidget {
   const Login({
-    required _OnSubmit onSubmit,
+    required OnSubmit onSubmit,
     required StateStatus status,
   })  : _onSubmit = onSubmit,
         _status = status;
-  final _OnSubmit _onSubmit;
+  final OnSubmit _onSubmit;
   final StateStatus _status;
 
   @override
-  _LoginState createState() => _LoginState();
+  ValidateFormState<Login> createState() => _LoginState();
 }
 
 class _LoginState extends ValidateFormState<Login> {
@@ -74,8 +75,8 @@ class _LoginState extends ValidateFormState<Login> {
                   labelText: AppLocalizations.of(context)!.email,
                   keyboardType: TextInputType.emailAddress,
                   validators: [
-                    FormBuilderValidators.required(context),
-                    FormBuilderValidators.email(context),
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.email(),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -86,7 +87,7 @@ class _LoginState extends ValidateFormState<Login> {
                   obscureText: true,
                   keyboardType: TextInputType.visiblePassword,
                   validators: [
-                    FormBuilderValidators.required(context),
+                    FormBuilderValidators.required(),
                   ],
                 ),
               ],

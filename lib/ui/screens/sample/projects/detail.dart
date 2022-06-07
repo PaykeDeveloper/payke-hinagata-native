@@ -97,7 +97,7 @@ class ProjectDetail extends StatefulWidget {
   final Project? _project;
 
   @override
-  _ProjectDetailState createState() => _ProjectDetailState();
+  State<ProjectDetail> createState() => _ProjectDetailState();
 }
 
 class _ProjectDetailState extends State<ProjectDetail> {

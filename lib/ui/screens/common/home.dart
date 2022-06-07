@@ -73,7 +73,7 @@ class Home extends StatefulWidget {
   final Function0<Future> _onPressedProjectEdit;
 
   @override
-  _HomeState createState() => _HomeState();
+  State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {

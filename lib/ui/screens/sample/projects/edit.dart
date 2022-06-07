@@ -95,11 +95,11 @@ class ProjectEditScreen extends StatelessWidget {
   }
 }
 
-typedef _OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
+typedef OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
 class ProjectEdit extends StatefulWidget {
   const ProjectEdit({
-    required _OnSubmit onSubmit,
+    required OnSubmit onSubmit,
     required VoidCallback initState,
     required VoidCallback onPressedDelete,
     required StateStatus status,
@@ -111,7 +111,7 @@ class ProjectEdit extends StatefulWidget {
         _status = status,
         _error = error,
         _project = project;
-  final _OnSubmit _onSubmit;
+  final OnSubmit _onSubmit;
   final VoidCallback _initState;
   final VoidCallback _onPressedDelete;
   final StateStatus _status;
@@ -119,7 +119,7 @@ class ProjectEdit extends StatefulWidget {
   final Project? _project;
 
   @override
-  _ProjectEditState createState() => _ProjectEditState();
+  State<ProjectEdit> createState() => _ProjectEditState();
 }
 
 class _ProjectEditState extends State<ProjectEdit> {

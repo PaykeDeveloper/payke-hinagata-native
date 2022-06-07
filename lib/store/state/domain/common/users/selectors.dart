@@ -1,6 +1,6 @@
+import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/base/utils.dart';
 
 import './models/user.dart';
 import './notifier.dart';

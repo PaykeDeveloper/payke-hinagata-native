@@ -150,7 +150,7 @@ class MemberList extends StatefulWidget {
   final Map<int, User> _usersMap;
 
   @override
-  _MemberListState createState() => _MemberListState();
+  State<MemberList> createState() => _MemberListState();
 }
 
 class _MemberListState extends State<MemberList> {

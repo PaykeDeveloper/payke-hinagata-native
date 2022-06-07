@@ -53,22 +53,22 @@ class ProjectAddScreen extends StatelessWidget {
   }
 }
 
-typedef _OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
+typedef OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
 class ProjectAdd extends StatefulWidget {
   const ProjectAdd({
-    required _OnSubmit onSubmit,
+    required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,
   })  : _onSubmit = onSubmit,
         _status = status,
         _error = error;
-  final _OnSubmit _onSubmit;
+  final OnSubmit _onSubmit;
   final StateStatus _status;
   final StoreError? _error;
 
   @override
-  _ProjectAddState createState() => _ProjectAddState();
+  State<ProjectAdd> createState() => _ProjectAddState();
 }
 
 class _ProjectAddState extends State<ProjectAdd> {

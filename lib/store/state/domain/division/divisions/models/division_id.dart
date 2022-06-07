@@ -2,7 +2,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'division_id.freezed.dart';
-
 part 'division_id.g.dart';
 
 @freezed

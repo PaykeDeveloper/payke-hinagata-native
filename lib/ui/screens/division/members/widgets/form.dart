@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/common/roles/models/role.dart';
@@ -30,7 +31,7 @@ class MemberForm extends StatefulWidget {
   final MemberFormCallBack onSubmit;
 
   @override
-  _MemberFormState createState() => _MemberFormState();
+  ValidateFormState<MemberForm> createState() => _MemberFormState();
 }
 
 class _MemberFormState extends ValidateFormState<MemberForm> {
@@ -50,7 +51,7 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
 
     final initialRolesValue = member?.roleNames ?? [];
 
-    final List<DropdownMenuItem> userNameItems = [
+    final List<DropdownMenuItem<UserId>> userNameItems = [
       const DropdownMenuItem(child: Text('')),
       ...users
           .map((user) =>
@@ -83,7 +84,7 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
                   initialValue: initialUserValue,
                   valueTransformer: (value) => (value as UserId?)?.value,
                   validators: [
-                    FormBuilderValidators.required(context),
+                    FormBuilderValidators.required(),
                   ],
                 ),
                 ValidateFilterChip(
@@ -93,7 +94,7 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
                   options: roleItems,
                   initialValue: initialRolesValue,
                   validators: [
-                    FormBuilderValidators.required<List<String>>(context),
+                    FormBuilderValidators.required<List<String>>(),
                   ],
                   spacing: 5,
                   runSpacing: 5,

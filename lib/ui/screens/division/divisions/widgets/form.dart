@@ -1,6 +1,7 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division.dart';
@@ -24,7 +25,7 @@ class DivisionForm extends StatefulWidget {
   final DivisionFormCallBack onSubmit;
 
   @override
-  _DivisionFormState createState() => _DivisionFormState();
+  ValidateFormState<DivisionForm> createState() => _DivisionFormState();
 }
 
 class _DivisionFormState extends ValidateFormState<DivisionForm> {
@@ -52,7 +53,7 @@ class _DivisionFormState extends ValidateFormState<DivisionForm> {
                   labelText: 'Name',
                   initialValue: division?.name,
                   validators: [
-                    FormBuilderValidators.required(context),
+                    FormBuilderValidators.required(),
                   ],
                 ),
               ],
