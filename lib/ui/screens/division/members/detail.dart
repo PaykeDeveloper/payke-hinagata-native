@@ -96,7 +96,7 @@ class MemberDetail extends StatefulWidget {
   final Member? _member;
 
   @override
-  _MemberDetailState createState() => _MemberDetailState();
+  State<MemberDetail> createState() => _MemberDetailState();
 }
 
 class _MemberDetailState extends State<MemberDetail> {

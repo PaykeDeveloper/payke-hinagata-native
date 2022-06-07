@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 
 class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
@@ -12,7 +13,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
     required List<FormBuilderFieldOption<T>> options,
     List<T> initialValue = const [],
     bool? enabled,
-    ValueTransformer<List<T>>? valueTransformer,
+    ValueTransformer<List<T>?>? valueTransformer,
     List<FormFieldValidator<List<T>>>? validators,
     this.runSpacing = 0.0,
     this.spacing = 0.0,
@@ -32,7 +33,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
   final List<FormBuilderFieldOption<T>> _options;
   final List<T> _initialValue;
   final bool? _enabled;
-  final ValueTransformer<List<T>>? _valueTransformer;
+  final ValueTransformer<List<T>?>? _valueTransformer;
   final List<FormFieldValidator<List<T>>>? _validators;
   final double runSpacing, spacing;
 

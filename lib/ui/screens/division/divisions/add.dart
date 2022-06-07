@@ -36,22 +36,22 @@ class DivisionAddScreen extends StatelessWidget {
   }
 }
 
-typedef _OnSubmit = Future<StoreResult?> Function(DivisionInput input);
+typedef OnSubmit = Future<StoreResult?> Function(DivisionInput input);
 
 class DivisionAdd extends StatefulWidget {
   const DivisionAdd({
-    required _OnSubmit onSubmit,
+    required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,
   })  : _onSubmit = onSubmit,
         _status = status,
         _error = error;
-  final _OnSubmit _onSubmit;
+  final OnSubmit _onSubmit;
   final StateStatus _status;
   final StoreError? _error;
 
   @override
-  _DivisionAddState createState() => _DivisionAddState();
+  State<DivisionAdd> createState() => _DivisionAddState();
 }
 
 class _DivisionAddState extends State<DivisionAdd> {

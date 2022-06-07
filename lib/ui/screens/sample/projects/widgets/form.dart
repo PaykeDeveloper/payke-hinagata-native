@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/priority.dart';
@@ -29,10 +30,10 @@ class ProjectForm extends StatefulWidget {
   final ProjectFormCallBack onSubmit;
 
   @override
-  _ProjectFormState createState() => _ProjectFormState();
+  ValidateFormState<ProjectForm> createState() => _ProjectFormState();
 }
 
-final items = [
+final List<DropdownMenuItem<Priority>> items = [
   const DropdownMenuItem(
     value: null,
     child: Text(''),
@@ -83,7 +84,7 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                   labelText: 'Name',
                   initialValue: project?.name,
                   validators: [
-                    FormBuilderValidators.required(context),
+                    FormBuilderValidators.required(),
                   ],
                 ),
                 ValidateTextField(

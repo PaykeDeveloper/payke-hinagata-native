@@ -30,6 +30,7 @@ class MainRouter extends HookWidget {
       Future.delayed(Duration.zero, () {
         _initState(context);
       });
+      return null;
     }, []);
 
     final divisionId = context.select(divisionIdSelector);

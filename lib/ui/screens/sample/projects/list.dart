@@ -138,7 +138,7 @@ class ProjectList extends StatefulWidget {
   final List<Project> _projects;
 
   @override
-  _ProjectListState createState() => _ProjectListState();
+  State<ProjectList> createState() => _ProjectListState();
 }
 
 class _ProjectListState extends State<ProjectList> {

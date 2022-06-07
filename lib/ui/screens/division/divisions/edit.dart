@@ -67,12 +67,12 @@ class DivisionEditScreen extends StatelessWidget {
   }
 }
 
-typedef _OnSubmit = Future<StoreResult?> Function(DivisionInput input);
+typedef OnSubmit = Future<StoreResult?> Function(DivisionInput input);
 
 class DivisionEdit extends StatefulWidget {
   const DivisionEdit({
     required VoidCallback initState,
-    required _OnSubmit onSubmit,
+    required OnSubmit onSubmit,
     required Function0<Future> onPressedDelete,
     required StateStatus status,
     required StoreError? error,
@@ -86,7 +86,7 @@ class DivisionEdit extends StatefulWidget {
         _division = division,
         _selectedId = selectedId;
   final VoidCallback _initState;
-  final _OnSubmit _onSubmit;
+  final OnSubmit _onSubmit;
   final Function0<Future> _onPressedDelete;
   final StateStatus _status;
   final StoreError? _error;
@@ -94,7 +94,7 @@ class DivisionEdit extends StatefulWidget {
   final DivisionId? _selectedId;
 
   @override
-  _DivisionEditState createState() => _DivisionEditState();
+  State<DivisionEdit> createState() => _DivisionEditState();
 }
 
 class _DivisionEditState extends State<DivisionEdit> {

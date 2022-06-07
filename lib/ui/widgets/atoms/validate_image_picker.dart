@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 
 class ValidateImagePicker<ParentWidget extends StatefulWidget>
@@ -14,7 +15,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
     List<dynamic>? initialValue,
     bool? enabled,
     int maxImages = 1,
-    ValueTransformer<List<dynamic>>? valueTransformer,
+    ValueTransformer<List<dynamic>?>? valueTransformer,
     List<FormFieldValidator<List<dynamic>>>? validators,
   })  : _key = key,
         _parent = parent,
@@ -32,7 +33,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
   final List<dynamic>? _initialValue;
   final bool? _enabled;
   final int _maxImages;
-  final ValueTransformer<List<dynamic>>? _valueTransformer;
+  final ValueTransformer<List<dynamic>?>? _valueTransformer;
   final List<FormFieldValidator<List<dynamic>>>? _validators;
 
   String? _checkParentErrors(List<dynamic>? _) {
