@@ -58,7 +58,7 @@ jobs:
           BACKEND_ORIGIN: ${{ secrets.BACKEND_ORIGIN }}
       - uses: actions/setup-node@v3
         with:
-          node-version: 14.18.0
+          node-version: 16
           cache: npm
       - run: npm install -g firebase-tools
       - run: firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk --app $FIREBASE_APP --token $FIREBASE_TOKEN
