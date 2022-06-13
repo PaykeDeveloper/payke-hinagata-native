@@ -10,7 +10,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
-    required List<FormBuilderFieldOption<T>> options,
+    required List<FormBuilderChipOption<T>> options,
     List<T> initialValue = const [],
     bool? enabled,
     ValueTransformer<List<T>?>? valueTransformer,
@@ -30,7 +30,7 @@ class ValidateFilterChip<ParentWidget extends StatefulWidget, T>
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
-  final List<FormBuilderFieldOption<T>> _options;
+  final List<FormBuilderChipOption<T>> _options;
   final List<T> _initialValue;
   final bool? _enabled;
   final ValueTransformer<List<T>?>? _valueTransformer;

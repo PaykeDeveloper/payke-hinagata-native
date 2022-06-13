@@ -60,7 +60,7 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
     ];
 
     final roleItems = roles
-        .map((role) => FormBuilderFieldOption(
+        .map((role) => FormBuilderChipOption<String>(
               key: ValueKey('${role.id}'),
               value: role.name,
               child: Text(role.name),
