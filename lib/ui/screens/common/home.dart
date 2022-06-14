@@ -2,11 +2,12 @@ import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
-import 'package:native_app/store/state/ui/division_id/notifier.dart';
-import 'package:native_app/ui/screens/sample/projects/detail.dart';
-import 'package:native_app/ui/screens/sample/projects/edit.dart';
 import 'package:provider/provider.dart';
+
+// import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
+// import 'package:native_app/store/state/ui/division_id/notifier.dart';
+// import 'package:native_app/ui/screens/sample/projects/detail.dart';
+// import 'package:native_app/ui/screens/sample/projects/edit.dart';
 
 class HomePage extends Page {
   const HomePage({
@@ -38,23 +39,23 @@ class HomeScreen extends StatelessWidget {
       await notifier.replace(BottomTab.projects, []);
     }
 
-    Future onPressedProjectEdit() async {
-      final divisionId = context.read<DivisionIdState>().data;
-      if (divisionId == null) return;
-      const projectSlug = ProjectSlug('6b42f759-0de1-45dd-bb1d-e82af6207a55');
-
-      final notifier = context.read<RouteStateNotifier>();
-      await notifier.changeIndex(BottomTab.projects);
-      await notifier.replace(BottomTab.projects, [
-        ProjectDetailPage(divisionId: divisionId, projectSlug: projectSlug),
-        ProjectEditPage(divisionId: divisionId, projectSlug: projectSlug),
-      ]);
-    }
+    // Future onPressedProjectEdit() async {
+    //   final divisionId = context.read<DivisionIdState>().data;
+    //   if (divisionId == null) return;
+    //   const projectSlug = ProjectSlug('6b42f759-0de1-45dd-bb1d-e82af6207a55');
+    //
+    //   final notifier = context.read<RouteStateNotifier>();
+    //   await notifier.changeIndex(BottomTab.projects);
+    //   await notifier.replace(BottomTab.projects, [
+    //     ProjectDetailPage(divisionId: divisionId, projectSlug: projectSlug),
+    //     ProjectEditPage(divisionId: divisionId, projectSlug: projectSlug),
+    //   ]);
+    // }
 
     return Home(
       openDrawer: _openDrawer,
       onPressedProjectList: onPressedProjectList,
-      onPressedProjectEdit: onPressedProjectEdit,
+      // onPressedProjectEdit: onPressedProjectEdit,
     );
   }
 }
@@ -63,14 +64,16 @@ class Home extends StatefulWidget {
   const Home({
     required VoidCallback openDrawer,
     required Function0<Future> onPressedProjectList,
-    required Function0<Future> onPressedProjectEdit,
+    // required Function0<Future> onPressedProjectEdit,
   })  : _openDrawer = openDrawer,
-        _onPressedProjectList = onPressedProjectList,
-        _onPressedProjectEdit = onPressedProjectEdit;
+        _onPressedProjectList = onPressedProjectList;
+
+  // _onPressedProjectEdit = onPressedProjectEdit;
 
   final VoidCallback _openDrawer;
   final Function0<Future> _onPressedProjectList;
-  final Function0<Future> _onPressedProjectEdit;
+
+  // final Function0<Future> _onPressedProjectEdit;
 
   @override
   State<Home> createState() => _HomeState();
