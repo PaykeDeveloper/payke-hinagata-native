@@ -95,11 +95,11 @@ class _HomeState extends State<Home> {
               onPressed: widget._onPressedProjectList,
               child: const Text('Project list'),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: widget._onPressedProjectEdit,
-              child: const Text('Project edit'),
-            ),
+            // const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: widget._onPressedProjectEdit,
+            //   child: const Text('Project edit'),
+            // ),
           ],
         ),
       ),

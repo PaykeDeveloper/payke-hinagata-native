@@ -192,6 +192,7 @@ class _ProjectListState extends State<ProjectList> {
           child: RefreshIndicator(
             onRefresh: widget._onRefresh,
             child: ListView.builder(
+              padding: const EdgeInsets.only(bottom: 60),
               physics: const AlwaysScrollableScrollPhysics(),
               itemCount: widget._projects.length,
               itemBuilder: (context, index) {

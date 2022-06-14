@@ -131,6 +131,7 @@ class _DivisionListState extends State<DivisionList> {
           child: RefreshIndicator(
             onRefresh: widget._onRefresh,
             child: ListView.builder(
+              padding: const EdgeInsets.only(bottom: 60),
               physics: const AlwaysScrollableScrollPhysics(),
               itemCount: widget._divisions.length,
               itemBuilder: (context, index) {

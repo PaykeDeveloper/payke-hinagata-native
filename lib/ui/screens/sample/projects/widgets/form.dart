@@ -96,6 +96,7 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
                   minHeight: 160,
                   maxLines: 5,
                 ),
+                const SizedBox(height: 20),
                 ValidateDropdown(
                   parent: this,
                   name: 'priority',
