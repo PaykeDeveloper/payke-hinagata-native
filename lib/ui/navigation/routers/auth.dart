@@ -33,10 +33,10 @@ class AuthRouter extends HookWidget {
       final id = uri.pathSegments.elementAtOrNull(1)?.toIntOrNull();
       if (id != null) {
         final divisionId = DivisionId(id);
+        final notifier = context.read<RouteStateNotifier>();
         await context.read<DivisionIdNotifier>().setDivisionId(divisionId);
 
         if (uri.pathSegments.elementAtOrNull(2) == 'projects') {
-          final notifier = context.read<RouteStateNotifier>();
           await notifier.changeIndex(BottomTab.projects);
 
           final slug = uri.pathSegments.elementAtOrNull(3);
@@ -58,6 +58,7 @@ class AuthRouter extends HookWidget {
 
   Future<void> _handleInitialUri(BuildContext context) async {
     final uri = await getInitialUri();
+    // ignore: use_build_context_synchronously
     await _handleUri(context, uri);
   }
 

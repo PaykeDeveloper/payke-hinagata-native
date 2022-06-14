@@ -38,11 +38,12 @@ class ProjectAddScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final urlParams = ProjectsUrl(divisionId: _divisionId);
     Future<StoreResult<Project>> onSubmit(Map<String, dynamic> data) async {
+      final navigator = Navigator.of(context);
       final result = await context
           .read<ProjectsNotifier>()
           .add(urlParams: urlParams, data: data, useFormData: true);
       if (result is Success) {
-        Navigator.of(context).pop();
+        navigator.pop();
       }
       return result;
     }

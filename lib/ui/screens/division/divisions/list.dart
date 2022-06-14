@@ -96,8 +96,9 @@ class _DivisionListState extends State<DivisionList> {
   }
 
   Future _onTapSelect(DivisionId divisionId) async {
+    final navigator = Navigator.of(context);
     await widget._setDivisionId(divisionId);
-    Navigator.of(context).popUntil((route) => route.isFirst);
+    navigator.popUntil((route) => route.isFirst);
   }
 
   void _onPressedEdit(DivisionId divisionId) {

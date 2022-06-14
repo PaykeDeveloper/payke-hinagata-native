@@ -17,11 +17,12 @@ class DivisionAddScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<StoreResult?> onSubmit(DivisionInput input) async {
+      final navigator = Navigator.of(context);
       final result = await context
           .read<DivisionsNotifier>()
           .addEntity(urlParams: const DivisionsUrl(), data: input);
       if (result is Success) {
-        Navigator.of(context).pop();
+        navigator.pop();
       }
       return result;
     }
