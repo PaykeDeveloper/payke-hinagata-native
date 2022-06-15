@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
@@ -155,7 +154,7 @@ class ApiClientImpl extends ApiClient {
       final value = entry.value;
       if (containNull && value == null) {
         convertedData[entry.key] = '';
-      } else if (value is File) {
+      } else if (value is XFile) {
         final filename = value.path.split('/').last;
         convertedData[entry.key] =
             await MultipartFile.fromFile(value.path, filename: filename);

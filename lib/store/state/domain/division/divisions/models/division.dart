@@ -12,7 +12,6 @@ class Division with _$Division {
     required DivisionId id,
     required String name,
     @JsonKey(name: 'created_at') required DateTime createdAt,
-    @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _Division;
 
   factory Division.fromJson(Map<String, dynamic> json) =>

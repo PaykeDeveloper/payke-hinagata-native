@@ -27,7 +27,6 @@ class Project with _$Project {
     @JsonKey(name: 'cover_url') String? coverUrl,
     @JsonKey(name: 'lock_version') int? lockVersion,
     @JsonKey(name: 'created_at') required DateTime createdAt,
-    @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _Project;
 
   factory Project.fromJson(Map<String, dynamic> json) =>

@@ -31,12 +31,14 @@ class DivisionEditScreen extends StatelessWidget {
           .fetchEntityIfNeeded(url: DivisionUrl(id: _divisionId), reset: true);
     }
 
+    final navigator = Navigator.of(context);
+
     Future<StoreResult?> onSubmit(DivisionInput input) async {
       final result = await context
           .read<DivisionsNotifier>()
           .mergeEntity(urlParams: DivisionUrl(id: _divisionId), data: input);
       if (result is Success) {
-        Navigator.of(context).pop();
+        navigator.pop();
       }
       return result;
     }
@@ -46,7 +48,7 @@ class DivisionEditScreen extends StatelessWidget {
           .read<DivisionsNotifier>()
           .deleteEntity(urlParams: DivisionUrl(id: _divisionId));
       if (result is Success) {
-        Navigator.of(context).pop();
+        navigator.pop();
       }
     }
 

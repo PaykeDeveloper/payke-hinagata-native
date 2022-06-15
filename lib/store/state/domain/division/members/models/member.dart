@@ -15,7 +15,6 @@ class Member with _$Member {
     @JsonKey(name: 'user_id') required UserId userId,
     @JsonKey(name: 'division_id') required DivisionId divisionId,
     @JsonKey(name: 'created_at') required DateTime createdAt,
-    @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _Member;
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);
