@@ -54,12 +54,11 @@ class ProjectEditScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final projectUrl = ProjectUrl(divisionId: _divisionId, slug: _projectSlug);
     Future<StoreResult?> onSubmit(Map<String, dynamic> input) async {
-      final navigator = Navigator.of(context);
       final result = await context
           .read<ProjectsNotifier>()
           .merge(urlParams: projectUrl, data: input, useFormData: true);
       if (result is Success) {
-        navigator.pop();
+        Navigator.of(context).pop();
       }
       return result;
     }
@@ -71,12 +70,13 @@ class ProjectEditScreen extends StatelessWidget {
     }
 
     Future onPressedDelete() async {
-      final notifier = context.read<RouteStateNotifier>();
       final result = await context
           .read<ProjectsNotifier>()
           .deleteEntity(urlParams: projectUrl);
       if (result is Success) {
-        await notifier.replace(BottomTab.projects, []);
+        await context
+            .read<RouteStateNotifier>()
+            .replace(BottomTab.projects, []);
       }
     }
 

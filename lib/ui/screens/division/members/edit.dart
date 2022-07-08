@@ -59,12 +59,11 @@ class MemberEditScreen extends StatelessWidget {
     final memberUrl = MemberUrl(divisionId: _divisionId, id: _memberId);
 
     Future<StoreResult?> onSubmit(MemberInput input) async {
-      final navigator = Navigator.of(context);
       final result = await context
           .read<MembersNotifier>()
           .mergeEntity(urlParams: memberUrl, data: input);
       if (result is Success) {
-        navigator.pop();
+        Navigator.of(context).pop();
       }
       return result;
     }
@@ -76,12 +75,11 @@ class MemberEditScreen extends StatelessWidget {
     }
 
     Future onPressedDelete() async {
-      final notifier = context.read<RouteStateNotifier>();
       final result = await context
           .read<MembersNotifier>()
           .deleteEntity(urlParams: memberUrl);
       if (result is Success) {
-        await notifier.replace(BottomTab.members, []);
+        await context.read<RouteStateNotifier>().replace(BottomTab.members, []);
       }
     }
 
