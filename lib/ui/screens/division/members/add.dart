@@ -40,11 +40,10 @@ class MemberAddScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<StoreResult?> onSubmit(MemberInput input) async {
-      final navigator = Navigator.of(context);
       final result = await context.read<MembersNotifier>().addEntity(
           urlParams: MembersUrl(divisionId: _divisionId), data: input);
       if (result is Success) {
-        navigator.pop();
+        Navigator.of(context).pop();
       }
       return result;
     }
