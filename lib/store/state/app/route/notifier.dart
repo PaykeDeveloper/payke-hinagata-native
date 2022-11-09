@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
+import './models/route_params.dart';
 import './models/route_state.dart';
 
 const initialTab = BottomTab.home;
@@ -24,7 +24,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     );
   }
 
-  Future push(BottomTab tab, Page page) async {
+  Future push(BottomTab tab, RouteParams page) async {
     switch (tab) {
       case BottomTab.home:
         state = state.copyWith(
@@ -64,7 +64,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     }
   }
 
-  Future replace(BottomTab tab, List<Page> pages) async {
+  Future replace(BottomTab tab, List<RouteParams> pages) async {
     switch (tab) {
       case BottomTab.home:
         state = state.copyWith(
@@ -96,7 +96,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     }
   }
 
-  List<Page> _get(BottomTab tab) {
+  List<RouteParams> _get(BottomTab tab) {
     switch (tab) {
       case BottomTab.home:
         return state.homePages;

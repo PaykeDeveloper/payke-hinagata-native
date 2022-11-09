@@ -34,7 +34,7 @@ class ProjectsNavigator extends StatelessWidget {
       },
       pages: [
         ProjectListPage(divisionId: divisionId!, openDrawer: _openDrawer),
-        ...pages
+        ...pages.map((p) => p.toPage()),
       ],
     );
   }

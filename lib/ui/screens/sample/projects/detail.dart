@@ -10,11 +10,10 @@ import 'package:native_app/store/state/domain/sample/projects/models/project_slu
 import 'package:native_app/store/state/domain/sample/projects/models/project_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
+import 'package:native_app/ui/navigation/params/projects/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
-
-import './edit.dart';
 
 class ProjectDetailPage extends Page {
   ProjectDetailPage({
@@ -60,7 +59,10 @@ class ProjectDetailScreen extends StatelessWidget {
     void onPressedEdit() {
       context.read<RouteStateNotifier>().push(
             BottomTab.projects,
-            ProjectEditPage(divisionId: _divisionId, projectSlug: _projectSlug),
+            ProjectEditParams(
+              divisionId: _divisionId,
+              projectSlug: _projectSlug,
+            ),
           );
     }
 

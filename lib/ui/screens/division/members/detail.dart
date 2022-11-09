@@ -9,11 +9,10 @@ import 'package:native_app/store/state/domain/division/members/models/member_id.
 import 'package:native_app/store/state/domain/division/members/models/member_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
+import 'package:native_app/ui/navigation/params/members/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
-
-import './edit.dart';
 
 class MemberDetailPage extends Page {
   MemberDetailPage({
@@ -58,7 +57,7 @@ class MemberDetailScreen extends StatelessWidget {
     void onPressedEdit() {
       context.read<RouteStateNotifier>().push(
             BottomTab.members,
-            MemberEditPage(divisionId: _divisionId, memberId: _memberId),
+            MemberEditParams(divisionId: _divisionId, memberId: _memberId),
           );
     }
 

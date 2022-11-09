@@ -29,7 +29,10 @@ class HomeNavigator extends StatelessWidget {
         notifier.pop(BottomTab.home);
         return true;
       },
-      pages: [HomePage(openDrawer: _openDrawer), ...pages],
+      pages: [
+        HomePage(openDrawer: _openDrawer),
+        ...pages.map((p) => p.toPage()),
+      ],
     );
   }
 }

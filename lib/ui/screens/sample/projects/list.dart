@@ -10,13 +10,12 @@ import 'package:native_app/store/state/domain/sample/projects/models/project_slu
 import 'package:native_app/store/state/domain/sample/projects/models/projects_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
+import 'package:native_app/ui/navigation/params/projects/add.dart';
+import 'package:native_app/ui/navigation/params/projects/detail.dart';
+import 'package:native_app/ui/navigation/params/projects/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
-
-import './add.dart';
-import './detail.dart';
-import './edit.dart';
 
 class ProjectListPage extends Page {
   const ProjectListPage({
@@ -67,21 +66,23 @@ class ProjectListScreen extends StatelessWidget {
     void onPressedNew() {
       context
           .read<RouteStateNotifier>()
-          .push(BottomTab.projects, ProjectAddPage(divisionId: _divisionId));
+          .push(BottomTab.projects, ProjectAddParams(divisionId: _divisionId));
     }
 
     void onTapShow(ProjectSlug projectSlug) {
       context.read<RouteStateNotifier>().push(
             BottomTab.projects,
-            ProjectDetailPage(
-                divisionId: _divisionId, projectSlug: projectSlug),
+            ProjectDetailParams(
+              divisionId: _divisionId,
+              projectSlug: projectSlug,
+            ),
           );
     }
 
     void onPressedEdit(ProjectSlug projectSlug) {
       context.read<RouteStateNotifier>().push(
             BottomTab.projects,
-            ProjectEditPage(
+            ProjectEditParams(
               divisionId: _divisionId,
               projectSlug: projectSlug,
             ),

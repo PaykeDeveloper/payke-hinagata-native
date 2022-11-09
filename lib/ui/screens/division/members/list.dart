@@ -13,13 +13,12 @@ import 'package:native_app/store/state/domain/division/members/models/member_id.
 import 'package:native_app/store/state/domain/division/members/models/members_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
+import 'package:native_app/ui/navigation/params/members/add.dart';
+import 'package:native_app/ui/navigation/params/members/detail.dart';
+import 'package:native_app/ui/navigation/params/members/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
-
-import './add.dart';
-import './detail.dart';
-import './edit.dart';
 
 class MemberListPage extends Page {
   const MemberListPage({
@@ -78,20 +77,20 @@ class MemberListScreen extends StatelessWidget {
     void onPressedNew() {
       context
           .read<RouteStateNotifier>()
-          .push(BottomTab.members, MemberAddPage(divisionId: _divisionId));
+          .push(BottomTab.members, MemberAddParams(divisionId: _divisionId));
     }
 
     void onTapShow(MemberId memberId) {
       context.read<RouteStateNotifier>().push(
             BottomTab.members,
-            MemberDetailPage(divisionId: _divisionId, memberId: memberId),
+            MemberDetailParams(divisionId: _divisionId, memberId: memberId),
           );
     }
 
     void onPressedEdit(MemberId memberId) {
       context.read<RouteStateNotifier>().push(
             BottomTab.members,
-            MemberEditPage(divisionId: _divisionId, memberId: memberId),
+            MemberEditParams(divisionId: _divisionId, memberId: memberId),
           );
     }
 

@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import './route_params.dart';
 
 part 'route_state.freezed.dart';
 
@@ -7,9 +8,9 @@ part 'route_state.freezed.dart';
 class RouteState with _$RouteState {
   const factory RouteState({
     required BottomTab tab,
-    @Default([]) List<Page> homePages,
-    @Default([]) List<Page> projectPages,
-    @Default([]) List<Page> memberPages,
+    @Default([]) List<RouteParams> homePages,
+    @Default([]) List<RouteParams> projectPages,
+    @Default([]) List<RouteParams> memberPages,
   }) = _RouteState;
 
   const RouteState._();

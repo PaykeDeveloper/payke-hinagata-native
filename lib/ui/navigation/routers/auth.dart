@@ -10,9 +10,9 @@ import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/ui/division_id/notifier.dart';
+import 'package:native_app/ui/navigation/params/projects/detail.dart';
 import 'package:native_app/ui/screens/auth/login.dart';
 import 'package:native_app/ui/screens/common/loading.dart';
-import 'package:native_app/ui/screens/sample/projects/detail.dart';
 import 'package:provider/provider.dart';
 import 'package:uni_links/uni_links.dart';
 
@@ -43,7 +43,7 @@ class AuthRouter extends HookWidget {
           if (slug != null) {
             final projectSlug = ProjectSlug(slug);
             await notifier.replace(BottomTab.projects, [
-              ProjectDetailPage(
+              ProjectDetailParams(
                 divisionId: divisionId,
                 projectSlug: projectSlug,
               ),
