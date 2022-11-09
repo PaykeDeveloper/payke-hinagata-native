@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/screens/sample/projects/list.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +20,7 @@ class ProjectsNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pages = context.select((RouteState state) => state.projectPages);
+    final paramsList = context.select(projectParamsListSelector);
     final divisionId = context.select(divisionIdSelector);
     return Navigator(
       key: _navigatorKey,
@@ -34,7 +35,7 @@ class ProjectsNavigator extends StatelessWidget {
       },
       pages: [
         ProjectListPage(divisionId: divisionId!, openDrawer: _openDrawer),
-        ...pages.map((p) => p.toPage()),
+        ...paramsList.map((p) => p.toPage()),
       ],
     );
   }

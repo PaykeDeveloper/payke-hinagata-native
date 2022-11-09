@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/ui/screens/common/home.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,7 @@ class HomeNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pages = context.select((RouteState state) => state.homePages);
+    final paramsList = context.select(homeParamsListSelector);
     return Navigator(
       key: _navigatorKey,
       onPopPage: (route, result) {
@@ -31,7 +32,7 @@ class HomeNavigator extends StatelessWidget {
       },
       pages: [
         HomePage(openDrawer: _openDrawer),
-        ...pages.map((p) => p.toPage()),
+        ...paramsList.map((p) => p.toPage()),
       ],
     );
   }

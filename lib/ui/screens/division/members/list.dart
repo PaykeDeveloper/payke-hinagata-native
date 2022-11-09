@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/models/users_url.dart';
 import 'package:native_app/store/state/domain/common/users/notifier.dart';
@@ -93,7 +94,8 @@ class MemberListScreen extends StatelessWidget {
           );
     }
 
-    bool checkRouteEmpty() => context.read<RouteState>().memberPages.isEmpty;
+    bool checkRouteEmpty() =>
+        memberParamsListSelector(context.read<RouteState>()).isEmpty;
 
     final error = context.select(membersErrorSelector);
     final members = context.select(membersSelector);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/screens/division/members/list.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,7 @@ class MembersNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pages = context.select((RouteState state) => state.memberPages);
+    final paramsList = context.select(memberParamsListSelector);
     final divisionId = context.select(divisionIdSelector);
     return Navigator(
       key: _navigatorKey,
@@ -33,7 +34,7 @@ class MembersNavigator extends StatelessWidget {
       },
       pages: [
         MemberListPage(divisionId: divisionId!, openDrawer: _openDrawer),
-        ...pages.map((p) => p.toPage()),
+        ...paramsList.map((p) => p.toPage()),
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
@@ -88,7 +89,8 @@ class ProjectListScreen extends StatelessWidget {
           );
     }
 
-    bool checkRouteEmpty() => context.read<RouteState>().projectPages.isEmpty;
+    bool checkRouteEmpty() =>
+        projectParamsListSelector(context.read<RouteState>()).isEmpty;
 
     final error = context.select(projectsErrorSelector);
     final projects = context.select(projectsSelector);
