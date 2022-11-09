@@ -22,8 +22,7 @@ class ProjectListPage extends Page {
     required DivisionId divisionId,
     required VoidCallback openDrawer,
   })  : _divisionId = divisionId,
-        _openDrawer = openDrawer,
-        super(key: const ValueKey("projectListPage"));
+        _openDrawer = openDrawer;
   final DivisionId _divisionId;
   final VoidCallback _openDrawer;
 

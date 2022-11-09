@@ -15,14 +15,11 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class MemberDetailPage extends Page {
-  MemberDetailPage({
+  const MemberDetailPage({
     required DivisionId divisionId,
     required MemberId memberId,
   })  : _divisionId = divisionId,
-        _memberId = memberId,
-        super(
-            key: ValueKey(
-                "memberDetailPage-${divisionId.value}-${memberId.value}"));
+        _memberId = memberId;
   final DivisionId _divisionId;
   final MemberId _memberId;
 

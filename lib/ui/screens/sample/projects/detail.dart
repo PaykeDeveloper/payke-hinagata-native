@@ -16,14 +16,11 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
 class ProjectDetailPage extends Page {
-  ProjectDetailPage({
+  const ProjectDetailPage({
     required DivisionId divisionId,
     required ProjectSlug projectSlug,
   })  : _divisionId = divisionId,
-        _projectSlug = projectSlug,
-        super(
-            key: ValueKey(
-                "projectDetailPage-${divisionId.value}-${projectSlug.value}"));
+        _projectSlug = projectSlug;
   final DivisionId _divisionId;
   final ProjectSlug _projectSlug;
 

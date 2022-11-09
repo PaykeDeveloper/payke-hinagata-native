@@ -18,9 +18,8 @@ import 'package:provider/provider.dart';
 import './widgets/form.dart';
 
 class MemberAddPage extends Page {
-  MemberAddPage({required DivisionId divisionId})
-      : _divisionId = divisionId,
-        super(key: ValueKey("memberAddPage-${divisionId.value}"));
+  const MemberAddPage({required DivisionId divisionId})
+      : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override

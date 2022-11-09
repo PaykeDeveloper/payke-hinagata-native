@@ -22,14 +22,11 @@ import 'package:provider/provider.dart';
 import './widgets/form.dart';
 
 class MemberEditPage extends Page {
-  MemberEditPage({
+  const MemberEditPage({
     required DivisionId divisionId,
     required MemberId memberId,
   })  : _divisionId = divisionId,
-        _memberId = memberId,
-        super(
-            key: ValueKey(
-                "memberEditPage-${divisionId.value}-${memberId.value}"));
+        _memberId = memberId;
   final DivisionId _divisionId;
   final MemberId _memberId;
 

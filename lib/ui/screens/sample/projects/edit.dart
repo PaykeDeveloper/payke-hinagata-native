@@ -18,14 +18,11 @@ import 'package:provider/provider.dart';
 import './widgets/form.dart';
 
 class ProjectEditPage extends Page {
-  ProjectEditPage({
+  const ProjectEditPage({
     required DivisionId divisionId,
     required ProjectSlug projectSlug,
   })  : _divisionId = divisionId,
-        _projectSlug = projectSlug,
-        super(
-            key: ValueKey(
-                "projectEditPage-${divisionId.value}-${projectSlug.value}"));
+        _projectSlug = projectSlug;
   final DivisionId _divisionId;
   final ProjectSlug _projectSlug;
 

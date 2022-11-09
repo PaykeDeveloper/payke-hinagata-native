@@ -15,9 +15,8 @@ import 'package:provider/provider.dart';
 import './widgets/form.dart';
 
 class ProjectAddPage extends Page {
-  ProjectAddPage({required DivisionId divisionId})
-      : _divisionId = divisionId,
-        super(key: ValueKey("projectAddPage-${divisionId.value}"));
+  const ProjectAddPage({required DivisionId divisionId})
+      : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
