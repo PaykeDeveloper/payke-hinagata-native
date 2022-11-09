@@ -25,29 +25,37 @@ class BackendClient {
   Future<StoreResult<Result>> get<Result>({
     required Result Function(dynamic) decode,
     required String path,
+    Map<String, dynamic>? queryParameters,
   }) async {
-    return _call(request: _client.get(path: path), decode: decode);
+    return _call(
+      request: _client.get(path: path, queryParameters: queryParameters),
+      decode: decode,
+    );
   }
 
   Future<StoreResult<Result>> getObject<Result>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
+    Map<String, dynamic>? queryParameters,
   }) async {
     return get(
       decode: (json) => decode(json as Map<String, dynamic>),
       path: path,
+      queryParameters: queryParameters,
     );
   }
 
   Future<StoreResult<List<Result>>> getList<Result>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
+    Map<String, dynamic>? queryParameters,
   }) async {
     return get(
       decode: (list) => (list as List<dynamic>)
           .map((json) => decode(json as Map<String, dynamic>))
           .toList(),
       path: path,
+      queryParameters: queryParameters,
     );
   }
 
@@ -55,6 +63,7 @@ class BackendClient {
     required Result Function(dynamic) decode,
     required String path,
     Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
     bool useFormData = false,
     bool containNull = true,
   }) async {
@@ -62,6 +71,7 @@ class BackendClient {
       request: _client.post(
         path: path,
         data: data ?? {},
+        queryParameters: queryParameters,
         useFormData: useFormData,
         containNull: containNull,
       ),
@@ -73,12 +83,14 @@ class BackendClient {
     required Result Function(Map<String, dynamic>) decode,
     required String path,
     Data? data,
+    Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
     return post(
       decode: (json) => decode(json as Map<String, dynamic>),
       path: path,
       data: data?.toJson(),
+      queryParameters: queryParameters,
       useFormData: useFormData,
     );
   }
@@ -87,6 +99,7 @@ class BackendClient {
     required Result Function(dynamic) decode,
     required String path,
     Map<String, dynamic>? data,
+    Map<String, dynamic>? queryParameters,
     bool useFormData = false,
     bool containNull = true,
   }) async {
@@ -94,6 +107,7 @@ class BackendClient {
       request: _client.patch(
         path: path,
         data: data ?? {},
+        queryParameters: queryParameters,
         useFormData: useFormData,
         containNull: containNull,
       ),
@@ -105,12 +119,14 @@ class BackendClient {
     required Result Function(Map<String, dynamic>) decode,
     required String path,
     Data? data,
+    Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
     return patch(
       decode: (json) => decode(json as Map<String, dynamic>),
       path: path,
       data: data?.toJson(),
+      queryParameters: queryParameters,
       useFormData: useFormData,
     );
   }
@@ -118,8 +134,12 @@ class BackendClient {
   Future<StoreResult<Result>> delete<Result>({
     required Result Function(dynamic) decode,
     required String path,
+    Map<String, dynamic>? queryParameters,
   }) async {
-    return _call(request: _client.delete(path: path), decode: decode);
+    return _call(
+      request: _client.delete(path: path, queryParameters: queryParameters),
+      decode: decode,
+    );
   }
 
   Future<StoreResult<T>> _call<T>(

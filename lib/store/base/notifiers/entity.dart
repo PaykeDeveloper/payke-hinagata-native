@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -33,14 +34,19 @@ abstract class EntityNotifier<Entity, EntityUrl,
 
   Entity decodeEntity(Map<String, dynamic> json);
 
-  Future fetchEntity({required EntityUrl url}) async {
+  Future fetchEntity({
+    required EntityUrl url,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     state = state.copyWith(
       entityStatus: StateStatus.started,
       entityUrl: url,
+      entityQueryParameters: queryParameters,
     );
     final result = await read<BackendClient>().getObject(
       decode: decodeEntity,
       path: getEntityUrl(url),
+      queryParameters: queryParameters,
     );
     result.when(
       success: (data) {
@@ -66,12 +72,14 @@ abstract class EntityNotifier<Entity, EntityUrl,
   Future<StoreResult<Entity>> addEntity({
     required EntityUrl urlParams,
     required CreateInput data,
+    Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
     final result = await read<BackendClient>().postObject(
       decode: decodeEntity,
       path: getEntityUrl(urlParams),
       data: data,
+      queryParameters: queryParameters,
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
@@ -88,12 +96,14 @@ abstract class EntityNotifier<Entity, EntityUrl,
   Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
     required CreateInput data,
+    Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
     final result = await read<BackendClient>().patchObject(
       decode: decodeEntity,
       path: getEntityUrl(urlParams),
       data: data,
+      queryParameters: queryParameters,
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
@@ -109,10 +119,12 @@ abstract class EntityNotifier<Entity, EntityUrl,
 
   Future<StoreResult<void>> deleteEntity({
     required EntityUrl urlParams,
+    Map<String, dynamic>? queryParameters,
   }) async {
     final result = await read<BackendClient>().delete(
       decode: (json) {},
       path: getEntityUrl(urlParams),
+      queryParameters: queryParameters,
     );
     if (result is Success) {
       if (state.entityStatus == StateStatus.done) {
@@ -131,7 +143,10 @@ abstract class EntityNotifier<Entity, EntityUrl,
         now.difference(timestamp).inMinutes < _activeMinutes;
   }
 
-  bool _shouldFetchEntity({required EntityUrl url}) {
+  bool _shouldFetchEntity({
+    required EntityUrl url,
+    Map<String, dynamic>? queryParameters,
+  }) {
     switch (state.entityStatus) {
       case StateStatus.initial:
       case StateStatus.failed:
@@ -140,16 +155,18 @@ abstract class EntityNotifier<Entity, EntityUrl,
         return false;
       case StateStatus.done:
         final preferState = _checkInActivePeriod(state.entityTimestamp) &&
-            state.entityUrl == url;
+            state.entityUrl == url &&
+            mapEquals(state.entityQueryParameters, queryParameters);
         return !preferState;
     }
   }
 
   Future fetchEntityIfNeeded({
     required EntityUrl url,
+    Map<String, dynamic>? queryParameters,
     bool? reset,
   }) async {
-    if (!_shouldFetchEntity(url: url)) {
+    if (!_shouldFetchEntity(url: url, queryParameters: queryParameters)) {
       return null;
     }
 
@@ -157,7 +174,7 @@ abstract class EntityNotifier<Entity, EntityUrl,
       await resetEntityIfNeeded();
     }
 
-    return fetchEntity(url: url);
+    return fetchEntity(url: url, queryParameters: queryParameters);
   }
 
   Future resetEntity() async {
@@ -165,6 +182,7 @@ abstract class EntityNotifier<Entity, EntityUrl,
       entity: null,
       entityStatus: StateStatus.initial,
       entityUrl: null,
+      entityQueryParameters: null,
       entityTimestamp: null,
       entityError: null,
     );
