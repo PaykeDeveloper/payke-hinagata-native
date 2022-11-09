@@ -10,7 +10,6 @@ import 'package:native_app/store/state/domain/sample/projects/models/project_slu
 import 'package:native_app/store/state/domain/sample/projects/models/project_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
-import 'package:native_app/ui/screens/sample/projects/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';

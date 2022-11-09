@@ -9,7 +9,6 @@ import 'package:native_app/store/state/domain/division/members/models/member_id.
 import 'package:native_app/store/state/domain/division/members/models/member_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
-import 'package:native_app/ui/screens/division/members/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
