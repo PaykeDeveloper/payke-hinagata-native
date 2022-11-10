@@ -4,27 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/projects_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
+import 'package:native_app/ui/navigation/params/projects/add.dart';
+import 'package:native_app/ui/navigation/params/projects/detail.dart';
+import 'package:native_app/ui/navigation/params/projects/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
-
-import './add.dart';
-import './detail.dart';
-import './edit.dart';
 
 class ProjectListPage extends Page {
   const ProjectListPage({
     required DivisionId divisionId,
     required VoidCallback openDrawer,
   })  : _divisionId = divisionId,
-        _openDrawer = openDrawer,
-        super(key: const ValueKey("projectListPage"));
+        _openDrawer = openDrawer;
   final DivisionId _divisionId;
   final VoidCallback _openDrawer;
 
@@ -67,28 +66,31 @@ class ProjectListScreen extends StatelessWidget {
     void onPressedNew() {
       context
           .read<RouteStateNotifier>()
-          .push(BottomTab.projects, ProjectAddPage(divisionId: _divisionId));
+          .push(BottomTab.projects, ProjectAddParams(divisionId: _divisionId));
     }
 
     void onTapShow(ProjectSlug projectSlug) {
       context.read<RouteStateNotifier>().push(
             BottomTab.projects,
-            ProjectDetailPage(
-                divisionId: _divisionId, projectSlug: projectSlug),
-          );
-    }
-
-    void onPressedEdit(ProjectSlug projectSlug) {
-      context.read<RouteStateNotifier>().push(
-            BottomTab.projects,
-            ProjectEditPage(
+            ProjectDetailParams(
               divisionId: _divisionId,
               projectSlug: projectSlug,
             ),
           );
     }
 
-    bool checkRouteEmpty() => context.read<RouteState>().projectPages.isEmpty;
+    void onPressedEdit(ProjectSlug projectSlug) {
+      context.read<RouteStateNotifier>().push(
+            BottomTab.projects,
+            ProjectEditParams(
+              divisionId: _divisionId,
+              projectSlug: projectSlug,
+            ),
+          );
+    }
+
+    bool checkRouteEmpty() =>
+        projectParamsListSelector(context.read<RouteState>()).isEmpty;
 
     final error = context.select(projectsErrorSelector);
     final projects = context.select(projectsSelector);

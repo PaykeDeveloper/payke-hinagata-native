@@ -9,22 +9,17 @@ import 'package:native_app/store/state/domain/division/members/models/member_id.
 import 'package:native_app/store/state/domain/division/members/models/member_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
-import 'package:native_app/ui/screens/division/members/edit.dart';
+import 'package:native_app/ui/navigation/params/members/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import 'package:provider/provider.dart';
 
-import './edit.dart';
-
 class MemberDetailPage extends Page {
-  MemberDetailPage({
+  const MemberDetailPage({
     required DivisionId divisionId,
     required MemberId memberId,
   })  : _divisionId = divisionId,
-        _memberId = memberId,
-        super(
-            key: ValueKey(
-                "memberDetailPage-${divisionId.value}-${memberId.value}"));
+        _memberId = memberId;
   final DivisionId _divisionId;
   final MemberId _memberId;
 
@@ -59,7 +54,7 @@ class MemberDetailScreen extends StatelessWidget {
     void onPressedEdit() {
       context.read<RouteStateNotifier>().push(
             BottomTab.members,
-            MemberEditPage(divisionId: _divisionId, memberId: _memberId),
+            MemberEditParams(divisionId: _divisionId, memberId: _memberId),
           );
     }
 

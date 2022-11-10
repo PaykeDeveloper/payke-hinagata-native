@@ -12,8 +12,7 @@ import 'package:provider/provider.dart';
 class HomePage extends Page {
   const HomePage({
     required VoidCallback openDrawer,
-  })  : _openDrawer = openDrawer,
-        super(key: const ValueKey("homePage"));
+  }) : _openDrawer = openDrawer;
   final VoidCallback _openDrawer;
 
   @override

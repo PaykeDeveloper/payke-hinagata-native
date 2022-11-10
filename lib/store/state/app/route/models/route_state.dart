@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import './route_params.dart';
 
 part 'route_state.freezed.dart';
 
@@ -7,9 +8,9 @@ part 'route_state.freezed.dart';
 class RouteState with _$RouteState {
   const factory RouteState({
     required BottomTab tab,
-    @Default([]) List<Page> homePages,
-    @Default([]) List<Page> projectPages,
-    @Default([]) List<Page> memberPages,
+    @Default([]) List<RouteParams> homeParamsList,
+    @Default([]) List<RouteParams> projectParamsList,
+    @Default([]) List<RouteParams> memberParamsList,
   }) = _RouteState;
 
   const RouteState._();
@@ -17,11 +18,11 @@ class RouteState with _$RouteState {
   bool get isFirstTab {
     switch (tab) {
       case BottomTab.home:
-        return homePages.isEmpty;
+        return homeParamsList.isEmpty;
       case BottomTab.projects:
-        return projectPages.isEmpty;
+        return projectParamsList.isEmpty;
       case BottomTab.members:
-        return memberPages.isEmpty;
+        return memberParamsList.isEmpty;
     }
   }
 }

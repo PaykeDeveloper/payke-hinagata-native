@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:state_notifier/state_notifier.dart';
 
+import './models/route_params.dart';
 import './models/route_state.dart';
 
 const initialTab = BottomTab.home;
@@ -25,21 +24,21 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     );
   }
 
-  Future push(BottomTab tab, Page page) async {
+  Future push(BottomTab tab, RouteParams params) async {
     switch (tab) {
       case BottomTab.home:
         state = state.copyWith(
-          homePages: [...state.homePages, page],
+          homeParamsList: [...state.homeParamsList, params],
         );
         break;
       case BottomTab.projects:
         state = state.copyWith(
-          projectPages: [...state.projectPages, page],
+          projectParamsList: [...state.projectParamsList, params],
         );
         break;
       case BottomTab.members:
         state = state.copyWith(
-          memberPages: [...state.memberPages, page],
+          memberParamsList: [...state.memberParamsList, params],
         );
         break;
     }
@@ -49,37 +48,37 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     switch (tab) {
       case BottomTab.home:
         state = state.copyWith(
-          homePages: state.homePages.toList()..removeLast(),
+          homeParamsList: state.homeParamsList.toList()..removeLast(),
         );
         break;
       case BottomTab.projects:
         state = state.copyWith(
-          projectPages: state.projectPages.toList()..removeLast(),
+          projectParamsList: state.projectParamsList.toList()..removeLast(),
         );
         break;
       case BottomTab.members:
         state = state.copyWith(
-          memberPages: state.memberPages.toList()..removeLast(),
+          memberParamsList: state.memberParamsList.toList()..removeLast(),
         );
         break;
     }
   }
 
-  Future replace(BottomTab tab, List<Page> pages) async {
+  Future replace(BottomTab tab, List<RouteParams> paramsList) async {
     switch (tab) {
       case BottomTab.home:
         state = state.copyWith(
-          homePages: pages,
+          homeParamsList: paramsList,
         );
         break;
       case BottomTab.projects:
         state = state.copyWith(
-          projectPages: pages,
+          projectParamsList: paramsList,
         );
         break;
       case BottomTab.members:
         state = state.copyWith(
-          memberPages: pages,
+          memberParamsList: paramsList,
         );
         break;
     }
@@ -97,14 +96,14 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     }
   }
 
-  List<Page> _get(BottomTab tab) {
+  List<RouteParams> _get(BottomTab tab) {
     switch (tab) {
       case BottomTab.home:
-        return state.homePages;
+        return state.homeParamsList;
       case BottomTab.projects:
-        return state.projectPages;
+        return state.projectParamsList;
       case BottomTab.members:
-        return state.memberPages;
+        return state.memberParamsList;
     }
   }
 }

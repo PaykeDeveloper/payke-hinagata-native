@@ -11,6 +11,7 @@ class EntityState<Entity, EntityUrl> with _$EntityState<Entity, EntityUrl> {
     @Default(null) Entity? entity,
     @Default(StateStatus.initial) StateStatus entityStatus,
     @Default(null) EntityUrl? entityUrl,
+    @Default(null) Map<String, dynamic>? entityQueryParameters,
     @Default(null) DateTime? entityTimestamp,
     @Default(null) StoreError? entityError,
   }) = _EntityState<Entity, EntityUrl>;

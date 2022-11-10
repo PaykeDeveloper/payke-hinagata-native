@@ -12,11 +12,13 @@ class EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
     @Default(null) Entity? entity,
     @Default(StateStatus.initial) StateStatus entityStatus,
     @Default(null) EntityUrl? entityUrl,
+    @Default(null) Map<String, dynamic>? entityQueryParameters,
     @Default(null) DateTime? entityTimestamp,
     @Default(null) StoreError? entityError,
     @Default([]) List<EntitiesEntity> entities,
     @Default(StateStatus.initial) StateStatus entitiesStatus,
     @Default(null) EntitiesUrl? entitiesUrl,
+    @Default(null) Map<String, dynamic>? entitiesQueryParameters,
     @Default(null) DateTime? entitiesTimestamp,
     @Default(null) StoreError? entitiesError,
   }) = _EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>;

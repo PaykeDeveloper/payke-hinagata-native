@@ -9,6 +9,7 @@ abstract class ApiClient {
 
   Future<Response<Result>> get<Result>({
     required String path,
+    Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   });
 
@@ -17,6 +18,7 @@ abstract class ApiClient {
     required Map<String, dynamic> data,
     required bool useFormData,
     required bool containNull,
+    Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   });
 
@@ -25,11 +27,13 @@ abstract class ApiClient {
     required Map<String, dynamic> data,
     required bool useFormData,
     required bool containNull,
+    Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   });
 
   Future<Response<Result>> delete<Result>({
     required String path,
+    Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   });
 }
@@ -47,11 +51,13 @@ class ApiClientImpl extends ApiClient {
   @override
   Future<Response<Result>> get<Result>({
     required String path,
+    Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
     final response = await dio.get<Result>(
       path,
+      queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken ?? _cancelToken,
     );
@@ -64,6 +70,7 @@ class ApiClientImpl extends ApiClient {
     required Map<String, dynamic> data,
     required bool useFormData,
     required bool containNull,
+    Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
@@ -73,6 +80,7 @@ class ApiClientImpl extends ApiClient {
     final response = await dio.post<Result>(
       path,
       data: convertedData,
+      queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken ?? _cancelToken,
     );
@@ -85,6 +93,7 @@ class ApiClientImpl extends ApiClient {
     required Map<String, dynamic> data,
     required bool useFormData,
     required bool containNull,
+    Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
@@ -95,6 +104,7 @@ class ApiClientImpl extends ApiClient {
     final response = await dio.post<Result>(
       path,
       data: convertedData,
+      queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken ?? _cancelToken,
     );
@@ -104,11 +114,13 @@ class ApiClientImpl extends ApiClient {
   @override
   Future<Response<Result>> delete<Result>({
     required String path,
+    Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
   }) async {
     final options = await _getOptions();
     final response = await dio.delete<Result>(
       path,
+      queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken ?? _cancelToken,
     );
