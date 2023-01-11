@@ -65,18 +65,18 @@ class ApiClientMock extends ApiClientImpl {
 
 void _inspect(DioAdapter adapter) => adapter
   ..onPost(
-    'api/v1/login/',
+    '/api/v1/login',
     (server) => server.reply(200, {"token": "test"}),
     data: Matchers.any,
   )
   ..onGet(
-    'api/v1/roles/',
+    '/api/v1/roles',
     (server) => server.reply(200, [
       {"id": 1, "name": "Administrator", "type": "user", "required": false},
     ]),
   )
   ..onGet(
-    'api/v1/users/',
+    '/api/v1/users',
     (server) => server.reply(200, [
       {
         "id": 1,
@@ -92,7 +92,7 @@ void _inspect(DioAdapter adapter) => adapter
     ]),
   )
   ..onGet(
-    'api/v1/divisions/',
+    '/api/v1/divisions',
     (server) => server.reply(200, [
       {
         "id": 1,
@@ -118,7 +118,7 @@ void _inspect(DioAdapter adapter) => adapter
     ]),
   )
   ..onGet(
-      'api/v1/divisions/1/projects/',
+      '/api/v1/divisions/1/projects',
       (server) => server.reply(200, [
             {
               "id": 1,
@@ -141,7 +141,7 @@ void _inspect(DioAdapter adapter) => adapter
             }
           ]))
   ..onGet(
-      'api/v1/divisions/1/projects/d5095f7e-eb63-40b5-a641-2e672d167384/',
+      '/api/v1/divisions/1/projects/d5095f7e-eb63-40b5-a641-2e672d167384',
       (server) => server.reply(200, {
             "id": 1,
             "division_id": 1,
@@ -162,7 +162,7 @@ void _inspect(DioAdapter adapter) => adapter
             "cover_url": ""
           }))
   ..onPost(
-      'api/v1/divisions/1/projects/d5095f7e-eb63-40b5-a641-2e672d167384/',
+      '/api/v1/divisions/1/projects/d5095f7e-eb63-40b5-a641-2e672d167384',
       (server) => server.reply(200, {
             "id": 1,
             "division_id": 1,
