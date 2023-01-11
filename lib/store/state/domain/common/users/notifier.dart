@@ -13,10 +13,10 @@ class UsersNotifier extends EntitiesNotifier<User, UserUrl, User, UsersUrl,
   UsersNotifier(UsersState state) : super(state);
 
   @override
-  String getEntitiesUrl(UsersUrl url) => 'api/v1/users/';
+  String getEntitiesUrl(UsersUrl url) => '/api/v1/users';
 
   @override
-  String getEntityUrl(UserUrl url) => 'api/v1/users/${url.id.value}/';
+  String getEntityUrl(UserUrl url) => '/api/v1/users/${url.id.value}';
 
   @override
   User decodeEntities(Map<String, dynamic> json) => User.fromJson(json);

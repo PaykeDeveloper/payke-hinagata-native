@@ -14,11 +14,11 @@ class MembersNotifier extends EntitiesNotifier<Member, MemberUrl, Member,
 
   @override
   String getEntitiesUrl(MembersUrl url) =>
-      'api/v1/divisions/${url.divisionId.value}/members/';
+      '/api/v1/divisions/${url.divisionId.value}/members';
 
   @override
   String getEntityUrl(MemberUrl url) =>
-      'api/v1/divisions/${url.divisionId.value}/members/${url.id.value}/';
+      '/api/v1/divisions/${url.divisionId.value}/members/${url.id.value}';
 
   @override
   Member decodeEntities(Map<String, dynamic> json) => Member.fromJson(json);
