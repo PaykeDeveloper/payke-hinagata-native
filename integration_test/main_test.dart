@@ -41,7 +41,7 @@ void main() {
       await tester.tap(find.text(_divisionName));
       await tester.pump(const Duration(seconds: 3));
       await tester.tap(find.text('Projects'));
-      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(seconds: 5));
       await tester.tap(find.text(_projectName));
       await tester.pump(const Duration(seconds: 3));
       await tester.tap(find.byIcon(Icons.edit));
