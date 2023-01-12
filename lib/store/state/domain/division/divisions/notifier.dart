@@ -15,10 +15,10 @@ class DivisionsNotifier extends EntitiesNotifier<Division, DivisionUrl,
   DivisionsNotifier(DivisionsState state) : super(state);
 
   @override
-  String getEntitiesUrl(DivisionsUrl url) => 'api/v1/divisions/';
+  String getEntitiesUrl(DivisionsUrl url) => '/api/v1/divisions';
 
   @override
-  String getEntityUrl(DivisionUrl url) => 'api/v1/divisions/${url.id.value}/';
+  String getEntityUrl(DivisionUrl url) => '/api/v1/divisions/${url.id.value}';
 
   @override
   Division decodeEntities(Map<String, dynamic> json) => Division.fromJson(json);

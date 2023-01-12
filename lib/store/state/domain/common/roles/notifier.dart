@@ -13,10 +13,10 @@ class RolesNotifier extends EntitiesNotifier<Role, RoleUrl, Role, RolesUrl,
   RolesNotifier(RolesState state) : super(state);
 
   @override
-  String getEntitiesUrl(RolesUrl url) => 'api/v1/roles/';
+  String getEntitiesUrl(RolesUrl url) => '/api/v1/roles';
 
   @override
-  String getEntityUrl(RoleUrl url) => 'api/v1/roles/${url.id.value}/';
+  String getEntityUrl(RoleUrl url) => '/api/v1/roles/${url.id.value}';
 
   @override
   Role decodeEntities(Map<String, dynamic> json) => Role.fromJson(json);

@@ -86,6 +86,7 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
                   validators: [
                     FormBuilderValidators.required(),
                   ],
+                  enabled: member == null,
                 ),
                 ValidateFilterChip(
                   parent: this,

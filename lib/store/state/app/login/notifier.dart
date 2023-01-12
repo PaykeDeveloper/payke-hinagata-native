@@ -36,7 +36,7 @@ class LoginNotifier extends StateNotifier<LoginState> with LocatorMixin {
     final client = read<BackendClient>();
     final result = await client.postObject(
         decode: (json) => LoginOutput.fromJson(json),
-        path: 'api/v1/login/',
+        path: '/api/v1/login',
         data: input);
     if (result is Success<LoginOutput>) {
       state = state.copyWith(status: StateStatus.done, error: null);

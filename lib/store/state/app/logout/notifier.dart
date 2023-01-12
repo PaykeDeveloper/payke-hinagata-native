@@ -14,7 +14,7 @@ class LogoutNotifier extends StateNotifier<LogoutState> with LocatorMixin {
     final client = read<BackendClient>();
     await client.post(
       decode: (json) => null,
-      path: 'api/v1/logout',
+      path: '/api/v1/logout',
     );
     final notifier = read<BackendTokenNotifier>();
     await notifier.removeToken();
