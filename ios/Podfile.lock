@@ -8,8 +8,9 @@ PODS:
     - Flutter
   - package_info (0.0.1):
     - Flutter
-  - shared_preferences_ios (0.0.1):
+  - shared_preferences_foundation (0.0.1):
     - Flutter
+    - FlutterMacOS
   - uni_links (0.0.1):
     - Flutter
 
@@ -19,7 +20,7 @@ DEPENDENCIES:
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
-  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/ios`)
   - uni_links (from `.symlinks/plugins/uni_links/ios`)
 
 EXTERNAL SOURCES:
@@ -33,8 +34,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/integration_test/ios"
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
-  shared_preferences_ios:
-    :path: ".symlinks/plugins/shared_preferences_ios/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/ios"
   uni_links:
     :path: ".symlinks/plugins/uni_links/ios"
 
@@ -44,7 +45,7 @@ SPEC CHECKSUMS:
   image_picker_ios: b786a5dcf033a8336a657191401bfdf12017dabb
   integration_test: a1e7d09bd98eca2fc37aefd79d4f41ad37bdbbe5
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  shared_preferences_foundation: 297b3ebca31b34ec92be11acd7fb0ba932c822ca
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
 
 PODFILE CHECKSUM: ef19549a9bc3046e7bb7d2fab4d021637c0c58a3

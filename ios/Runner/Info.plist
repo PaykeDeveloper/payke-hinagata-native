@@ -45,7 +45,8 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
-
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
     <!-- FIXME: SAMPLE CODE start -->
     <!-- image_picker -->
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -9,11 +9,11 @@ on:
 env:
   java_version: 11
   java_distribution: zulu
-  flutter_version: 3.0.1
+  flutter_version: 3.7.0
 jobs:
   test:
-    runs-on: macos-latest
-    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     env:
       BACKEND_ORIGIN: https://example.com
     steps:
@@ -30,8 +30,5 @@ jobs:
       - run: flutter pub get
       - run: flutter pub run build_runner build --delete-conflicting-outputs
       - run: flutter analyze
-      - run: flutter format . --set-exit-if-changed
+      - run: dart format . --set-exit-if-changed
       - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN
-      - run: xcrun xctrace list devices
-      - run: xcrun simctl boot "iPhone 13"
-      - run: flutter test --dart-define=BACKEND_ORIGIN=$BACKEND_ORIGIN integration_test

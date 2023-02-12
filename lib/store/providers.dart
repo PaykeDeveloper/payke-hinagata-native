@@ -1,11 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
-import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/domain/common/roles/notifier.dart';
-import 'package:native_app/store/state/domain/common/users/notifier.dart';
-import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:provider/single_child_widget.dart';
 
 import './base/models/entities_state.dart';
@@ -15,7 +10,12 @@ import './state/app/backend_token/notifier.dart';
 import './state/app/locale/notifier.dart';
 import './state/app/login/notifier.dart';
 import './state/app/logout/notifier.dart';
+import './state/app/route/models/route_state.dart';
+import './state/app/route/notifier.dart';
+import './state/domain/common/roles/notifier.dart';
+import './state/domain/common/users/notifier.dart';
 import './state/domain/division/divisions/notifier.dart';
+import './state/domain/division/members/notifier.dart';
 import './state/domain/sample/projects/notifier.dart';
 import './state/ui/division_id/notifier.dart';
 

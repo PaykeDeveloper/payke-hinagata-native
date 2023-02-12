@@ -64,7 +64,7 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
     final message = error.getContextMessage(context);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(message),
-      backgroundColor: Theme.of(context).errorColor,
+      backgroundColor: Theme.of(context).colorScheme.error,
     ));
   }
 
