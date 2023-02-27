@@ -130,8 +130,8 @@ class ApiClientImpl extends ApiClient {
   static Dio _getDio(String baseUrl) {
     final options = BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: 30000,
-      receiveTimeout: 30000,
+      connectTimeout: const Duration(minutes: 10),
+      receiveTimeout: const Duration(minutes: 10),
     );
     final dio = Dio(options);
     if (!productMode) {

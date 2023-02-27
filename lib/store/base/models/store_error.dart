@@ -33,13 +33,13 @@ class StoreError with _$StoreError {
 StoreError getStateError(Exception exception) {
   if (exception is DioError) {
     switch (exception.type) {
-      case DioErrorType.connectTimeout:
+      case DioErrorType.connectionTimeout:
       case DioErrorType.sendTimeout:
       case DioErrorType.receiveTimeout:
         return const StoreError.sendTimeout();
       case DioErrorType.cancel:
         return const StoreError.requestCancelled();
-      case DioErrorType.response:
+      case DioErrorType.badResponse:
         final statusCode = exception.response?.statusCode;
         if (statusCode == null) {
           break;
@@ -57,12 +57,8 @@ StoreError getStateError(Exception exception) {
           return StoreError.serviceUnavailable(ErrorResult.fromJson(json));
         }
         break;
-      case DioErrorType.other:
-        if (exception.error is SocketException ||
-            exception.error is HandshakeException) {
-          return const StoreError.noInternetConnection();
-        }
-        break;
+      case DioErrorType.connectionError:
+        return const StoreError.noInternetConnection();
     }
   }
   return const StoreError.unexpectedError();
