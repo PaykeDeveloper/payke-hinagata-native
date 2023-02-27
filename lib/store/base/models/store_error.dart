@@ -13,7 +13,7 @@ class StoreError with _$StoreError {
 
   const factory StoreError.requestCancelled() = RequestCancelled;
 
-  const factory StoreError.unauthorisedRequest(ErrorResult result) =
+  const factory StoreError.unauthorisedRequest(ErrorResult? result) =
       UnauthorisedRequest;
 
   const factory StoreError.badRequest(ErrorResult result) = BadRequest;
@@ -33,13 +33,13 @@ class StoreError with _$StoreError {
 StoreError getStateError(Exception exception) {
   if (exception is DioError) {
     switch (exception.type) {
-      case DioErrorType.connectTimeout:
+      case DioErrorType.connectionTimeout:
       case DioErrorType.sendTimeout:
       case DioErrorType.receiveTimeout:
         return const StoreError.sendTimeout();
       case DioErrorType.cancel:
         return const StoreError.requestCancelled();
-      case DioErrorType.response:
+      case DioErrorType.badResponse:
         final statusCode = exception.response?.statusCode;
         if (statusCode == null) {
           break;
@@ -57,11 +57,11 @@ StoreError getStateError(Exception exception) {
           return StoreError.serviceUnavailable(ErrorResult.fromJson(json));
         }
         break;
-      case DioErrorType.other:
-        if (exception.error is SocketException ||
-            exception.error is HandshakeException) {
-          return const StoreError.noInternetConnection();
-        }
+      case DioErrorType.connectionError:
+        return const StoreError.noInternetConnection();
+      case DioErrorType.badCertificate:
+        return const StoreError.unauthorisedRequest(null);
+      case DioErrorType.unknown:
         break;
     }
   }
@@ -73,7 +73,7 @@ extension StateErrorExt on StoreError {
     final message = map(
       sendTimeout: (error) => null,
       requestCancelled: (error) => null,
-      unauthorisedRequest: (error) => error.result.message,
+      unauthorisedRequest: (error) => error.result?.message,
       badRequest: (error) => error.result.message,
       notFound: (error) => error.result.message,
       requestTimeout: (error) => null,
