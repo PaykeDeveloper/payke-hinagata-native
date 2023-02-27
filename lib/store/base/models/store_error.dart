@@ -13,7 +13,7 @@ class StoreError with _$StoreError {
 
   const factory StoreError.requestCancelled() = RequestCancelled;
 
-  const factory StoreError.unauthorisedRequest(ErrorResult result) =
+  const factory StoreError.unauthorisedRequest(ErrorResult? result) =
       UnauthorisedRequest;
 
   const factory StoreError.badRequest(ErrorResult result) = BadRequest;
@@ -59,6 +59,10 @@ StoreError getStateError(Exception exception) {
         break;
       case DioErrorType.connectionError:
         return const StoreError.noInternetConnection();
+      case DioErrorType.badCertificate:
+        return const StoreError.unauthorisedRequest(null);
+      case DioErrorType.unknown:
+        break;
     }
   }
   return const StoreError.unexpectedError();
@@ -69,7 +73,7 @@ extension StateErrorExt on StoreError {
     final message = map(
       sendTimeout: (error) => null,
       requestCancelled: (error) => null,
-      unauthorisedRequest: (error) => error.result.message,
+      unauthorisedRequest: (error) => error.result?.message,
       badRequest: (error) => error.result.message,
       notFound: (error) => error.result.message,
       requestTimeout: (error) => null,
