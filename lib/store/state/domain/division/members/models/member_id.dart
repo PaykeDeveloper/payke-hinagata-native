@@ -1,3 +1,4 @@
+// FIXME: SAMPLE CODE
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'member_id.freezed.dart';

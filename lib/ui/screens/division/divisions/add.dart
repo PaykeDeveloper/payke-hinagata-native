@@ -1,5 +1,6 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
@@ -9,16 +10,15 @@ import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
-class DivisionAddScreen extends StatelessWidget {
+class DivisionAddScreen extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Future<StoreResult?> onSubmit(DivisionInput input) async {
-      final result = await context
-          .read<DivisionsNotifier>()
+      final result = await ref
+          .read(divisionsProvider.notifier)
           .addEntity(urlParams: const DivisionsUrl(), data: input);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -26,8 +26,8 @@ class DivisionAddScreen extends StatelessWidget {
       return result;
     }
 
-    final status = context.select(divisionsStatusSelector);
-    final error = context.select(divisionsErrorSelector);
+    final status = ref.watch(divisionsStatusSelector);
+    final error = ref.watch(divisionsErrorSelector);
     return DivisionAdd(
       onSubmit: onSubmit,
       status: status,

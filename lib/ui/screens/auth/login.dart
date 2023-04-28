@@ -2,24 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/login/notifier.dart';
+import 'package:native_app/store/state/app/login/selectors.dart';
 import 'package:native_app/ui/widgets/atoms/logo.dart';
 import 'package:native_app/ui/widgets/atoms/submit_button.dart';
 import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 import 'package:native_app/ui/widgets/atoms/validate_text_field.dart';
-import 'package:provider/provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Future<StoreResult> onSubmit(String email, String password) async {
-      final notifier = context.read<LoginNotifier>();
+      final notifier = ref.read(loginProvider.notifier);
       return notifier.login(email, password);
     }
 
-    final status = context.select((LoginState state) => state.status);
+    final status = ref.watch(loginStatusSelector);
 
     return Scaffold(
       body: Login(

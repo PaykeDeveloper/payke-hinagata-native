@@ -1,8 +1,8 @@
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:provider/provider.dart';
 
 // import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 // import 'package:native_app/store/state/ui/division_id/notifier.dart';
@@ -24,16 +24,16 @@ class HomePage extends Page {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({
     required VoidCallback openDrawer,
   }) : _openDrawer = openDrawer;
   final VoidCallback _openDrawer;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Future onPressedProjectList() async {
-      final notifier = context.read<RouteStateNotifier>();
+      final notifier = ref.read(routeStateProvider.notifier);
       await notifier.changeIndex(BottomTab.projects);
       await notifier.replace(BottomTab.projects, []);
     }

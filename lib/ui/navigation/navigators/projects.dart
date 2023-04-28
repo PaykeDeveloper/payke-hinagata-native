@@ -1,13 +1,13 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/screens/sample/projects/list.dart';
-import 'package:provider/provider.dart';
 
-class ProjectsNavigator extends StatelessWidget {
+class ProjectsNavigator extends ConsumerWidget {
   const ProjectsNavigator({
     required GlobalKey<NavigatorState>? navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
@@ -19,9 +19,9 @@ class ProjectsNavigator extends StatelessWidget {
   void _openDrawer() => _scaffoldKey.currentState?.openDrawer();
 
   @override
-  Widget build(BuildContext context) {
-    final paramsList = context.select(projectParamsListSelector);
-    final divisionId = context.select(divisionIdSelector);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paramsList = ref.watch(projectParamsListSelector);
+    final divisionId = ref.watch(divisionIdSelector);
     return Navigator(
       key: _navigatorKey,
       onPopPage: (route, result) {
@@ -29,7 +29,7 @@ class ProjectsNavigator extends StatelessWidget {
           return false;
         }
 
-        final notifier = context.read<RouteStateNotifier>();
+        final notifier = ref.read(routeStateProvider.notifier);
         notifier.pop(BottomTab.projects);
         return true;
       },

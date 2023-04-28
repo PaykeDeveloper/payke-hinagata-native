@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/screens/division/members/list.dart';
-import 'package:provider/provider.dart';
 
-class MembersNavigator extends StatelessWidget {
+class MembersNavigator extends ConsumerWidget {
   const MembersNavigator({
     required GlobalKey<NavigatorState>? navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
@@ -18,9 +18,9 @@ class MembersNavigator extends StatelessWidget {
   void _openDrawer() => _scaffoldKey.currentState?.openDrawer();
 
   @override
-  Widget build(BuildContext context) {
-    final paramsList = context.select(memberParamsListSelector);
-    final divisionId = context.select(divisionIdSelector);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paramsList = ref.watch(memberParamsListSelector);
+    final divisionId = ref.watch(divisionIdSelector);
     return Navigator(
       key: _navigatorKey,
       onPopPage: (route, result) {
@@ -28,7 +28,7 @@ class MembersNavigator extends StatelessWidget {
           return false;
         }
 
-        final notifier = context.read<RouteStateNotifier>();
+        final notifier = ref.read(routeStateProvider.notifier);
         notifier.pop(BottomTab.members);
         return true;
       },

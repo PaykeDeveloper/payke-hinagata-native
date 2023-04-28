@@ -1,6 +1,7 @@
 // FIXME: SAMPLE CODE
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
@@ -16,7 +17,6 @@ import 'package:native_app/ui/navigation/params/projects/detail.dart';
 import 'package:native_app/ui/navigation/params/projects/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 class ProjectListPage extends Page {
   const ProjectListPage({
@@ -39,7 +39,7 @@ class ProjectListPage extends Page {
   }
 }
 
-class ProjectListScreen extends StatelessWidget {
+class ProjectListScreen extends ConsumerWidget {
   const ProjectListScreen({
     required DivisionId divisionId,
     required VoidCallback openDrawer,
@@ -49,28 +49,28 @@ class ProjectListScreen extends StatelessWidget {
   final VoidCallback _openDrawer;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Future initState() async {
-      await context.read<ProjectsNotifier>().fetchEntitiesIfNeeded(
+      await ref.read(projectsProvider.notifier).fetchEntitiesIfNeeded(
             url: ProjectsUrl(divisionId: _divisionId),
             reset: true,
           );
     }
 
     Future onRefresh() async {
-      await context
-          .read<ProjectsNotifier>()
+      await ref
+          .read(projectsProvider.notifier)
           .fetchEntities(url: ProjectsUrl(divisionId: _divisionId));
     }
 
     void onPressedNew() {
-      context
-          .read<RouteStateNotifier>()
+      ref
+          .read(routeStateProvider.notifier)
           .push(BottomTab.projects, ProjectAddParams(divisionId: _divisionId));
     }
 
     void onTapShow(ProjectSlug projectSlug) {
-      context.read<RouteStateNotifier>().push(
+      ref.read(routeStateProvider.notifier).push(
             BottomTab.projects,
             ProjectDetailParams(
               divisionId: _divisionId,
@@ -80,7 +80,7 @@ class ProjectListScreen extends StatelessWidget {
     }
 
     void onPressedEdit(ProjectSlug projectSlug) {
-      context.read<RouteStateNotifier>().push(
+      ref.read(routeStateProvider.notifier).push(
             BottomTab.projects,
             ProjectEditParams(
               divisionId: _divisionId,
@@ -89,11 +89,10 @@ class ProjectListScreen extends StatelessWidget {
           );
     }
 
-    bool checkRouteEmpty() =>
-        projectParamsListSelector(context.read<RouteState>()).isEmpty;
+    bool checkRouteEmpty() => ref.read(projectParamsListSelector).isEmpty;
 
-    final error = context.select(projectsErrorSelector);
-    final projects = context.select(projectsSelector);
+    final error = ref.watch(projectsErrorSelector);
+    final projects = ref.watch(projectsSelector);
 
     return ProjectList(
       openDrawer: _openDrawer,

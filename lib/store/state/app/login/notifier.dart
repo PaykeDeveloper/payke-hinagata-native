@@ -2,9 +2,10 @@ import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
+import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:package_info/package_info.dart';
 import 'package:state_notifier/state_notifier.dart';
@@ -19,7 +20,8 @@ const _web = 'web';
 typedef LoginState = StoreState<Login>;
 
 class LoginNotifier extends StateNotifier<LoginState> with LocatorMixin {
-  LoginNotifier() : super(StoreState(Login()));
+  LoginNotifier(this._ref) : super(StoreState(Login()));
+  final Ref _ref;
 
   Future<StoreResult<LoginOutput>> login(String email, String password) async {
     final packageName = await _getPackageName();
@@ -33,14 +35,16 @@ class LoginNotifier extends StateNotifier<LoginState> with LocatorMixin {
       deviceId: deviceId,
     );
     state = state.copyWith(status: StateStatus.started);
-    final client = read<BackendClient>();
+    final client = _ref.read(backendClientProvider);
     final result = await client.postObject(
         decode: (json) => LoginOutput.fromJson(json),
         path: '/api/v1/login',
         data: input);
     if (result is Success<LoginOutput>) {
       state = state.copyWith(status: StateStatus.done, error: null);
-      await read<BackendTokenNotifier>().setToken(result.data.token);
+      await _ref
+          .read(backendTokenProvider.notifier)
+          .setToken(result.data.token);
     } else if (result is Failure<LoginOutput>) {
       state = state.copyWith(status: StateStatus.failed, error: result.error);
     }
@@ -80,3 +84,6 @@ class LoginNotifier extends StateNotifier<LoginState> with LocatorMixin {
     return deviceId?.isNotEmpty == true ? deviceId : null;
   }
 }
+
+final loginProvider = StateNotifierProvider<LoginNotifier, LoginState>(
+    (ref) => LoginNotifier(ref));

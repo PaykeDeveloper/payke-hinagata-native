@@ -1,5 +1,6 @@
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/route_state.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
@@ -19,7 +20,6 @@ import 'package:native_app/ui/navigation/params/members/detail.dart';
 import 'package:native_app/ui/navigation/params/members/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 class MemberListPage extends Page {
   const MemberListPage({
@@ -42,7 +42,7 @@ class MemberListPage extends Page {
   }
 }
 
-class MemberListScreen extends StatelessWidget {
+class MemberListScreen extends ConsumerWidget {
   const MemberListScreen({
     required DivisionId divisionId,
     required VoidCallback openDrawer,
@@ -52,54 +52,53 @@ class MemberListScreen extends StatelessWidget {
   final VoidCallback _openDrawer;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final memberUrl = MembersUrl(divisionId: _divisionId);
     Future initState() async {
       await Future.wait([
-        context
-            .read<MembersNotifier>()
+        ref
+            .read(membersProvider.notifier)
             .fetchEntitiesIfNeeded(url: memberUrl, reset: true),
-        context
-            .read<UsersNotifier>()
+        ref
+            .read(usersProvider.notifier)
             .fetchEntitiesIfNeeded(url: const UsersUrl())
       ]);
     }
 
     Future onRefresh() async {
       await Future.wait([
-        context.read<MembersNotifier>().fetchEntities(url: memberUrl),
-        context
-            .read<UsersNotifier>()
+        ref.read(membersProvider.notifier).fetchEntities(url: memberUrl),
+        ref
+            .read(usersProvider.notifier)
             .fetchEntitiesIfNeeded(url: const UsersUrl(), reset: true),
       ]);
     }
 
     void onPressedNew() {
-      context
-          .read<RouteStateNotifier>()
+      ref
+          .read(routeStateProvider.notifier)
           .push(BottomTab.members, MemberAddParams(divisionId: _divisionId));
     }
 
     void onTapShow(MemberId memberId) {
-      context.read<RouteStateNotifier>().push(
+      ref.read(routeStateProvider.notifier).push(
             BottomTab.members,
             MemberDetailParams(divisionId: _divisionId, memberId: memberId),
           );
     }
 
     void onPressedEdit(MemberId memberId) {
-      context.read<RouteStateNotifier>().push(
+      ref.read(routeStateProvider.notifier).push(
             BottomTab.members,
             MemberEditParams(divisionId: _divisionId, memberId: memberId),
           );
     }
 
-    bool checkRouteEmpty() =>
-        memberParamsListSelector(context.read<RouteState>()).isEmpty;
+    bool checkRouteEmpty() => ref.read(memberParamsListSelector).isEmpty;
 
-    final error = context.select(membersErrorSelector);
-    final members = context.select(membersSelector);
-    final usersMap = context.select(usersMapSelector);
+    final error = ref.watch(membersErrorSelector);
+    final members = ref.watch(membersSelector);
+    final usersMap = ref.watch(usersMapSelector);
 
     return MemberList(
       openDrawer: _openDrawer,

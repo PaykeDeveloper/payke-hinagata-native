@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/logout/notifier.dart';
 import 'package:native_app/ui/extensions/state_error.dart';
-import 'package:provider/provider.dart';
 
-class ErrorWrapper extends StatelessWidget {
+class ErrorWrapper extends ConsumerWidget {
   const ErrorWrapper({
     required Widget child,
     required StoreError? error,
@@ -19,7 +19,7 @@ class ErrorWrapper extends StatelessWidget {
   final VoidCallback? _onPressedReload;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final error = _error;
     if (error != null) {
       final String message = error.getContextMessage(context);
@@ -38,7 +38,7 @@ class ErrorWrapper extends StatelessWidget {
         sendTimeout: (_) => _onPressedReload,
         requestCancelled: (_) => _onPressedReload,
         unauthorisedRequest: (_) {
-          final notifier = context.read<LogoutNotifier>();
+          final notifier = ref.read(logoutProvider.notifier);
           notifier.logout();
         },
         badRequest: (_) => _onPressedReload,

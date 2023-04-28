@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
 
@@ -10,7 +11,7 @@ typedef RolesState = EntitiesState<Role, RoleUrl, Role, RolesUrl>;
 
 class RolesNotifier extends EntitiesNotifier<Role, RoleUrl, Role, RolesUrl,
     RoleInput, RoleInput> {
-  RolesNotifier(RolesState state) : super(state);
+  RolesNotifier(super.ref, super.state);
 
   @override
   String getEntitiesUrl(RolesUrl url) => '/api/v1/roles';
@@ -24,3 +25,6 @@ class RolesNotifier extends EntitiesNotifier<Role, RoleUrl, Role, RolesUrl,
   @override
   Role decodeEntity(Map<String, dynamic> json) => Role.fromJson(json);
 }
+
+final rolesProvider = StateNotifierProvider<RolesNotifier, RolesState>(
+    (ref) => RolesNotifier(ref, const EntitiesState()));

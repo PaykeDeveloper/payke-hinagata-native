@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
@@ -17,7 +18,6 @@ import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
@@ -42,7 +42,7 @@ class MemberEditPage extends Page {
   }
 }
 
-class MemberEditScreen extends StatelessWidget {
+class MemberEditScreen extends ConsumerWidget {
   const MemberEditScreen({
     required DivisionId divisionId,
     required MemberId memberId,
@@ -52,12 +52,12 @@ class MemberEditScreen extends StatelessWidget {
   final MemberId _memberId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final memberUrl = MemberUrl(divisionId: _divisionId, id: _memberId);
 
     Future<StoreResult?> onSubmit(MemberInput input) async {
-      final result = await context
-          .read<MembersNotifier>()
+      final result = await ref
+          .read(membersProvider.notifier)
           .mergeEntity(urlParams: memberUrl, data: input);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -66,25 +66,27 @@ class MemberEditScreen extends StatelessWidget {
     }
 
     void initState() {
-      context
-          .read<MembersNotifier>()
+      ref
+          .read(membersProvider.notifier)
           .fetchEntityIfNeeded(url: memberUrl, reset: true);
     }
 
     Future onPressedDelete() async {
-      final result = await context
-          .read<MembersNotifier>()
+      final result = await ref
+          .read(membersProvider.notifier)
           .deleteEntity(urlParams: memberUrl);
       if (result is Success) {
-        await context.read<RouteStateNotifier>().replace(BottomTab.members, []);
+        await ref
+            .read(routeStateProvider.notifier)
+            .replace(BottomTab.members, []);
       }
     }
 
-    final status = context.select(memberStatusSelector);
-    final error = context.select(memberErrorSelector);
-    final member = context.select(memberSelector);
-    final users = context.select(usersSelector);
-    final roles = context.select(memberRolesSelector);
+    final status = ref.watch(memberStatusSelector);
+    final error = ref.watch(memberErrorSelector);
+    final member = ref.watch(memberSelector);
+    final users = ref.watch(usersSelector);
+    final roles = ref.watch(memberRolesSelector);
 
     return MemberEdit(
       onSubmit: onSubmit,

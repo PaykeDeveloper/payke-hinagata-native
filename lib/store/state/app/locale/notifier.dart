@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:state_notifier/state_notifier.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class LocaleNotifier extends StateNotifier<Locale?> {
   LocaleNotifier() : super(null);
@@ -9,3 +9,6 @@ class LocaleNotifier extends StateNotifier<Locale?> {
     state = locale;
   }
 }
+
+final localeProvider =
+    StateNotifierProvider<LocaleNotifier, Locale?>((ref) => LocaleNotifier());

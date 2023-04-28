@@ -1,3 +1,5 @@
+// FIXME: SAMPLE CODE
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
@@ -9,14 +11,9 @@ class DivisionIdNotifier extends StateNotifier<DivisionIdState>
     with LocatorMixin {
   DivisionIdNotifier() : super(const StoreState(null));
 
-  @override
-  void initState() {
-    super.initState();
+  Future initialize() async {
     state = state.copyWith(status: StateStatus.started);
-    _fetch();
-  }
 
-  Future _fetch() async {
     final value = await Preferences.divisionId.get();
     final divisionId = value != null ? DivisionId(value) : null;
     state = state.copyWith(data: divisionId, status: StateStatus.done);
@@ -28,3 +25,7 @@ class DivisionIdNotifier extends StateNotifier<DivisionIdState>
     return result;
   }
 }
+
+final divisionIdProvider =
+    StateNotifierProvider<DivisionIdNotifier, DivisionIdState>(
+        (ref) => DivisionIdNotifier());

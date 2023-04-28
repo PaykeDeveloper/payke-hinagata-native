@@ -1,21 +1,20 @@
 import 'package:native_app/base/utils.dart';
-import 'package:native_app/store/base/models/store_error.dart';
-import 'package:native_app/store/base/models/store_state.dart';
 
 import './models/user.dart';
 import './notifier.dart';
 
-List<User> usersSelector(UsersState state) => state.entities;
+final usersSelector = usersProvider.select((state) => state.entities);
 
-StateStatus usersStatusSelector(UsersState state) => state.entitiesStatus;
+final usersStatusSelector =
+    usersProvider.select((state) => state.entitiesStatus);
 
-StoreError? usersErrorSelector(UsersState state) => state.entitiesError;
+final usersErrorSelector = usersProvider.select((state) => state.entitiesError);
 
-User? userSelector(UsersState state) => state.entity;
+final userSelector = usersProvider.select((state) => state.entity);
 
-StateStatus userStatusSelector(UsersState state) => state.entityStatus;
+final userStatusSelector = usersProvider.select((state) => state.entityStatus);
 
-StoreError? userErrorSelector(UsersState state) => state.entityError;
+final userErrorSelector = usersProvider.select((state) => state.entityError);
 
-Map<int, User> usersMapSelector(UsersState state) =>
-    convertListToMap(state.entities, (User user) => user.id.value);
+final usersMapSelector = usersProvider.select(
+    (state) => convertListToMap(state.entities, (User user) => user.id.value));

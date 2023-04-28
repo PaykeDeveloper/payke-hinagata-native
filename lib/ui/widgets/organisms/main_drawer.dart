@@ -1,19 +1,19 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/state/app/logout/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/constants.dart';
 import 'package:native_app/ui/screens/division/divisions/list.dart';
 import 'package:package_info/package_info.dart';
-import 'package:provider/provider.dart';
 
-class MainDrawer extends StatelessWidget {
+class MainDrawer extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final divisionId = context.select(divisionIdSelector);
-    final divisions = context.select(divisionsSelector);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final divisionId = ref.watch(divisionIdSelector);
+    final divisions = ref.watch(divisionsSelector);
     final division = divisionId != null
         ? divisions.firstWhereOrNull((element) => element.id == divisionId)
         : null;
@@ -39,7 +39,7 @@ class MainDrawer extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: Text(AppLocalizations.of(context)!.logout),
             onTap: () {
-              final notifier = context.read<LogoutNotifier>();
+              final notifier = ref.read(logoutProvider.notifier);
               notifier.logout();
             },
           ),

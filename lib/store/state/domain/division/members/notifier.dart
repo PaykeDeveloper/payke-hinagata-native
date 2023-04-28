@@ -1,3 +1,5 @@
+// FIXME: SAMPLE CODE
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
 
@@ -10,7 +12,7 @@ typedef MembersState = EntitiesState<Member, MemberUrl, Member, MembersUrl>;
 
 class MembersNotifier extends EntitiesNotifier<Member, MemberUrl, Member,
     MembersUrl, MemberInput, MemberInput> {
-  MembersNotifier(MembersState state) : super(state);
+  MembersNotifier(super.ref, super.state);
 
   @override
   String getEntitiesUrl(MembersUrl url) =>
@@ -26,3 +28,6 @@ class MembersNotifier extends EntitiesNotifier<Member, MemberUrl, Member,
   @override
   Member decodeEntity(Map<String, dynamic> json) => Member.fromJson(json);
 }
+
+final membersProvider = StateNotifierProvider<MembersNotifier, MembersState>(
+    (ref) => MembersNotifier(ref, const EntitiesState()));

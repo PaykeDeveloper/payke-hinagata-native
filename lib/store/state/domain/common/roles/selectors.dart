@@ -1,20 +1,17 @@
-import 'package:native_app/store/base/models/store_error.dart';
-import 'package:native_app/store/base/models/store_state.dart';
-
-import './models/role.dart';
 import './notifier.dart';
 
-List<Role> rolesSelector(RolesState state) => state.entities;
+final rolesSelector = rolesProvider.select((state) => state.entities);
 
-List<Role> memberRolesSelector(RolesState state) =>
-    state.entities.where((element) => element.type == 'member').toList();
+final memberRolesSelector = rolesProvider.select((state) =>
+    state.entities.where((element) => element.type == 'member').toList());
 
-StateStatus rolesStatusSelector(RolesState state) => state.entitiesStatus;
+final rolesStatusSelector =
+    rolesProvider.select((state) => state.entitiesStatus);
 
-StoreError? rolesErrorSelector(RolesState state) => state.entitiesError;
+final rolesErrorSelector = rolesProvider.select((state) => state.entitiesError);
 
-Role? roleSelector(RolesState state) => state.entity;
+final roleSelector = rolesProvider.select((state) => state.entity);
 
-StateStatus roleStatusSelector(RolesState state) => state.entityStatus;
+final roleStatusSelector = rolesProvider.select((state) => state.entityStatus);
 
-StoreError? roleErrorSelector(RolesState state) => state.entityError;
+final roleErrorSelector = rolesProvider.select((state) => state.entityError);

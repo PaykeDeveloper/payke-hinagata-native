@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
@@ -13,7 +14,6 @@ import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
@@ -31,15 +31,15 @@ class MemberAddPage extends Page {
   }
 }
 
-class MemberAddScreen extends StatelessWidget {
+class MemberAddScreen extends ConsumerWidget {
   const MemberAddScreen({required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Future<StoreResult?> onSubmit(MemberInput input) async {
-      final result = await context.read<MembersNotifier>().addEntity(
+      final result = await ref.read(membersProvider.notifier).addEntity(
           urlParams: MembersUrl(divisionId: _divisionId), data: input);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -47,10 +47,10 @@ class MemberAddScreen extends StatelessWidget {
       return result;
     }
 
-    final status = context.select(membersStatusSelector);
-    final error = context.select(membersErrorSelector);
-    final users = context.select(usersSelector);
-    final roles = context.select(memberRolesSelector);
+    final status = ref.watch(membersStatusSelector);
+    final error = ref.watch(membersErrorSelector);
+    final users = ref.watch(usersSelector);
+    final roles = ref.watch(memberRolesSelector);
 
     return MemberAdd(
       onSubmit: onSubmit,

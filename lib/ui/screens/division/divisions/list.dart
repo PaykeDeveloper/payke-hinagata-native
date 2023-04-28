@@ -1,6 +1,7 @@
 // FIXME: SAMPLE CODE
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
@@ -11,33 +12,32 @@ import 'package:native_app/store/state/ui/division_id/notifier.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 import './add.dart';
 import './edit.dart';
 
-class DivisionListScreen extends StatelessWidget {
+class DivisionListScreen extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Future initState() async {
-      await context
-          .read<DivisionsNotifier>()
+      await ref
+          .read(divisionsProvider.notifier)
           .fetchEntitiesIfNeeded(url: const DivisionsUrl(), reset: true);
     }
 
     Future onRefresh() async {
-      await context
-          .read<DivisionsNotifier>()
+      await ref
+          .read(divisionsProvider.notifier)
           .fetchEntities(url: const DivisionsUrl());
     }
 
     Future setDivisionId(DivisionId divisionId) async {
-      await context.read<DivisionIdNotifier>().setDivisionId(divisionId);
+      await ref.read(divisionIdProvider.notifier).setDivisionId(divisionId);
     }
 
-    final error = context.select(divisionsErrorSelector);
-    final divisions = context.select(divisionsSelector);
-    final selectedId = context.select(divisionIdSelector);
+    final error = ref.watch(divisionsErrorSelector);
+    final divisions = ref.watch(divisionsSelector);
+    final selectedId = ref.watch(divisionIdSelector);
 
     return DivisionList(
       initState: initState,

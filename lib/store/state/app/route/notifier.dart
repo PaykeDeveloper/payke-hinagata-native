@@ -1,3 +1,4 @@
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
@@ -7,12 +8,8 @@ import './models/route_state.dart';
 const initialTab = BottomTab.home;
 
 class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
-  RouteStateNotifier() : super(const RouteState(tab: initialTab));
-
-  @override
-  void update(Locator watch) {
-    super.update(watch);
-    final token = watch<BackendTokenState>().data;
+  RouteStateNotifier(Ref ref) : super(const RouteState(tab: initialTab)) {
+    final token = ref.watch(backendTokenProvider).data;
     if (token == null) {
       _resetAll();
     }
@@ -107,3 +104,7 @@ class RouteStateNotifier extends StateNotifier<RouteState> with LocatorMixin {
     }
   }
 }
+
+final routeStateProvider =
+    StateNotifierProvider<RouteStateNotifier, RouteState>(
+        (ref) => RouteStateNotifier(ref));

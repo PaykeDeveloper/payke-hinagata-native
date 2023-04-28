@@ -1,4 +1,5 @@
 // FIXME: SAMPLE CODE
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
 
@@ -12,7 +13,7 @@ typedef ProjectsState
 
 class ProjectsNotifier extends EntitiesNotifier<Project, ProjectUrl, Project,
     ProjectsUrl, ProjectInput, ProjectInput> {
-  ProjectsNotifier(ProjectsState state) : super(state);
+  ProjectsNotifier(super.ref, super.state);
 
   @override
   String getEntitiesUrl(ProjectsUrl url) =>
@@ -28,3 +29,6 @@ class ProjectsNotifier extends EntitiesNotifier<Project, ProjectUrl, Project,
   @override
   Project decodeEntity(Map<String, dynamic> json) => Project.fromJson(json);
 }
+
+final projectsProvider = StateNotifierProvider<ProjectsNotifier, ProjectsState>(
+    (ref) => ProjectsNotifier(ref, const EntitiesState()));

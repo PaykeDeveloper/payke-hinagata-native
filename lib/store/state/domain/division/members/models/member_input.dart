@@ -1,3 +1,4 @@
+// FIXME: SAMPLE CODE
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 

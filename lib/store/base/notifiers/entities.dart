@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
+import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:state_notifier/state_notifier.dart';
 
@@ -13,24 +14,22 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
         EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>>
     with LocatorMixin {
   EntitiesNotifier(
+    this._ref,
     EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> state, {
     int activeMinutes = 10,
     bool reset = true,
   })  : _activeMinutes = activeMinutes,
         _reset = reset,
-        super(state);
-
-  final int _activeMinutes;
-  final bool _reset;
-
-  @override
-  void update(Locator watch) {
-    super.update(watch);
-    final token = watch<BackendTokenState>().data;
+        super(state) {
+    final token = _ref.watch(backendTokenProvider).data;
     if (_reset && token == null) {
       resetAllIfNeeded();
     }
   }
+
+  final Ref _ref;
+  final int _activeMinutes;
+  final bool _reset;
 
   String getEntitiesUrl(EntitiesUrl url);
 
@@ -49,11 +48,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       entitiesUrl: url,
       entitiesQueryParameters: queryParameters,
     );
-    final result = await read<BackendClient>().getList(
-      decode: decodeEntities,
-      path: getEntitiesUrl(url),
-      queryParameters: queryParameters,
-    );
+    final result = await _ref.read(backendClientProvider).getList(
+          decode: decodeEntities,
+          path: getEntitiesUrl(url),
+          queryParameters: queryParameters,
+        );
     result.when(
       success: (data) {
         state = state.copyWith(
@@ -84,11 +83,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       entityUrl: url,
       entityQueryParameters: queryParameters,
     );
-    final result = await read<BackendClient>().getObject(
-      decode: decodeEntity,
-      path: getEntityUrl(url),
-      queryParameters: queryParameters,
-    );
+    final result = await _ref.read(backendClientProvider).getObject(
+          decode: decodeEntity,
+          path: getEntityUrl(url),
+          queryParameters: queryParameters,
+        );
     result.when(
       success: (data) {
         state = state.copyWith(
@@ -116,13 +115,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await read<BackendClient>().postObject(
-      decode: decodeEntity,
-      path: getEntitiesUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
+    final result = await _ref.read(backendClientProvider).postObject(
+          decode: decodeEntity,
+          path: getEntitiesUrl(urlParams),
+          data: data,
+          queryParameters: queryParameters,
+          useFormData: useFormData,
+        );
     if (result is Success<Entity>) {
       if (state.entitiesStatus == StateStatus.done) {
         await resetEntities();
@@ -137,13 +136,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await read<BackendClient>().post(
-      decode: (data) => decodeEntity(data as Map<String, dynamic>),
-      path: getEntitiesUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
+    final result = await _ref.read(backendClientProvider).post(
+          decode: (data) => decodeEntity(data as Map<String, dynamic>),
+          path: getEntitiesUrl(urlParams),
+          data: data,
+          queryParameters: queryParameters,
+          useFormData: useFormData,
+        );
     if (result is Success<Entity>) {
       if (state.entitiesStatus == StateStatus.done) {
         await resetEntities();
@@ -158,13 +157,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await read<BackendClient>().patchObject(
-      decode: decodeEntity,
-      path: getEntityUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
+    final result = await _ref.read(backendClientProvider).patchObject(
+          decode: decodeEntity,
+          path: getEntityUrl(urlParams),
+          data: data,
+          queryParameters: queryParameters,
+          useFormData: useFormData,
+        );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
@@ -185,13 +184,13 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await read<BackendClient>().patch(
-      decode: (data) => decodeEntity(data as Map<String, dynamic>),
-      path: getEntityUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
+    final result = await _ref.read(backendClientProvider).patch(
+          decode: (data) => decodeEntity(data as Map<String, dynamic>),
+          path: getEntityUrl(urlParams),
+          data: data,
+          queryParameters: queryParameters,
+          useFormData: useFormData,
+        );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
@@ -210,11 +209,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     required EntityUrl urlParams,
     Map<String, dynamic>? queryParameters,
   }) async {
-    final result = await read<BackendClient>().delete(
-      decode: (json) {},
-      path: getEntityUrl(urlParams),
-      queryParameters: queryParameters,
-    );
+    final result = await _ref.read(backendClientProvider).delete(
+          decode: (json) {},
+          path: getEntityUrl(urlParams),
+          queryParameters: queryParameters,
+        );
     if (result is Success) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
