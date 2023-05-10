@@ -3,12 +3,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 typedef DivisionIdState = StoreState<DivisionId?>;
 
-class DivisionIdNotifier extends StateNotifier<DivisionIdState>
-    with LocatorMixin {
+class DivisionIdNotifier extends StateNotifier<DivisionIdState> {
   DivisionIdNotifier() : super(const StoreState(null));
 
   Future initialize() async {

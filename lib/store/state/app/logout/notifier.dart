@@ -2,13 +2,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 class Logout {}
 
 typedef LogoutState = StoreState<Logout>;
 
-class LogoutNotifier extends StateNotifier<LogoutState> with LocatorMixin {
+class LogoutNotifier extends StateNotifier<LogoutState> {
   LogoutNotifier(this._ref) : super(StoreState(Logout()));
 
   final Ref _ref;

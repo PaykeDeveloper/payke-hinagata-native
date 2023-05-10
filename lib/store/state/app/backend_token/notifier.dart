@@ -1,14 +1,12 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 import './models/backend_token.dart';
 
 typedef BackendTokenState = StoreState<BackendToken?>;
 
-class BackendTokenNotifier extends StateNotifier<BackendTokenState>
-    with LocatorMixin {
+class BackendTokenNotifier extends StateNotifier<BackendTokenState> {
   BackendTokenNotifier() : super(const StoreState(null));
 
   Future initialize() async {

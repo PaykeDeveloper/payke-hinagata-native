@@ -8,7 +8,6 @@ import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:package_info/package_info.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 import './models/login_input.dart';
 import './models/login_output.dart';
@@ -19,7 +18,7 @@ const _web = 'web';
 
 typedef LoginState = StoreState<Login>;
 
-class LoginNotifier extends StateNotifier<LoginState> with LocatorMixin {
+class LoginNotifier extends StateNotifier<LoginState> {
   LoginNotifier(this._ref) : super(StoreState(Login()));
   final Ref _ref;
 

@@ -6,13 +6,11 @@ import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
         CreateInput extends JsonGenerator, UpdateInput extends JsonGenerator>
     extends StateNotifier<
-        EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>>
-    with LocatorMixin {
+        EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>> {
   EntitiesNotifier(
     this._ref,
     EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> state, {
@@ -21,9 +19,12 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   })  : _activeMinutes = activeMinutes,
         _reset = reset,
         super(state) {
-    final token = _ref.watch(backendTokenProvider).data;
-    if (_reset && token == null) {
-      resetAllIfNeeded();
+    if (_reset) {
+      _ref.listen<BackendTokenState>(backendTokenProvider, (previous, next) {
+        if (next.data != null) {
+          resetAllIfNeeded();
+        }
+      });
     }
   }
 
