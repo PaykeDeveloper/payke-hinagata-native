@@ -39,7 +39,7 @@ class MemberAddScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future<StoreResult?> onSubmit(MemberInput input) async {
-      final result = await ref.read(membersProvider.notifier).addEntity(
+      final result = await ref.read(membersStateProvider.notifier).addEntity(
           urlParams: MembersUrl(divisionId: _divisionId), data: input);
       if (result is Success) {
         Navigator.of(context).pop();

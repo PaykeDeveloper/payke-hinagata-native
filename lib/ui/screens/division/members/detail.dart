@@ -47,7 +47,7 @@ class MemberDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     void initState() {
-      ref.read(membersProvider.notifier).fetchEntityIfNeeded(
+      ref.read(membersStateProvider.notifier).fetchEntityIfNeeded(
           url: MemberUrl(divisionId: _divisionId, id: _memberId), reset: true);
     }
 

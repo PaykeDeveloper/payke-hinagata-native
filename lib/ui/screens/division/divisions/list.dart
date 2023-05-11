@@ -21,13 +21,13 @@ class DivisionListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Future initState() async {
       await ref
-          .read(divisionsProvider.notifier)
+          .read(divisionsStateProvider.notifier)
           .fetchEntitiesIfNeeded(url: const DivisionsUrl(), reset: true);
     }
 
     Future onRefresh() async {
       await ref
-          .read(divisionsProvider.notifier)
+          .read(divisionsStateProvider.notifier)
           .fetchEntities(url: const DivisionsUrl());
     }
 

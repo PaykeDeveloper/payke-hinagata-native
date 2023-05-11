@@ -57,19 +57,19 @@ class MemberListScreen extends ConsumerWidget {
     Future initState() async {
       await Future.wait([
         ref
-            .read(membersProvider.notifier)
+            .read(membersStateProvider.notifier)
             .fetchEntitiesIfNeeded(url: memberUrl, reset: true),
         ref
-            .read(usersProvider.notifier)
+            .read(usersStateProvider.notifier)
             .fetchEntitiesIfNeeded(url: const UsersUrl())
       ]);
     }
 
     Future onRefresh() async {
       await Future.wait([
-        ref.read(membersProvider.notifier).fetchEntities(url: memberUrl),
+        ref.read(membersStateProvider.notifier).fetchEntities(url: memberUrl),
         ref
-            .read(usersProvider.notifier)
+            .read(usersStateProvider.notifier)
             .fetchEntitiesIfNeeded(url: const UsersUrl(), reset: true),
       ]);
     }

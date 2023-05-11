@@ -51,7 +51,7 @@ class ProjectListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future initState() async {
-      await ref.read(projectsProvider.notifier).fetchEntitiesIfNeeded(
+      await ref.read(projectsStateProvider.notifier).fetchEntitiesIfNeeded(
             url: ProjectsUrl(divisionId: _divisionId),
             reset: true,
           );
@@ -59,7 +59,7 @@ class ProjectListScreen extends ConsumerWidget {
 
     Future onRefresh() async {
       await ref
-          .read(projectsProvider.notifier)
+          .read(projectsStateProvider.notifier)
           .fetchEntities(url: ProjectsUrl(divisionId: _divisionId));
     }
 

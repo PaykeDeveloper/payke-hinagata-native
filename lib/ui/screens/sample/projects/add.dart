@@ -38,7 +38,7 @@ class ProjectAddScreen extends ConsumerWidget {
     final urlParams = ProjectsUrl(divisionId: _divisionId);
     Future<StoreResult<Project>> onSubmit(Map<String, dynamic> data) async {
       final result = await ref
-          .read(projectsProvider.notifier)
+          .read(projectsStateProvider.notifier)
           .add(urlParams: urlParams, data: data, useFormData: true);
       if (result is Success) {
         Navigator.of(context).pop();

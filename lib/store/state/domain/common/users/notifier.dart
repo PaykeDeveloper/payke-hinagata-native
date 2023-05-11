@@ -1,17 +1,19 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/user.dart';
 import './models/user_input.dart';
 import './models/user_url.dart';
 import './models/users_url.dart';
 
-typedef UsersState = EntitiesState<User, UserUrl, User, UsersUrl>;
+part 'notifier.g.dart';
 
-class UsersNotifier extends EntitiesNotifier<User, UserUrl, User, UsersUrl,
-    UserInput, UserInput> {
-  UsersNotifier(super.ref, super.state);
+@riverpod
+class UsersState extends _$UsersState
+    with EntitiesMixin<User, UserUrl, User, UsersUrl, UserInput, UserInput> {
+  @override
+  EntitiesState<User, UserUrl, User, UsersUrl> build() => const EntitiesState();
 
   @override
   String getEntitiesUrl(UsersUrl url) => '/api/v1/users';
@@ -25,6 +27,3 @@ class UsersNotifier extends EntitiesNotifier<User, UserUrl, User, UsersUrl,
   @override
   User decodeEntity(Map<String, dynamic> json) => User.fromJson(json);
 }
-
-final usersProvider = StateNotifierProvider<UsersNotifier, UsersState>(
-    (ref) => UsersNotifier(ref, const EntitiesState()));

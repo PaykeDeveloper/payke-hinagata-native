@@ -57,7 +57,7 @@ class MemberEditScreen extends ConsumerWidget {
 
     Future<StoreResult?> onSubmit(MemberInput input) async {
       final result = await ref
-          .read(membersProvider.notifier)
+          .read(membersStateProvider.notifier)
           .mergeEntity(urlParams: memberUrl, data: input);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -67,13 +67,13 @@ class MemberEditScreen extends ConsumerWidget {
 
     void initState() {
       ref
-          .read(membersProvider.notifier)
+          .read(membersStateProvider.notifier)
           .fetchEntityIfNeeded(url: memberUrl, reset: true);
     }
 
     Future onPressedDelete() async {
       final result = await ref
-          .read(membersProvider.notifier)
+          .read(membersStateProvider.notifier)
           .deleteEntity(urlParams: memberUrl);
       if (result is Success) {
         await ref

@@ -19,13 +19,13 @@ import 'package:native_app/ui/screens/main.dart';
 class MainRouter extends HookConsumerWidget {
   void _initState(BuildContext context, WidgetRef ref) {
     ref
-        .read(divisionsProvider.notifier)
+        .read(divisionsStateProvider.notifier)
         .fetchEntitiesIfNeeded(url: const DivisionsUrl());
     ref
-        .read(usersProvider.notifier)
+        .read(usersStateProvider.notifier)
         .fetchEntitiesIfNeeded(url: const UsersUrl());
     ref
-        .read(rolesProvider.notifier)
+        .read(rolesStateProvider.notifier)
         .fetchEntitiesIfNeeded(url: const RolesUrl());
     ref.read(divisionIdProvider.notifier).initialize();
   }

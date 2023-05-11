@@ -18,7 +18,7 @@ class DivisionAddScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Future<StoreResult?> onSubmit(DivisionInput input) async {
       final result = await ref
-          .read(divisionsProvider.notifier)
+          .read(divisionsStateProvider.notifier)
           .addEntity(urlParams: const DivisionsUrl(), data: input);
       if (result is Success) {
         Navigator.of(context).pop();

@@ -1,18 +1,23 @@
 // FIXME: SAMPLE CODE
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/member.dart';
 import './models/member_input.dart';
 import './models/member_url.dart';
 import './models/members_url.dart';
 
-typedef MembersState = EntitiesState<Member, MemberUrl, Member, MembersUrl>;
+part 'notifier.g.dart';
 
-class MembersNotifier extends EntitiesNotifier<Member, MemberUrl, Member,
-    MembersUrl, MemberInput, MemberInput> {
-  MembersNotifier(super.ref, super.state);
+@riverpod
+class MembersState extends _$MembersState
+    with
+        EntitiesMixin<Member, MemberUrl, Member, MembersUrl, MemberInput,
+            MemberInput> {
+  @override
+  EntitiesState<Member, MemberUrl, Member, MembersUrl> build() =>
+      const EntitiesState();
 
   @override
   String getEntitiesUrl(MembersUrl url) =>
@@ -28,6 +33,3 @@ class MembersNotifier extends EntitiesNotifier<Member, MemberUrl, Member,
   @override
   Member decodeEntity(Map<String, dynamic> json) => Member.fromJson(json);
 }
-
-final membersProvider = StateNotifierProvider<MembersNotifier, MembersState>(
-    (ref) => MembersNotifier(ref, const EntitiesState()));

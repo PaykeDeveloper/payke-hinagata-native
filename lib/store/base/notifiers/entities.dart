@@ -1,37 +1,14 @@
 import 'package:flutter/foundation.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
-import 'package:native_app/store/state/app/backend_token/notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
-        CreateInput extends JsonGenerator, UpdateInput extends JsonGenerator>
-    extends StateNotifier<
+abstract class _Entities<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
+    extends AutoDisposeNotifier<
         EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>> {
-  EntitiesNotifier(
-    this._ref,
-    EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> state, {
-    int activeMinutes = 10,
-    bool reset = true,
-  })  : _activeMinutes = activeMinutes,
-        _reset = reset,
-        super(state) {
-    if (_reset) {
-      _ref.listen<BackendTokenState>(backendTokenProvider, (previous, next) {
-        if (next.data != null) {
-          resetAllIfNeeded();
-        }
-      });
-    }
-  }
-
-  final Ref _ref;
-  final int _activeMinutes;
-  final bool _reset;
-
   String getEntitiesUrl(EntitiesUrl url);
 
   String getEntityUrl(EntityUrl url);
@@ -39,8 +16,14 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   EntitiesEntity decodeEntities(Map<String, dynamic> json);
 
   Entity decodeEntity(Map<String, dynamic> json);
+}
 
-  Future fetchEntities({
+mixin EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
+        CreateInput extends JsonGenerator, UpdateInput extends JsonGenerator>
+    implements _Entities<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> {
+  final int _activeMinutes = 10;
+
+  Future<StoreResult<List<EntitiesEntity>>> fetchEntities({
     required EntitiesUrl url,
     Map<String, dynamic>? queryParameters,
   }) async {
@@ -49,7 +32,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       entitiesUrl: url,
       entitiesQueryParameters: queryParameters,
     );
-    final result = await _ref.read(backendClientProvider).getList(
+    final result = await ref.read(backendClientProvider).getList(
           decode: decodeEntities,
           path: getEntitiesUrl(url),
           queryParameters: queryParameters,
@@ -75,7 +58,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return result;
   }
 
-  Future fetchEntity({
+  Future<StoreResult<Entity>> fetchEntity({
     required EntityUrl url,
     Map<String, dynamic>? queryParameters,
   }) async {
@@ -84,7 +67,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
       entityUrl: url,
       entityQueryParameters: queryParameters,
     );
-    final result = await _ref.read(backendClientProvider).getObject(
+    final result = await ref.read(backendClientProvider).getObject(
           decode: decodeEntity,
           path: getEntityUrl(url),
           queryParameters: queryParameters,
@@ -116,7 +99,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await _ref.read(backendClientProvider).postObject(
+    final result = await ref.read(backendClientProvider).postObject(
           decode: decodeEntity,
           path: getEntitiesUrl(urlParams),
           data: data,
@@ -137,7 +120,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await _ref.read(backendClientProvider).post(
+    final result = await ref.read(backendClientProvider).post(
           decode: (data) => decodeEntity(data as Map<String, dynamic>),
           path: getEntitiesUrl(urlParams),
           data: data,
@@ -154,11 +137,11 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
 
   Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
-    required CreateInput data,
+    required UpdateInput data,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await _ref.read(backendClientProvider).patchObject(
+    final result = await ref.read(backendClientProvider).patchObject(
           decode: decodeEntity,
           path: getEntityUrl(urlParams),
           data: data,
@@ -185,7 +168,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await _ref.read(backendClientProvider).patch(
+    final result = await ref.read(backendClientProvider).patch(
           decode: (data) => decodeEntity(data as Map<String, dynamic>),
           path: getEntityUrl(urlParams),
           data: data,
@@ -210,7 +193,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     required EntityUrl urlParams,
     Map<String, dynamic>? queryParameters,
   }) async {
-    final result = await _ref.read(backendClientProvider).delete(
+    final result = await ref.read(backendClientProvider).delete(
           decode: (json) {},
           path: getEntityUrl(urlParams),
           queryParameters: queryParameters,

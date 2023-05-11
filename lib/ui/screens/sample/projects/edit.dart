@@ -52,7 +52,7 @@ class ProjectEditScreen extends ConsumerWidget {
     final projectUrl = ProjectUrl(divisionId: _divisionId, slug: _projectSlug);
     Future<StoreResult?> onSubmit(Map<String, dynamic> input) async {
       final result = await ref
-          .read(projectsProvider.notifier)
+          .read(projectsStateProvider.notifier)
           .merge(urlParams: projectUrl, data: input, useFormData: true);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -62,13 +62,13 @@ class ProjectEditScreen extends ConsumerWidget {
 
     void initState() {
       ref
-          .read(projectsProvider.notifier)
+          .read(projectsStateProvider.notifier)
           .fetchEntityIfNeeded(url: projectUrl, reset: true);
     }
 
     Future onPressedDelete() async {
       final result = await ref
-          .read(projectsProvider.notifier)
+          .read(projectsStateProvider.notifier)
           .deleteEntity(urlParams: projectUrl);
       if (result is Success) {
         await ref

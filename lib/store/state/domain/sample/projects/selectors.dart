@@ -1,18 +1,19 @@
 // FIXME: SAMPLE CODE
 import './notifier.dart';
 
-final projectsSelector = projectsProvider.select((state) => state.entities);
+final projectsSelector =
+    projectsStateProvider.select((state) => state.entities);
 
 final projectsStatusSelector =
-    projectsProvider.select((state) => state.entitiesStatus);
+    projectsStateProvider.select((state) => state.entitiesStatus);
 
 final projectsErrorSelector =
-    projectsProvider.select((state) => state.entitiesError);
+    projectsStateProvider.select((state) => state.entitiesError);
 
-final projectSelector = projectsProvider.select((state) => state.entity);
+final projectSelector = projectsStateProvider.select((state) => state.entity);
 
 final projectStatusSelector =
-    projectsProvider.select((state) => state.entityStatus);
+    projectsStateProvider.select((state) => state.entityStatus);
 
 final projectErrorSelector =
-    projectsProvider.select((state) => state.entityError);
+    projectsStateProvider.select((state) => state.entityError);

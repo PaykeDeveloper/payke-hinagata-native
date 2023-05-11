@@ -48,7 +48,7 @@ class ProjectDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     void initState() {
-      ref.read(projectsProvider.notifier).fetchEntityIfNeeded(
+      ref.read(projectsStateProvider.notifier).fetchEntityIfNeeded(
           url: ProjectUrl(divisionId: _divisionId, slug: _projectSlug),
           reset: true);
     }

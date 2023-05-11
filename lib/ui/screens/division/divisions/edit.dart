@@ -26,13 +26,13 @@ class DivisionEditScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     void initState() {
       ref
-          .read(divisionsProvider.notifier)
+          .read(divisionsStateProvider.notifier)
           .fetchEntityIfNeeded(url: DivisionUrl(id: _divisionId), reset: true);
     }
 
     Future<StoreResult?> onSubmit(DivisionInput input) async {
       final result = await ref
-          .read(divisionsProvider.notifier)
+          .read(divisionsStateProvider.notifier)
           .mergeEntity(urlParams: DivisionUrl(id: _divisionId), data: input);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -42,7 +42,7 @@ class DivisionEditScreen extends ConsumerWidget {
 
     Future onPressedDelete() async {
       final result = await ref
-          .read(divisionsProvider.notifier)
+          .read(divisionsStateProvider.notifier)
           .deleteEntity(urlParams: DivisionUrl(id: _divisionId));
       if (result is Success) {
         Navigator.of(context).pop();
