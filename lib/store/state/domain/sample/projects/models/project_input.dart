@@ -21,7 +21,7 @@ class ProjectInput extends JsonGenerator with _$ProjectInput {
     int? difficulty,
     double? coefficient,
     double? productivity,
-    @JsonKey(ignore: true) File? cover,
+    @JsonKey(includeFromJson: false, includeToJson: false) File? cover,
     @JsonKey(name: 'lock_version') int? lockVersion,
   }) = _ProjectInput;
 
