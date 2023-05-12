@@ -21,15 +21,14 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
   final int _activeMinutes = 10;
   final bool _reset = true;
 
-  @override
-  EntityState<Entity, EntityUrl> build() {
+  EntityState<Entity, EntityUrl> buildDefault() {
     if (_reset) {
       ref.listen<StoreState<BackendToken?>>(backendTokenStateProvider,
-              (previous, next) {
-            if (next.data == null) {
-              resetEntityIfNeeded();
-            }
-          });
+          (previous, next) {
+        if (next.data == null) {
+          resetEntityIfNeeded();
+        }
+      });
     }
     return EntityState<Entity, EntityUrl>();
   }

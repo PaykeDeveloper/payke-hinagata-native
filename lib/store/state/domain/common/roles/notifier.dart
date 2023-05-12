@@ -13,6 +13,9 @@ part 'notifier.g.dart';
 class RolesState extends _$RolesState
     with EntitiesMixin<Role, RoleUrl, Role, RolesUrl, RoleInput, RoleInput> {
   @override
+  EntitiesState<Role, RoleUrl, Role, RolesUrl> build() => buildDefault();
+
+  @override
   String getEntitiesUrl(RolesUrl url) => '/api/v1/roles';
 
   @override

@@ -16,6 +16,10 @@ class DivisionsState extends _$DivisionsState
         EntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl,
             DivisionInput, DivisionInput> {
   @override
+  EntitiesState<Division, DivisionUrl, Division, DivisionsUrl> build() =>
+      buildDefault();
+
+  @override
   String getEntitiesUrl(DivisionsUrl url) => '/api/v1/divisions';
 
   @override

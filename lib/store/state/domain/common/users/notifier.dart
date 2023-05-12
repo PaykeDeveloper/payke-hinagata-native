@@ -13,6 +13,9 @@ part 'notifier.g.dart';
 class UsersState extends _$UsersState
     with EntitiesMixin<User, UserUrl, User, UsersUrl, UserInput, UserInput> {
   @override
+  EntitiesState<User, UserUrl, User, UsersUrl> build() => buildDefault();
+
+  @override
   String getEntitiesUrl(UsersUrl url) => '/api/v1/users';
 
   @override

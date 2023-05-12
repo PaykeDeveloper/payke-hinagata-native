@@ -26,8 +26,7 @@ mixin EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   final int _activeMinutes = 10;
   final bool _reset = true;
 
-  @override
-  EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> build() {
+  EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> buildDefault() {
     if (_reset) {
       ref.listen<StoreState<BackendToken?>>(backendTokenStateProvider,
           (previous, next) {

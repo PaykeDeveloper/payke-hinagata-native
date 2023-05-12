@@ -16,6 +16,10 @@ class MembersState extends _$MembersState
         EntitiesMixin<Member, MemberUrl, Member, MembersUrl, MemberInput,
             MemberInput> {
   @override
+  EntitiesState<Member, MemberUrl, Member, MembersUrl> build() =>
+      buildDefault();
+
+  @override
   String getEntitiesUrl(MembersUrl url) =>
       '/api/v1/divisions/${url.divisionId.value}/members';
 
