@@ -27,7 +27,7 @@ class MainRouter extends HookConsumerWidget {
     ref
         .read(rolesStateProvider.notifier)
         .fetchEntitiesIfNeeded(url: const RolesUrl());
-    ref.read(divisionIdProvider.notifier).initialize();
+    ref.read(divisionIdStateProvider.notifier).initialize();
   }
 
   @override

@@ -16,10 +16,6 @@ class ProjectsState extends _$ProjectsState
         EntitiesMixin<Project, ProjectUrl, Project, ProjectsUrl, ProjectInput,
             ProjectInput> {
   @override
-  EntitiesState<Project, ProjectUrl, Project, ProjectsUrl> build() =>
-      const EntitiesState();
-
-  @override
   String getEntitiesUrl(ProjectsUrl url) =>
       '/api/v1/divisions/${url.divisionId.value}/projects';
 

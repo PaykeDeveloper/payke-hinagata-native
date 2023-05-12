@@ -9,9 +9,9 @@ part 'notifier.g.dart';
 @riverpod
 BackendClient backendClient(BackendClientRef ref) {
   final client = BackendClient();
-  final locale = ref.watch(localeProvider);
+  final locale = ref.watch(localeStateProvider);
   client.setLocale(locale);
-  final token = ref.watch(backendTokenProvider).data;
+  final token = ref.watch(backendTokenStateProvider).data;
   client.setToken(token);
   return client;
 }

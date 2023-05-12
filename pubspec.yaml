@@ -37,7 +37,7 @@ dependencies:
 
   flutter_localizations:
     sdk: flutter
-  intl: ^0.17.0
+  intl: ^0.18.0
   flutter_hooks: ^0.18.0
   hooks_riverpod: ^2.3.6
   riverpod_annotation: ^2.1.1
@@ -46,9 +46,9 @@ dependencies:
   json_serializable: ^6.2.0
   json_annotation: ^4.7.0
   freezed_annotation: ^2.0.3
-  flutter_form_builder: ^7.2.1
-  form_builder_validators: ^8.1.1
-  form_builder_image_picker: ^3.1.0
+  flutter_form_builder: ^9.0.0
+  form_builder_validators: ^9.0.0
+  form_builder_image_picker: ^4.0.0
   package_info: ^2.0.0
   device_info: ^2.0.0
   logger: ^1.0.0

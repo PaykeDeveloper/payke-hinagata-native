@@ -5,8 +5,10 @@ import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
+import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
+import 'package:native_app/store/state/app/backend_token/notifier.dart';
 
-abstract class _Entity<Entity, EntityUrl>
+abstract class _EntityState<Entity, EntityUrl>
     extends AutoDisposeNotifier<EntityState<Entity, EntityUrl>> {
   String getEntityUrl(EntityUrl url);
 
@@ -14,8 +16,23 @@ abstract class _Entity<Entity, EntityUrl>
 }
 
 mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
-    UpdateInput extends JsonGenerator> implements _Entity<Entity, EntityUrl> {
+        UpdateInput extends JsonGenerator>
+    implements _EntityState<Entity, EntityUrl> {
   final int _activeMinutes = 10;
+  final bool _reset = true;
+
+  @override
+  EntityState<Entity, EntityUrl> build() {
+    if (_reset) {
+      ref.listen<StoreState<BackendToken?>>(backendTokenStateProvider,
+              (previous, next) {
+            if (next.data == null) {
+              resetEntityIfNeeded();
+            }
+          });
+    }
+    return EntityState<Entity, EntityUrl>();
+  }
 
   Future<StoreResult<Entity>> fetchEntity({
     required EntityUrl url,

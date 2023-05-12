@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:native_app/store/state/app/locale/notifier.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
@@ -21,7 +21,7 @@ import 'main.dart';
 class AuthRouter extends HookConsumerWidget {
   void _setLocale(BuildContext context, WidgetRef ref) {
     final locale = Localizations.localeOf(context);
-    final notifier = ref.read(localeProvider.notifier);
+    final notifier = ref.read(localeStateProvider.notifier);
     notifier.setLocale(locale);
   }
 
@@ -33,7 +33,9 @@ class AuthRouter extends HookConsumerWidget {
       final id = uri.pathSegments.elementAtOrNull(1)?.toIntOrNull();
       if (id != null) {
         final divisionId = DivisionId(id);
-        await ref.read(divisionIdProvider.notifier).setDivisionId(divisionId);
+        await ref
+            .read(divisionIdStateProvider.notifier)
+            .setDivisionId(divisionId);
 
         if (uri.pathSegments.elementAtOrNull(2) == 'projects') {
           final notifier = ref.read(routeStateProvider.notifier);
@@ -66,7 +68,7 @@ class AuthRouter extends HookConsumerWidget {
     useEffect(() {
       Future.delayed(Duration.zero, () {
         _setLocale(context, ref);
-        ref.read(backendTokenProvider.notifier).initialize();
+        ref.read(backendTokenStateProvider.notifier).initialize();
       });
       return null;
     }, []);
@@ -80,8 +82,8 @@ class AuthRouter extends HookConsumerWidget {
       return null;
     }, []);
 
-    final locale = ref.watch(localeProvider);
-    final token = ref.watch(backendTokenProvider);
+    final locale = ref.watch(localeStateProvider);
+    final token = ref.watch(backendTokenStateProvider);
 
     if (locale == null || token.status != StateStatus.done) {
       return LoadingScreen();

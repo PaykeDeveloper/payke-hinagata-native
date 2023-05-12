@@ -39,7 +39,7 @@ class MainDrawer extends ConsumerWidget {
             leading: const Icon(Icons.logout),
             title: Text(AppLocalizations.of(context)!.logout),
             onTap: () {
-              final notifier = ref.read(logoutProvider.notifier);
+              final notifier = ref.read(logoutStateProvider.notifier);
               notifier.logout();
             },
           ),

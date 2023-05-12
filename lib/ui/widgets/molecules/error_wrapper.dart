@@ -38,7 +38,7 @@ class ErrorWrapper extends ConsumerWidget {
         sendTimeout: (_) => _onPressedReload,
         requestCancelled: (_) => _onPressedReload,
         unauthorisedRequest: (_) {
-          final notifier = ref.read(logoutProvider.notifier);
+          final notifier = ref.read(logoutStateProvider.notifier);
           notifier.logout();
         },
         badRequest: (_) => _onPressedReload,

@@ -1,13 +1,15 @@
 // FIXME: SAMPLE CODE
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-typedef DivisionIdState = StoreState<DivisionId?>;
+part 'notifier.g.dart';
 
-class DivisionIdNotifier extends StateNotifier<DivisionIdState> {
-  DivisionIdNotifier() : super(const StoreState(null));
+@riverpod
+class DivisionIdState extends _$DivisionIdState {
+  @override
+  StoreState<DivisionId?> build() => const StoreState(null);
 
   Future initialize() async {
     state = state.copyWith(status: StateStatus.started);
@@ -23,7 +25,3 @@ class DivisionIdNotifier extends StateNotifier<DivisionIdState> {
     return result;
   }
 }
-
-final divisionIdProvider =
-    StateNotifierProvider<DivisionIdNotifier, DivisionIdState>(
-        (ref) => DivisionIdNotifier());

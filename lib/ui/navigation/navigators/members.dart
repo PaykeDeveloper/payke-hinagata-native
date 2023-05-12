@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';

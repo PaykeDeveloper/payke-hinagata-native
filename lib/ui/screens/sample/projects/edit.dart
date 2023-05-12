@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';

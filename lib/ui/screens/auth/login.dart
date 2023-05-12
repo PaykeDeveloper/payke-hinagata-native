@@ -16,7 +16,7 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future<StoreResult> onSubmit(String email, String password) async {
-      final notifier = ref.read(loginProvider.notifier);
+      final notifier = ref.read(loginStateProvider.notifier);
       return notifier.login(email, password);
     }
 

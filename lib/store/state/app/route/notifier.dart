@@ -1,18 +1,26 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/route_params.dart';
-import './models/route_state.dart';
+import './models/router.dart';
+
+part 'notifier.g.dart';
 
 const initialTab = BottomTab.home;
 
-class RouteStateNotifier extends StateNotifier<RouteState> {
-  RouteStateNotifier(Ref ref) : super(const RouteState(tab: initialTab)) {
-    ref.listen<BackendTokenState>(backendTokenProvider, (previous, next) {
+@riverpod
+class RouteState extends _$RouteState {
+  @override
+  Router build() {
+    ref.listen<StoreState<BackendToken?>>(backendTokenStateProvider,
+        (previous, next) {
       if (next.data == null) {
         _resetAll();
       }
     });
+    return const Router(tab: initialTab);
   }
 
   Future changeIndex(BottomTab tab) async {
@@ -104,7 +112,3 @@ class RouteStateNotifier extends StateNotifier<RouteState> {
     }
   }
 }
-
-final routeStateProvider =
-    StateNotifierProvider<RouteStateNotifier, RouteState>(
-        (ref) => RouteStateNotifier(ref));

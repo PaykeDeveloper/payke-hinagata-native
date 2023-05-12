@@ -4,9 +4,11 @@ import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
+import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
+import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-abstract class _Entities<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
+abstract class _EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
     extends AutoDisposeNotifier<
         EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>> {
   String getEntitiesUrl(EntitiesUrl url);
@@ -20,8 +22,22 @@ abstract class _Entities<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
 
 mixin EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
         CreateInput extends JsonGenerator, UpdateInput extends JsonGenerator>
-    implements _Entities<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> {
+    implements _EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> {
   final int _activeMinutes = 10;
+  final bool _reset = true;
+
+  @override
+  EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> build() {
+    if (_reset) {
+      ref.listen<StoreState<BackendToken?>>(backendTokenStateProvider,
+          (previous, next) {
+        if (next.data == null) {
+          resetAllIfNeeded();
+        }
+      });
+    }
+    return EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>();
+  }
 
   Future<StoreResult<List<EntitiesEntity>>> fetchEntities({
     required EntitiesUrl url,

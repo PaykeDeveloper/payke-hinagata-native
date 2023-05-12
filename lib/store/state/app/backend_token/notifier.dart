@@ -1,13 +1,15 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/backend_token.dart';
 
-typedef BackendTokenState = StoreState<BackendToken?>;
+part 'notifier.g.dart';
 
-class BackendTokenNotifier extends StateNotifier<BackendTokenState> {
-  BackendTokenNotifier() : super(const StoreState(null));
+@riverpod
+class BackendTokenState extends _$BackendTokenState {
+  @override
+  StoreState<BackendToken?> build() => const StoreState(null);
 
   Future initialize() async {
     state = state.copyWith(status: StateStatus.started);
@@ -29,7 +31,3 @@ class BackendTokenNotifier extends StateNotifier<BackendTokenState> {
     return result;
   }
 }
-
-final backendTokenProvider =
-    StateNotifierProvider<BackendTokenNotifier, BackendTokenState>(
-        (ref) => BackendTokenNotifier());
