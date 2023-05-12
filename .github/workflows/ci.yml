@@ -9,7 +9,7 @@ on:
 env:
   java_version: 11
   java_distribution: zulu
-  flutter_version: 3.7.0
+  flutter_version: 3.10.0
 jobs:
   test:
     runs-on: ubuntu-latest
