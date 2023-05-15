@@ -16,6 +16,8 @@ import 'package:native_app/ui/screens/main.dart';
 import 'package:provider/provider.dart';
 
 class MainRouter extends HookWidget {
+  const MainRouter({super.key});
+
   void _initState(BuildContext context) {
     context
         .read<DivisionsNotifier>()
@@ -40,16 +42,16 @@ class MainRouter extends HookWidget {
 
     if (divisionIdStatus != StateStatus.done ||
         divisionsStatus != StateStatus.done) {
-      return LoadingScreen();
+      return const LoadingScreen();
     }
 
     final division = divisionId != null
         ? divisions.firstWhereOrNull((element) => element.id == divisionId)
         : null;
     if (division == null) {
-      return DivisionListScreen();
+      return const DivisionListScreen();
     }
 
-    return MainScreen();
+    return const MainScreen();
   }
 }

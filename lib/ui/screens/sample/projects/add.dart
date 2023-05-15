@@ -29,7 +29,7 @@ class ProjectAddPage extends Page {
 }
 
 class ProjectAddScreen extends StatelessWidget {
-  const ProjectAddScreen({required DivisionId divisionId})
+  const ProjectAddScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
@@ -56,6 +56,7 @@ typedef OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
 class ProjectAdd extends StatefulWidget {
   const ProjectAdd({
+    super.key,
     required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,

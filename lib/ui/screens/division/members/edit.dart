@@ -44,6 +44,7 @@ class MemberEditPage extends Page {
 
 class MemberEditScreen extends StatelessWidget {
   const MemberEditScreen({
+    super.key,
     required DivisionId divisionId,
     required MemberId memberId,
   })  : _divisionId = divisionId,
@@ -103,6 +104,7 @@ typedef OnSubmit = Future<StoreResult?> Function(MemberInput input);
 
 class MemberEdit extends StatefulWidget {
   const MemberEdit({
+    super.key,
     required OnSubmit onSubmit,
     required VoidCallback initState,
     required VoidCallback onPressedDelete,

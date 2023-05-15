@@ -41,6 +41,7 @@ class ProjectListPage extends Page {
 
 class ProjectListScreen extends StatelessWidget {
   const ProjectListScreen({
+    super.key,
     required DivisionId divisionId,
     required VoidCallback openDrawer,
   })  : _divisionId = divisionId,
@@ -111,6 +112,7 @@ class ProjectListScreen extends StatelessWidget {
 
 class ProjectList extends StatefulWidget {
   const ProjectList({
+    super.key,
     required VoidCallback openDrawer,
     required Function0<Future> initState,
     required Function0<Future> onRefresh,

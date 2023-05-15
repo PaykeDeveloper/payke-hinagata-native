@@ -26,6 +26,7 @@ class HomePage extends Page {
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
+    super.key,
     required VoidCallback openDrawer,
   }) : _openDrawer = openDrawer;
   final VoidCallback _openDrawer;
@@ -61,6 +62,7 @@ class HomeScreen extends StatelessWidget {
 
 class Home extends StatefulWidget {
   const Home({
+    super.key,
     required VoidCallback openDrawer,
     required Function0<Future> onPressedProjectList,
     // required Function0<Future> onPressedProjectEdit,

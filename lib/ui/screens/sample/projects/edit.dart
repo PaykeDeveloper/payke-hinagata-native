@@ -40,6 +40,7 @@ class ProjectEditPage extends Page {
 
 class ProjectEditScreen extends StatelessWidget {
   const ProjectEditScreen({
+    super.key,
     required DivisionId divisionId,
     required ProjectSlug projectSlug,
   })  : _divisionId = divisionId,
@@ -96,6 +97,7 @@ typedef OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
 class ProjectEdit extends StatefulWidget {
   const ProjectEdit({
+    super.key,
     required OnSubmit onSubmit,
     required VoidCallback initState,
     required VoidCallback onPressedDelete,

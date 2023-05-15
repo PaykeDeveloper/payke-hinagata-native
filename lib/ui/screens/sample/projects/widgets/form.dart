@@ -20,6 +20,7 @@ typedef ProjectFormCallBack = Future<StoreResult?> Function(
 
 class ProjectForm extends StatefulWidget {
   const ProjectForm({
+    super.key,
     required this.project,
     required this.status,
     required this.onSubmit,

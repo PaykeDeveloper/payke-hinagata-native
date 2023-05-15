@@ -6,7 +6,7 @@ import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 class ValidateDropdown<ParentWidget extends StatefulWidget, T>
     extends StatelessWidget {
   const ValidateDropdown({
-    Key? key,
+    super.key,
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
@@ -15,8 +15,7 @@ class ValidateDropdown<ParentWidget extends StatefulWidget, T>
     bool? enabled,
     ValueTransformer<T?>? valueTransformer,
     List<FormFieldValidator<T>>? validators,
-  })  : _key = key,
-        _parent = parent,
+  })  : _parent = parent,
         _name = name,
         _labelText = labelText,
         _items = items,
@@ -24,7 +23,6 @@ class ValidateDropdown<ParentWidget extends StatefulWidget, T>
         _enabled = enabled,
         _valueTransformer = valueTransformer,
         _validators = validators;
-  final Key? _key;
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
@@ -62,7 +60,7 @@ class ValidateDropdown<ParentWidget extends StatefulWidget, T>
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderDropdown<T>(
-        key: _key ?? ValueKey(_name),
+        key: key ?? ValueKey(_name),
         name: _name,
         initialValue: _initialValue,
         enabled: _enabled ?? !_parent.loading,

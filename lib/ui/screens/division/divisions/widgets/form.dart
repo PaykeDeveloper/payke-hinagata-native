@@ -15,6 +15,7 @@ typedef DivisionFormCallBack = Future<StoreResult?> Function(
 
 class DivisionForm extends StatefulWidget {
   const DivisionForm({
+    super.key,
     required this.division,
     required this.status,
     required this.onSubmit,

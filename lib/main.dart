@@ -6,5 +6,5 @@ import './base/constants.dart';
 
 void main() {
   debugPaintSizeEnabled = debugPrintSize;
-  runApp(App());
+  runApp(const App());
 }
