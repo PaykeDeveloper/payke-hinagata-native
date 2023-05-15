@@ -147,12 +147,12 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     bool useFormData = false,
   }) async {
     final result = await ref.read(backendClientProvider).patch(
-      decode: (data) => decodeEntity(data as Map<String, dynamic>),
-      path: getEntityUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
+          decode: (data) => decodeEntity(data as Map<String, dynamic>),
+          path: getEntityUrl(urlParams),
+          data: data,
+          queryParameters: queryParameters,
+          useFormData: useFormData,
+        );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(

@@ -37,8 +37,7 @@ class Login extends StatefulWidget {
   const Login({
     required OnSubmit onSubmit,
     required StateStatus status,
-  })
-      : _onSubmit = onSubmit,
+  })  : _onSubmit = onSubmit,
         _status = status;
   final OnSubmit _onSubmit;
   final StateStatus _status;
