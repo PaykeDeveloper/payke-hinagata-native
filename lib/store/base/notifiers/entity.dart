@@ -9,7 +9,7 @@ import 'package:native_app/store/state/app/backend_token/models/backend_token.da
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
 
 abstract class _EntityState<Entity, EntityUrl>
-    extends AutoDisposeNotifier<EntityState<Entity, EntityUrl>> {
+    extends Notifier<EntityState<Entity, EntityUrl>> {
   String getEntityUrl(EntityUrl url);
 
   Entity decodeEntity(Map<String, dynamic> json);

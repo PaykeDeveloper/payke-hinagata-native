@@ -16,7 +16,7 @@ part 'notifier.g.dart';
 
 const _web = 'web';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class LoginState extends _$LoginState {
   @override
   StoreState<void> build() => const StoreState(null);

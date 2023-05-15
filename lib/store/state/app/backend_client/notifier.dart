@@ -6,7 +6,7 @@ import './models/backend_client.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 BackendClient backendClient(BackendClientRef ref) {
   final client = BackendClient();
   final locale = ref.watch(localeStateProvider);

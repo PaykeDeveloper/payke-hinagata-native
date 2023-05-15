@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class LogoutState extends _$LogoutState {
   @override
   Null build() => null;

@@ -6,7 +6,7 @@ import './models/backend_token.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class BackendTokenState extends _$BackendTokenState {
   @override
   StoreState<BackendToken?> build() => const StoreState(null);

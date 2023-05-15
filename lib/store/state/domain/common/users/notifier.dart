@@ -9,7 +9,7 @@ import './models/users_url.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class UsersState extends _$UsersState
     with EntitiesMixin<User, UserUrl, User, UsersUrl, UserInput, UserInput> {
   @override

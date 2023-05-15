@@ -10,7 +10,7 @@ import './models/projects_url.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ProjectsState extends _$ProjectsState
     with
         EntitiesMixin<Project, ProjectUrl, Project, ProjectsUrl, ProjectInput,

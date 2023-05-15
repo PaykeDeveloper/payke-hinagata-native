@@ -9,7 +9,7 @@ import './models/roles_url.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class RolesState extends _$RolesState
     with EntitiesMixin<Role, RoleUrl, Role, RolesUrl, RoleInput, RoleInput> {
   @override

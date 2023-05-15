@@ -10,7 +10,7 @@ part 'notifier.g.dart';
 
 const initialTab = BottomTab.home;
 
-@riverpod
+@Riverpod(keepAlive: true)
 class RouteState extends _$RouteState {
   @override
   Router build() {

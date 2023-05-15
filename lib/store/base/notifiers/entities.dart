@@ -9,7 +9,7 @@ import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 abstract class _EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
-    extends AutoDisposeNotifier<
+    extends Notifier<
         EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>> {
   String getEntitiesUrl(EntitiesUrl url);
 

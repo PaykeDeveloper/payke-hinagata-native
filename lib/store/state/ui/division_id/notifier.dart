@@ -6,7 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DivisionIdState extends _$DivisionIdState {
   @override
   StoreState<DivisionId?> build() => const StoreState(null);

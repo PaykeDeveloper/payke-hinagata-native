@@ -10,7 +10,7 @@ import './models/divisions_url.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DivisionsState extends _$DivisionsState
     with
         EntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl,

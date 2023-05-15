@@ -10,7 +10,7 @@ import './models/members_url.dart';
 
 part 'notifier.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class MembersState extends _$MembersState
     with
         EntitiesMixin<Member, MemberUrl, Member, MembersUrl, MemberInput,
