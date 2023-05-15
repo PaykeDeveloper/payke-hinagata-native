@@ -1,20 +1,17 @@
-import 'dart:ui';
-
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
-import 'package:state_notifier/state_notifier.dart';
+import 'package:native_app/store/state/app/locale/notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/backend_client.dart';
 
-class BackendClientNotifier extends StateNotifier<BackendClient>
-    with LocatorMixin {
-  BackendClientNotifier() : super(BackendClient());
+part 'notifier.g.dart';
 
-  @override
-  void update(Locator watch) {
-    super.update(watch);
-    final locale = watch<Locale?>();
-    state.setLocale(locale);
-    final token = watch<BackendTokenState>().data;
-    state.setToken(token);
-  }
+@Riverpod(keepAlive: true)
+BackendClient backendClient(BackendClientRef ref) {
+  final client = BackendClient();
+  final locale = ref.watch(localeStateProvider);
+  client.setLocale(locale);
+  final token = ref.watch(backendTokenStateProvider).data;
+  client.setToken(token);
+  return client;
 }

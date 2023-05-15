@@ -1,24 +1,25 @@
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
+import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/ui/navigation/navigators/home.dart';
 import 'package:native_app/ui/navigation/navigators/members.dart';
 import 'package:native_app/ui/navigation/navigators/projects.dart';
 import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
-import 'package:provider/provider.dart';
 
 import './common/loading.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends ConsumerWidget {
   const MainScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     void onTap(int index) {
       final tab = BottomTabExt.getTab(index);
-      final notifier = context.read<RouteStateNotifier>();
-      if (tab != context.read<RouteState>().tab) {
+      final notifier = ref.read(routeStateProvider.notifier);
+      if (tab != ref.read(routeStateProvider).tab) {
         notifier.changeIndex(tab);
       } else {
         notifier.replace(tab, []);
@@ -26,11 +27,11 @@ class MainScreen extends StatelessWidget {
     }
 
     Future changeTab(BottomTab tab) async {
-      await context.read<RouteStateNotifier>().changeIndex(initialTab);
+      await ref.read(routeStateProvider.notifier).changeIndex(initialTab);
     }
 
-    final tab = context.select((RouteState state) => state.tab);
-    final isFirst = context.select((RouteState state) => state.isFirstTab);
+    final tab = ref.watch(tabSelector);
+    final isFirst = ref.watch(isFirstTabSelector);
 
     return Main(
       onTap: onTap,

@@ -1,22 +1,21 @@
-import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
+import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
-import 'package:state_notifier/state_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class Logout {}
+part 'notifier.g.dart';
 
-typedef LogoutState = StoreState<Logout>;
-
-class LogoutNotifier extends StateNotifier<LogoutState> with LocatorMixin {
-  LogoutNotifier() : super(StoreState(Logout()));
+@Riverpod(keepAlive: true)
+class LogoutState extends _$LogoutState {
+  @override
+  Null build() => null;
 
   Future logout() async {
-    final client = read<BackendClient>();
+    final client = ref.read(backendClientProvider);
     await client.post(
       decode: (json) => null,
       path: '/api/v1/logout',
     );
-    final notifier = read<BackendTokenNotifier>();
+    final notifier = ref.read(backendTokenStateProvider.notifier);
     await notifier.removeToken();
   }
 }

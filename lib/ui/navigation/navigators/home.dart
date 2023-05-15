@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/ui/screens/common/home.dart';
-import 'package:provider/provider.dart';
 
-class HomeNavigator extends StatelessWidget {
+class HomeNavigator extends ConsumerWidget {
   const HomeNavigator({
     super.key,
     required GlobalKey<NavigatorState> navigatorKey,
@@ -18,8 +18,8 @@ class HomeNavigator extends StatelessWidget {
   void _openDrawer() => _scaffoldKey.currentState?.openDrawer();
 
   @override
-  Widget build(BuildContext context) {
-    final paramsList = context.select(homeParamsListSelector);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paramsList = ref.watch(homeParamsListSelector);
     return Navigator(
       key: _navigatorKey,
       onPopPage: (route, result) {
@@ -27,7 +27,7 @@ class HomeNavigator extends StatelessWidget {
           return false;
         }
 
-        final notifier = context.read<RouteStateNotifier>();
+        final notifier = ref.read(routeStateProvider.notifier);
         notifier.pop(BottomTab.home);
         return true;
       },

@@ -1,7 +1,7 @@
 // FIXME: SAMPLE CODE
-
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
@@ -14,26 +14,25 @@ import 'package:native_app/store/state/domain/division/divisions/selectors.dart'
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
-class DivisionEditScreen extends StatelessWidget {
+class DivisionEditScreen extends ConsumerWidget {
   const DivisionEditScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     void initState() {
-      context
-          .read<DivisionsNotifier>()
+      ref
+          .read(divisionsStateProvider.notifier)
           .fetchEntityIfNeeded(url: DivisionUrl(id: _divisionId), reset: true);
     }
 
     Future<StoreResult?> onSubmit(DivisionInput input) async {
-      final result = await context
-          .read<DivisionsNotifier>()
+      final result = await ref
+          .read(divisionsStateProvider.notifier)
           .mergeEntity(urlParams: DivisionUrl(id: _divisionId), data: input);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -42,18 +41,18 @@ class DivisionEditScreen extends StatelessWidget {
     }
 
     Future onPressedDelete() async {
-      final result = await context
-          .read<DivisionsNotifier>()
+      final result = await ref
+          .read(divisionsStateProvider.notifier)
           .deleteEntity(urlParams: DivisionUrl(id: _divisionId));
       if (result is Success) {
         Navigator.of(context).pop();
       }
     }
 
-    final status = context.select(divisionStatusSelector);
-    final error = context.select(divisionErrorSelector);
-    final division = context.select(divisionSelector);
-    final selectedId = context.select(divisionIdSelector);
+    final status = ref.watch(divisionStatusSelector);
+    final error = ref.watch(divisionErrorSelector);
+    final division = ref.watch(divisionSelector);
+    final selectedId = ref.watch(divisionIdSelector);
 
     return DivisionEdit(
       initState: initState,

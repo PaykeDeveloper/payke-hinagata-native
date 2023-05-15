@@ -1,18 +1,19 @@
 // FIXME: SAMPLE CODE
-import 'package:native_app/store/base/models/store_error.dart';
-import 'package:native_app/store/base/models/store_state.dart';
-
-import './models/project.dart';
 import './notifier.dart';
 
-List<Project> projectsSelector(ProjectsState state) => state.entities;
+final projectsSelector =
+    projectsStateProvider.select((state) => state.entities);
 
-StateStatus projectsStatusSelector(ProjectsState state) => state.entitiesStatus;
+final projectsStatusSelector =
+    projectsStateProvider.select((state) => state.entitiesStatus);
 
-StoreError? projectsErrorSelector(ProjectsState state) => state.entitiesError;
+final projectsErrorSelector =
+    projectsStateProvider.select((state) => state.entitiesError);
 
-Project? projectSelector(ProjectsState state) => state.entity;
+final projectSelector = projectsStateProvider.select((state) => state.entity);
 
-StateStatus projectStatusSelector(ProjectsState state) => state.entityStatus;
+final projectStatusSelector =
+    projectsStateProvider.select((state) => state.entityStatus);
 
-StoreError? projectErrorSelector(ProjectsState state) => state.entityError;
+final projectErrorSelector =
+    projectsStateProvider.select((state) => state.entityError);

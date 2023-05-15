@@ -1,19 +1,19 @@
 // FIXME: SAMPLE CODE
-import 'package:native_app/store/base/models/store_error.dart';
-import 'package:native_app/store/base/models/store_state.dart';
-
-import './models/division.dart';
 import './notifier.dart';
 
-List<Division> divisionsSelector(DivisionsState state) => state.entities;
+final divisionsSelector =
+    divisionsStateProvider.select((state) => state.entities);
 
-StateStatus divisionsStatusSelector(DivisionsState state) =>
-    state.entitiesStatus;
+final divisionsStatusSelector =
+    divisionsStateProvider.select((state) => state.entitiesStatus);
 
-StoreError? divisionsErrorSelector(DivisionsState state) => state.entitiesError;
+final divisionsErrorSelector =
+    divisionsStateProvider.select((state) => state.entitiesError);
 
-Division? divisionSelector(DivisionsState state) => state.entity;
+final divisionSelector = divisionsStateProvider.select((state) => state.entity);
 
-StateStatus divisionStatusSelector(DivisionsState state) => state.entityStatus;
+final divisionStatusSelector =
+    divisionsStateProvider.select((state) => state.entityStatus);
 
-StoreError? divisionErrorSelector(DivisionsState state) => state.entityError;
+final divisionErrorSelector =
+    divisionsStateProvider.select((state) => state.entityError);

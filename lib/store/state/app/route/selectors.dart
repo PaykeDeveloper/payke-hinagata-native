@@ -1,11 +1,15 @@
-import './models/route_params.dart';
-import './models/route_state.dart';
+import './notifier.dart';
 
-List<RouteParams> homeParamsListSelector(RouteState state) =>
-    state.homeParamsList;
+final tabSelector = routeStateProvider.select((state) => state.tab);
 
-List<RouteParams> projectParamsListSelector(RouteState state) =>
-    state.projectParamsList;
+final isFirstTabSelector =
+    routeStateProvider.select((state) => state.isFirstTab);
 
-List<RouteParams> memberParamsListSelector(RouteState state) =>
-    state.memberParamsList;
+final homeParamsListSelector =
+    routeStateProvider.select((state) => state.homeParamsList);
+
+final projectParamsListSelector =
+    routeStateProvider.select((state) => state.projectParamsList);
+
+final memberParamsListSelector =
+    routeStateProvider.select((state) => state.memberParamsList);

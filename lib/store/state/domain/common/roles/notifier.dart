@@ -1,16 +1,19 @@
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/role.dart';
 import './models/role_input.dart';
 import './models/role_url.dart';
 import './models/roles_url.dart';
 
-typedef RolesState = EntitiesState<Role, RoleUrl, Role, RolesUrl>;
+part 'notifier.g.dart';
 
-class RolesNotifier extends EntitiesNotifier<Role, RoleUrl, Role, RolesUrl,
-    RoleInput, RoleInput> {
-  RolesNotifier(RolesState state) : super(state);
+@Riverpod(keepAlive: true)
+class RolesState extends _$RolesState
+    with EntitiesMixin<Role, RoleUrl, Role, RolesUrl, RoleInput, RoleInput> {
+  @override
+  EntitiesState<Role, RoleUrl, Role, RolesUrl> build() => buildDefault();
 
   @override
   String getEntitiesUrl(RolesUrl url) => '/api/v1/roles';

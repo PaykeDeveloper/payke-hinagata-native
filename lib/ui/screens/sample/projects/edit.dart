@@ -1,9 +1,10 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
@@ -13,7 +14,6 @@ import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
@@ -38,7 +38,7 @@ class ProjectEditPage extends Page {
   }
 }
 
-class ProjectEditScreen extends StatelessWidget {
+class ProjectEditScreen extends ConsumerWidget {
   const ProjectEditScreen({
     super.key,
     required DivisionId divisionId,
@@ -49,11 +49,11 @@ class ProjectEditScreen extends StatelessWidget {
   final ProjectSlug _projectSlug;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final projectUrl = ProjectUrl(divisionId: _divisionId, slug: _projectSlug);
     Future<StoreResult?> onSubmit(Map<String, dynamic> input) async {
-      final result = await context
-          .read<ProjectsNotifier>()
+      final result = await ref
+          .read(projectsStateProvider.notifier)
           .merge(urlParams: projectUrl, data: input, useFormData: true);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -62,25 +62,25 @@ class ProjectEditScreen extends StatelessWidget {
     }
 
     void initState() {
-      context
-          .read<ProjectsNotifier>()
+      ref
+          .read(projectsStateProvider.notifier)
           .fetchEntityIfNeeded(url: projectUrl, reset: true);
     }
 
     Future onPressedDelete() async {
-      final result = await context
-          .read<ProjectsNotifier>()
+      final result = await ref
+          .read(projectsStateProvider.notifier)
           .deleteEntity(urlParams: projectUrl);
       if (result is Success) {
-        await context
-            .read<RouteStateNotifier>()
+        await ref
+            .read(routeStateProvider.notifier)
             .replace(BottomTab.projects, []);
       }
     }
 
-    final status = context.select(projectStatusSelector);
-    final error = context.select(projectErrorSelector);
-    final project = context.select(projectSelector);
+    final status = ref.watch(projectStatusSelector);
+    final error = ref.watch(projectErrorSelector);
+    final project = ref.watch(projectSelector);
 
     return ProjectEdit(
       onSubmit: onSubmit,

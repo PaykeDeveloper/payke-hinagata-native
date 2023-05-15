@@ -1,22 +1,19 @@
+// FIXME: SAMPLE CODE
 import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:state_notifier/state_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-typedef DivisionIdState = StoreState<DivisionId?>;
+part 'notifier.g.dart';
 
-class DivisionIdNotifier extends StateNotifier<DivisionIdState>
-    with LocatorMixin {
-  DivisionIdNotifier() : super(const StoreState(null));
-
+@Riverpod(keepAlive: true)
+class DivisionIdState extends _$DivisionIdState {
   @override
-  void initState() {
-    super.initState();
-    state = state.copyWith(status: StateStatus.started);
-    _fetch();
-  }
+  StoreState<DivisionId?> build() => const StoreState(null);
 
-  Future _fetch() async {
+  Future initialize() async {
+    state = state.copyWith(status: StateStatus.started);
+
     final value = await Preferences.divisionId.get();
     final divisionId = value != null ? DivisionId(value) : null;
     state = state.copyWith(data: divisionId, status: StateStatus.done);

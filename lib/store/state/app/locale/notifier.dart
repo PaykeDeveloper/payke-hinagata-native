@@ -1,9 +1,13 @@
 import 'dart:ui';
 
-import 'package:state_notifier/state_notifier.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class LocaleNotifier extends StateNotifier<Locale?> {
-  LocaleNotifier() : super(null);
+part 'notifier.g.dart';
+
+@Riverpod(keepAlive: true)
+class LocaleState extends _$LocaleState {
+  @override
+  Locale? build() => null;
 
   Future setLocale(Locale locale) async {
     state = locale;

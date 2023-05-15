@@ -1,8 +1,9 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
@@ -13,7 +14,6 @@ import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
 import 'package:native_app/ui/navigation/params/projects/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 class ProjectDetailPage extends Page {
   const ProjectDetailPage({
@@ -36,7 +36,7 @@ class ProjectDetailPage extends Page {
   }
 }
 
-class ProjectDetailScreen extends StatelessWidget {
+class ProjectDetailScreen extends ConsumerWidget {
   const ProjectDetailScreen({
     super.key,
     required DivisionId divisionId,
@@ -47,15 +47,15 @@ class ProjectDetailScreen extends StatelessWidget {
   final ProjectSlug _projectSlug;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     void initState() {
-      context.read<ProjectsNotifier>().fetchEntityIfNeeded(
+      ref.read(projectsStateProvider.notifier).fetchEntityIfNeeded(
           url: ProjectUrl(divisionId: _divisionId, slug: _projectSlug),
           reset: true);
     }
 
     void onPressedEdit() {
-      context.read<RouteStateNotifier>().push(
+      ref.read(routeStateProvider.notifier).push(
             BottomTab.projects,
             ProjectEditParams(
               divisionId: _divisionId,
@@ -64,9 +64,9 @@ class ProjectDetailScreen extends StatelessWidget {
           );
     }
 
-    final status = context.select(projectStatusSelector);
-    final error = context.select(projectErrorSelector);
-    final project = context.select(projectSelector);
+    final status = ref.watch(projectStatusSelector);
+    final error = ref.watch(projectErrorSelector);
+    final project = ref.watch(projectSelector);
     return ProjectDetail(
       initState: initState,
       onPressedEdit: onPressedEdit,

@@ -2,18 +2,18 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import './route_params.dart';
 
-part 'route_state.freezed.dart';
+part 'router.freezed.dart';
 
 @freezed
-class RouteState with _$RouteState {
-  const factory RouteState({
+class Router with _$Router {
+  const factory Router({
     required BottomTab tab,
     @Default([]) List<RouteParams> homeParamsList,
     @Default([]) List<RouteParams> projectParamsList,
     @Default([]) List<RouteParams> memberParamsList,
-  }) = _RouteState;
+  }) = _Router;
 
-  const RouteState._();
+  const Router._();
 
   bool get isFirstTab {
     switch (tab) {

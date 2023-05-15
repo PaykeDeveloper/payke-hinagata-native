@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/route/models/route_state.dart';
+import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member.dart';
@@ -12,7 +13,6 @@ import 'package:native_app/store/state/domain/division/members/selectors.dart';
 import 'package:native_app/ui/navigation/params/members/edit.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 class MemberDetailPage extends Page {
   const MemberDetailPage({
@@ -35,7 +35,7 @@ class MemberDetailPage extends Page {
   }
 }
 
-class MemberDetailScreen extends StatelessWidget {
+class MemberDetailScreen extends ConsumerWidget {
   const MemberDetailScreen({
     super.key,
     required DivisionId divisionId,
@@ -46,22 +46,22 @@ class MemberDetailScreen extends StatelessWidget {
   final MemberId _memberId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     void initState() {
-      context.read<MembersNotifier>().fetchEntityIfNeeded(
+      ref.read(membersStateProvider.notifier).fetchEntityIfNeeded(
           url: MemberUrl(divisionId: _divisionId, id: _memberId), reset: true);
     }
 
     void onPressedEdit() {
-      context.read<RouteStateNotifier>().push(
+      ref.read(routeStateProvider.notifier).push(
             BottomTab.members,
             MemberEditParams(divisionId: _divisionId, memberId: _memberId),
           );
     }
 
-    final status = context.select(memberStatusSelector);
-    final error = context.select(memberErrorSelector);
-    final member = context.select(memberSelector);
+    final status = ref.watch(memberStatusSelector);
+    final error = ref.watch(memberErrorSelector);
+    final member = ref.watch(memberSelector);
 
     return MemberDetail(
       initState: initState,

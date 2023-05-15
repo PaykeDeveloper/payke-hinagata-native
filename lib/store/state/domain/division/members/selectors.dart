@@ -1,17 +1,18 @@
-import 'package:native_app/store/base/models/store_error.dart';
-import 'package:native_app/store/base/models/store_state.dart';
-
-import './models/member.dart';
+// FIXME: SAMPLE CODE
 import './notifier.dart';
 
-List<Member> membersSelector(MembersState state) => state.entities;
+final membersSelector = membersStateProvider.select((state) => state.entities);
 
-StateStatus membersStatusSelector(MembersState state) => state.entitiesStatus;
+final membersStatusSelector =
+    membersStateProvider.select((state) => state.entitiesStatus);
 
-StoreError? membersErrorSelector(MembersState state) => state.entitiesError;
+final membersErrorSelector =
+    membersStateProvider.select((state) => state.entitiesError);
 
-Member? memberSelector(MembersState state) => state.entity;
+final memberSelector = membersStateProvider.select((state) => state.entity);
 
-StateStatus memberStatusSelector(MembersState state) => state.entityStatus;
+final memberStatusSelector =
+    membersStateProvider.select((state) => state.entityStatus);
 
-StoreError? memberErrorSelector(MembersState state) => state.entityError;
+final memberErrorSelector =
+    membersStateProvider.select((state) => state.entityError);

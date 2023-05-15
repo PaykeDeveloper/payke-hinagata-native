@@ -1,18 +1,23 @@
 // FIXME: SAMPLE CODE
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/division.dart';
 import './models/division_input.dart';
 import './models/division_url.dart';
 import './models/divisions_url.dart';
 
-typedef DivisionsState
-    = EntitiesState<Division, DivisionUrl, Division, DivisionsUrl>;
+part 'notifier.g.dart';
 
-class DivisionsNotifier extends EntitiesNotifier<Division, DivisionUrl,
-    Division, DivisionsUrl, DivisionInput, DivisionInput> {
-  DivisionsNotifier(DivisionsState state) : super(state);
+@Riverpod(keepAlive: true)
+class DivisionsState extends _$DivisionsState
+    with
+        EntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl,
+            DivisionInput, DivisionInput> {
+  @override
+  EntitiesState<Division, DivisionUrl, Division, DivisionsUrl> build() =>
+      buildDefault();
 
   @override
   String getEntitiesUrl(DivisionsUrl url) => '/api/v1/divisions';

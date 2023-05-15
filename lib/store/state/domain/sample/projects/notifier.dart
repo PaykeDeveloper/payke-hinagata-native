@@ -1,18 +1,23 @@
 // FIXME: SAMPLE CODE
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/project.dart';
 import './models/project_input.dart';
 import './models/project_url.dart';
 import './models/projects_url.dart';
 
-typedef ProjectsState
-    = EntitiesState<Project, ProjectUrl, Project, ProjectsUrl>;
+part 'notifier.g.dart';
 
-class ProjectsNotifier extends EntitiesNotifier<Project, ProjectUrl, Project,
-    ProjectsUrl, ProjectInput, ProjectInput> {
-  ProjectsNotifier(ProjectsState state) : super(state);
+@Riverpod(keepAlive: true)
+class ProjectsState extends _$ProjectsState
+    with
+        EntitiesMixin<Project, ProjectUrl, Project, ProjectsUrl, ProjectInput,
+            ProjectInput> {
+  @override
+  EntitiesState<Project, ProjectUrl, Project, ProjectsUrl> build() =>
+      buildDefault();
 
   @override
   String getEntitiesUrl(ProjectsUrl url) =>

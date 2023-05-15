@@ -1,5 +1,6 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
@@ -10,7 +11,6 @@ import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
-import 'package:provider/provider.dart';
 
 import './widgets/form.dart';
 
@@ -28,17 +28,17 @@ class ProjectAddPage extends Page {
   }
 }
 
-class ProjectAddScreen extends StatelessWidget {
+class ProjectAddScreen extends ConsumerWidget {
   const ProjectAddScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final urlParams = ProjectsUrl(divisionId: _divisionId);
     Future<StoreResult<Project>> onSubmit(Map<String, dynamic> data) async {
-      final result = await context
-          .read<ProjectsNotifier>()
+      final result = await ref
+          .read(projectsStateProvider.notifier)
           .add(urlParams: urlParams, data: data, useFormData: true);
       if (result is Success) {
         Navigator.of(context).pop();
@@ -46,8 +46,8 @@ class ProjectAddScreen extends StatelessWidget {
       return result;
     }
 
-    final status = context.select(projectsStatusSelector);
-    final error = context.select(projectsErrorSelector);
+    final status = ref.watch(projectsStatusSelector);
+    final error = ref.watch(projectsErrorSelector);
     return ProjectAdd(onSubmit: onSubmit, status: status, error: error);
   }
 }
