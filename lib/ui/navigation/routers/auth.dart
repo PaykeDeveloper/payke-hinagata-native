@@ -21,7 +21,7 @@ import 'main.dart';
 class AuthRouter extends HookConsumerWidget {
   const AuthRouter({super.key});
 
-  void _setLocale(BuildContext context) {
+  void _setLocale(BuildContext context, WidgetRef ref) {
     final locale = Localizations.localeOf(context);
     final notifier = ref.read(localeStateProvider.notifier);
     notifier.setLocale(locale);
