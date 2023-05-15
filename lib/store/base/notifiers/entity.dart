@@ -116,30 +116,6 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     return result;
   }
 
-  Future<StoreResult<Entity>> add({
-    required EntityUrl urlParams,
-    required Map<String, dynamic> data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await read<BackendClient>().post(
-      decode: (data) => decodeEntity(data as Map<String, dynamic>),
-      path: getEntityUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
-    if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: result.data,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-    }
-    return result;
-  }
-
   Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
     required UpdateInput data,
@@ -148,30 +124,6 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
   }) async {
     final result = await ref.read(backendClientProvider).patchObject(
           decode: decodeEntity,
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
-    if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: result.data,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<Entity>> merge({
-    required EntityUrl urlParams,
-    required Map<String, dynamic> data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await ref.read(backendClientProvider).patch(
-          decode: (data) => decodeEntity(data as Map<String, dynamic>),
           path: getEntityUrl(urlParams),
           data: data,
           queryParameters: queryParameters,
