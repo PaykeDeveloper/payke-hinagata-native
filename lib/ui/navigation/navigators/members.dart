@@ -8,6 +8,7 @@ import 'package:native_app/ui/screens/division/members/list.dart';
 
 class MembersNavigator extends ConsumerWidget {
   const MembersNavigator({
+    super.key,
     required GlobalKey<NavigatorState>? navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
   })  : _navigatorKey = navigatorKey,

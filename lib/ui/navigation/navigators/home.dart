@@ -7,6 +7,7 @@ import 'package:native_app/ui/screens/common/home.dart';
 
 class HomeNavigator extends ConsumerWidget {
   const HomeNavigator({
+    super.key,
     required GlobalKey<NavigatorState> navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
   })  : _navigatorKey = navigatorKey,

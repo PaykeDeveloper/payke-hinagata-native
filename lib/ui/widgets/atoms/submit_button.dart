@@ -4,6 +4,7 @@ import 'package:native_app/store/base/models/store_state.dart';
 
 class SubmitButton extends StatelessWidget {
   const SubmitButton({
+    super.key,
     required VoidCallback? onPressed,
     StateStatus? status,
     String? label,

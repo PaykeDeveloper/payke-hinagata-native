@@ -21,7 +21,8 @@ class ProjectEditPage extends Page {
   const ProjectEditPage({
     required DivisionId divisionId,
     required ProjectSlug projectSlug,
-  })  : _divisionId = divisionId,
+  })
+      : _divisionId = divisionId,
         _projectSlug = projectSlug;
   final DivisionId _divisionId;
   final ProjectSlug _projectSlug;
@@ -30,19 +31,22 @@ class ProjectEditPage extends Page {
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => ProjectEditScreen(
-        divisionId: _divisionId,
-        projectSlug: _projectSlug,
-      ),
+      builder: (context) =>
+          ProjectEditScreen(
+            divisionId: _divisionId,
+            projectSlug: _projectSlug,
+          ),
     );
   }
 }
 
 class ProjectEditScreen extends ConsumerWidget {
   const ProjectEditScreen({
+    super.key,
     required DivisionId divisionId,
     required ProjectSlug projectSlug,
-  })  : _divisionId = divisionId,
+  })
+      : _divisionId = divisionId,
         _projectSlug = projectSlug;
   final DivisionId _divisionId;
   final ProjectSlug _projectSlug;
@@ -96,13 +100,15 @@ typedef OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
 class ProjectEdit extends StatefulWidget {
   const ProjectEdit({
+    super.key,
     required OnSubmit onSubmit,
     required VoidCallback initState,
     required VoidCallback onPressedDelete,
     required StateStatus status,
     required StoreError? error,
     required Project? project,
-  })  : _onSubmit = onSubmit,
+  })
+      : _onSubmit = onSubmit,
         _initState = initState,
         _onPressedDelete = onPressedDelete,
         _status = status,

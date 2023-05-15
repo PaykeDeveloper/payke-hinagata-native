@@ -22,7 +22,8 @@ class ProjectListPage extends Page {
   const ProjectListPage({
     required DivisionId divisionId,
     required VoidCallback openDrawer,
-  })  : _divisionId = divisionId,
+  })
+      : _divisionId = divisionId,
         _openDrawer = openDrawer;
   final DivisionId _divisionId;
   final VoidCallback _openDrawer;
@@ -31,19 +32,22 @@ class ProjectListPage extends Page {
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => ProjectListScreen(
-        divisionId: _divisionId,
-        openDrawer: _openDrawer,
-      ),
+      builder: (context) =>
+          ProjectListScreen(
+            divisionId: _divisionId,
+            openDrawer: _openDrawer,
+          ),
     );
   }
 }
 
 class ProjectListScreen extends ConsumerWidget {
   const ProjectListScreen({
+    super.key,
     required DivisionId divisionId,
     required VoidCallback openDrawer,
-  })  : _divisionId = divisionId,
+  })
+      : _divisionId = divisionId,
         _openDrawer = openDrawer;
   final DivisionId _divisionId;
   final VoidCallback _openDrawer;
@@ -52,9 +56,9 @@ class ProjectListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Future initState() async {
       await ref.read(projectsStateProvider.notifier).fetchEntitiesIfNeeded(
-            url: ProjectsUrl(divisionId: _divisionId),
-            reset: true,
-          );
+        url: ProjectsUrl(divisionId: _divisionId),
+        reset: true,
+      );
     }
 
     Future onRefresh() async {
@@ -71,25 +75,28 @@ class ProjectListScreen extends ConsumerWidget {
 
     void onTapShow(ProjectSlug projectSlug) {
       ref.read(routeStateProvider.notifier).push(
-            BottomTab.projects,
-            ProjectDetailParams(
-              divisionId: _divisionId,
-              projectSlug: projectSlug,
-            ),
-          );
+        BottomTab.projects,
+        ProjectDetailParams(
+          divisionId: _divisionId,
+          projectSlug: projectSlug,
+        ),
+      );
     }
 
     void onPressedEdit(ProjectSlug projectSlug) {
       ref.read(routeStateProvider.notifier).push(
-            BottomTab.projects,
-            ProjectEditParams(
-              divisionId: _divisionId,
-              projectSlug: projectSlug,
-            ),
-          );
+        BottomTab.projects,
+        ProjectEditParams(
+          divisionId: _divisionId,
+          projectSlug: projectSlug,
+        ),
+      );
     }
 
-    bool checkRouteEmpty() => ref.read(projectParamsListSelector).isEmpty;
+    bool checkRouteEmpty() =>
+        ref
+            .read(projectParamsListSelector)
+            .isEmpty;
 
     final error = ref.watch(projectsErrorSelector);
     final projects = ref.watch(projectsSelector);
@@ -110,6 +117,7 @@ class ProjectListScreen extends ConsumerWidget {
 
 class ProjectList extends StatefulWidget {
   const ProjectList({
+    super.key,
     required VoidCallback openDrawer,
     required Function0<Future> initState,
     required Function0<Future> onRefresh,
@@ -119,7 +127,8 @@ class ProjectList extends StatefulWidget {
     required Function0<bool> checkRouteEmpty,
     required StoreError? error,
     required List<Project> projects,
-  })  : _openDrawer = openDrawer,
+  })
+      : _openDrawer = openDrawer,
         _initState = initState,
         _onRefresh = onRefresh,
         _onPressedNew = onPressedNew,
@@ -217,7 +226,8 @@ class _ListItem extends StatelessWidget {
     required Project project,
     required GestureTapCallback onTapItem,
     required VoidCallback onPressedEdit,
-  })  : _project = project,
+  })
+      : _project = project,
         _onTapItem = onTapItem,
         _onPressedEdit = onPressedEdit;
 

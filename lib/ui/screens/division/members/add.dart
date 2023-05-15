@@ -32,7 +32,7 @@ class MemberAddPage extends Page {
 }
 
 class MemberAddScreen extends ConsumerWidget {
-  const MemberAddScreen({required DivisionId divisionId})
+  const MemberAddScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
@@ -66,6 +66,7 @@ typedef OnSubmit = Future<StoreResult?> Function(MemberInput input);
 
 class MemberAdd extends StatefulWidget {
   const MemberAdd({
+    super.key,
     required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,

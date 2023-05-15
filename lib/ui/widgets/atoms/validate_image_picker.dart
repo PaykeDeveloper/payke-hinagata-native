@@ -8,7 +8,7 @@ import 'package:native_app/ui/widgets/atoms/validate_form_state.dart';
 class ValidateImagePicker<ParentWidget extends StatefulWidget>
     extends StatelessWidget {
   const ValidateImagePicker({
-    Key? key,
+    super.key,
     required ValidateFormState<ParentWidget> parent,
     required String name,
     required String labelText,
@@ -17,8 +17,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
     int maxImages = 1,
     ValueTransformer<List<dynamic>?>? valueTransformer,
     List<FormFieldValidator<List<dynamic>>>? validators,
-  })  : _key = key,
-        _parent = parent,
+  })  : _parent = parent,
         _name = name,
         _labelText = labelText,
         _initialValue = initialValue,
@@ -26,7 +25,6 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
         _maxImages = maxImages,
         _valueTransformer = valueTransformer,
         _validators = validators;
-  final Key? _key;
   final ValidateFormState<ParentWidget> _parent;
   final String _name;
   final String _labelText;
@@ -68,7 +66,7 @@ class ValidateImagePicker<ParentWidget extends StatefulWidget>
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 84),
       child: FormBuilderImagePicker(
-        key: _key ?? ValueKey(_name),
+        key: key ?? ValueKey(_name),
         name: _name,
         initialValue: _initialValue,
         enabled: _enabled ?? !_parent.loading,

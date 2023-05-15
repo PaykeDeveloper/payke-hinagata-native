@@ -10,6 +10,8 @@ import 'package:native_app/ui/screens/division/divisions/list.dart';
 import 'package:package_info/package_info.dart';
 
 class MainDrawer extends ConsumerWidget {
+  const MainDrawer({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final divisionId = ref.watch(divisionIdSelector);
@@ -32,7 +34,7 @@ class MainDrawer extends ConsumerWidget {
             title: Text(division?.name ?? 'Divisions'),
             onTap: () async {
               Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                  builder: (context) => DivisionListScreen()));
+                  builder: (context) => const DivisionListScreen()));
             },
           ),
           ListTile(

@@ -18,7 +18,7 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import './widgets/form.dart';
 
 class DivisionEditScreen extends ConsumerWidget {
-  const DivisionEditScreen({required DivisionId divisionId})
+  const DivisionEditScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
@@ -70,6 +70,7 @@ typedef OnSubmit = Future<StoreResult?> Function(DivisionInput input);
 
 class DivisionEdit extends StatefulWidget {
   const DivisionEdit({
+    super.key,
     required VoidCallback initState,
     required OnSubmit onSubmit,
     required Function0<Future> onPressedDelete,

@@ -12,6 +12,8 @@ import 'package:native_app/ui/widgets/organisms/main_drawer.dart';
 import './common/loading.dart';
 
 class MainScreen extends ConsumerWidget {
+  const MainScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     void onTap(int index) {
@@ -42,6 +44,7 @@ class MainScreen extends ConsumerWidget {
 
 class Main extends StatelessWidget {
   Main({
+    super.key,
     required Function1<int, void> onTap,
     required Function1<BottomTab, Future> changeTab,
     required BottomTab tab,
@@ -80,9 +83,9 @@ class Main extends StatelessWidget {
   ];
 
   final _children = <Widget>[
-    LoadingScreen(),
-    LoadingScreen(),
-    LoadingScreen(),
+    const LoadingScreen(),
+    const LoadingScreen(),
+    const LoadingScreen(),
   ];
 
   Widget _getWidget(BottomTab tab) {
@@ -133,7 +136,7 @@ class Main extends StatelessWidget {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        drawer: MainDrawer(),
+        drawer: const MainDrawer(),
         drawerEnableOpenDragGesture: _isFirst,
         body: IndexedStack(
           index: index,

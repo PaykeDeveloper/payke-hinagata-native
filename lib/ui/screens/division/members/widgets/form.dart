@@ -17,6 +17,7 @@ typedef MemberFormCallBack = Future<StoreResult?> Function(MemberInput input);
 
 class MemberForm extends StatefulWidget {
   const MemberForm({
+    super.key,
     required this.member,
     required this.users,
     required this.roles,
@@ -55,16 +56,17 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
       const DropdownMenuItem(child: Text('')),
       ...users
           .map((user) =>
-              DropdownMenuItem(value: user.id, child: Text(user.name)))
+          DropdownMenuItem(value: user.id, child: Text(user.name)))
           .toList()
     ];
 
     final roleItems = roles
-        .map((role) => FormBuilderChipOption<String>(
-              key: ValueKey('${role.id}'),
-              value: role.name,
-              child: Text(role.name),
-            ))
+        .map((role) =>
+        FormBuilderChipOption<String>(
+          key: ValueKey('${role.id}'),
+          value: role.name,
+          child: Text(role.name),
+        ))
         .toList();
 
     return SingleChildScrollView(

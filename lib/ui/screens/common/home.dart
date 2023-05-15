@@ -21,6 +21,7 @@ class HomePage extends Page {
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({
+    super.key,
     required VoidCallback openDrawer,
   }) : _openDrawer = openDrawer;
   final VoidCallback _openDrawer;
@@ -42,9 +43,11 @@ class HomeScreen extends ConsumerWidget {
 
 class Home extends StatefulWidget {
   const Home({
+    super.key,
     required VoidCallback openDrawer,
     required Function0<Future> onPressedProjectList,
-  })  : _openDrawer = openDrawer,
+  })
+      : _openDrawer = openDrawer,
         _onPressedProjectList = onPressedProjectList;
 
   final VoidCallback _openDrawer;

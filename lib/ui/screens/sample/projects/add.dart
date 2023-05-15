@@ -29,7 +29,7 @@ class ProjectAddPage extends Page {
 }
 
 class ProjectAddScreen extends ConsumerWidget {
-  const ProjectAddScreen({required DivisionId divisionId})
+  const ProjectAddScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
@@ -56,10 +56,12 @@ typedef OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
 class ProjectAdd extends StatefulWidget {
   const ProjectAdd({
+    super.key,
     required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,
-  })  : _onSubmit = onSubmit,
+  })
+      : _onSubmit = onSubmit,
         _status = status,
         _error = error;
   final OnSubmit _onSubmit;

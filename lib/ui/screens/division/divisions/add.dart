@@ -14,6 +14,8 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import './widgets/form.dart';
 
 class DivisionAddScreen extends ConsumerWidget {
+  const DivisionAddScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future<StoreResult?> onSubmit(DivisionInput input) async {
@@ -40,6 +42,7 @@ typedef OnSubmit = Future<StoreResult?> Function(DivisionInput input);
 
 class DivisionAdd extends StatefulWidget {
   const DivisionAdd({
+    super.key,
     required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,

@@ -44,6 +44,7 @@ class MemberListPage extends Page {
 
 class MemberListScreen extends ConsumerWidget {
   const MemberListScreen({
+    super.key,
     required DivisionId divisionId,
     required VoidCallback openDrawer,
   })  : _divisionId = divisionId,
@@ -117,6 +118,7 @@ class MemberListScreen extends ConsumerWidget {
 
 class MemberList extends StatefulWidget {
   const MemberList({
+    super.key,
     required VoidCallback openDrawer,
     required Function0<Future> initState,
     required Function0<Future> onRefresh,

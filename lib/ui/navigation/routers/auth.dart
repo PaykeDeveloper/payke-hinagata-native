@@ -19,7 +19,9 @@ import 'package:uni_links/uni_links.dart';
 import 'main.dart';
 
 class AuthRouter extends HookConsumerWidget {
-  void _setLocale(BuildContext context, WidgetRef ref) {
+  const AuthRouter({super.key});
+
+  void _setLocale(BuildContext context) {
     final locale = Localizations.localeOf(context);
     final notifier = ref.read(localeStateProvider.notifier);
     notifier.setLocale(locale);
@@ -86,11 +88,11 @@ class AuthRouter extends HookConsumerWidget {
     final token = ref.watch(backendTokenStateProvider);
 
     if (locale == null || token.status != StateStatus.done) {
-      return LoadingScreen();
+      return const LoadingScreen();
     }
     if (token.data == null) {
-      return LoginScreen();
+      return const LoginScreen();
     }
-    return MainRouter();
+    return const MainRouter();
   }
 }

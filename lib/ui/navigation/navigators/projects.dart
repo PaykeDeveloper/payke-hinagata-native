@@ -9,6 +9,7 @@ import 'package:native_app/ui/screens/sample/projects/list.dart';
 
 class ProjectsNavigator extends ConsumerWidget {
   const ProjectsNavigator({
+    super.key,
     required GlobalKey<NavigatorState>? navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
   })  : _navigatorKey = navigatorKey,

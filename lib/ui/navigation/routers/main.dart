@@ -17,6 +17,8 @@ import 'package:native_app/ui/screens/division/divisions/list.dart';
 import 'package:native_app/ui/screens/main.dart';
 
 class MainRouter extends HookConsumerWidget {
+  const MainRouter({super.key});
+
   void _initState(BuildContext context, WidgetRef ref) {
     ref
         .read(divisionsStateProvider.notifier)
@@ -46,16 +48,16 @@ class MainRouter extends HookConsumerWidget {
 
     if (divisionIdStatus != StateStatus.done ||
         divisionsStatus != StateStatus.done) {
-      return LoadingScreen();
+      return const LoadingScreen();
     }
 
     final division = divisionId != null
         ? divisions.firstWhereOrNull((element) => element.id == divisionId)
         : null;
     if (division == null) {
-      return DivisionListScreen();
+      return const DivisionListScreen();
     }
 
-    return MainScreen();
+    return const MainScreen();
   }
 }

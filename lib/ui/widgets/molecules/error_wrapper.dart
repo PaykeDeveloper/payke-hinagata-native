@@ -7,6 +7,7 @@ import 'package:native_app/ui/extensions/state_error.dart';
 
 class ErrorWrapper extends ConsumerWidget {
   const ErrorWrapper({
+    super.key,
     required Widget child,
     required StoreError? error,
     VoidCallback? onPressedReload,
