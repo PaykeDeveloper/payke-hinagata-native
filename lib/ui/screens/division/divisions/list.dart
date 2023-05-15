@@ -17,6 +17,8 @@ import './add.dart';
 import './edit.dart';
 
 class DivisionListScreen extends StatelessWidget {
+  const DivisionListScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     Future initState() async {
@@ -52,6 +54,7 @@ class DivisionListScreen extends StatelessWidget {
 
 class DivisionList extends StatefulWidget {
   const DivisionList({
+    super.key,
     required Function0<Future> initState,
     required Function0<Future> onRefresh,
     required Function1<DivisionId, Future> setDivisionId,
@@ -91,7 +94,8 @@ class _DivisionListState extends State<DivisionList> {
 
   void _onPressedNew() {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => DivisionAddScreen()))
+        .push(
+            MaterialPageRoute(builder: (context) => const DivisionAddScreen()))
         .then((value) => _initState());
   }
 

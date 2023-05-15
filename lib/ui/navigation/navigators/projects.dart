@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 class ProjectsNavigator extends StatelessWidget {
   const ProjectsNavigator({
+    super.key,
     required GlobalKey<NavigatorState>? navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
   })  : _navigatorKey = navigatorKey,

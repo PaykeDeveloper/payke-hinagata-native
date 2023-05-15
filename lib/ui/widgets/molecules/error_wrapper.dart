@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 class ErrorWrapper extends StatelessWidget {
   const ErrorWrapper({
+    super.key,
     required Widget child,
     required StoreError? error,
     VoidCallback? onPressedReload,

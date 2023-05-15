@@ -8,6 +8,8 @@ import './ui/navigation/routers/auth.dart';
 import './ui/theme.dart';
 
 class App extends StatelessWidget {
+  const App({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -20,7 +22,7 @@ class App extends StatelessWidget {
           FormBuilderLocalizations.delegate,
         ],
         supportedLocales: AppLocalizations.supportedLocales,
-        home: AuthRouter(),
+        home: const AuthRouter(),
       ),
     );
   }

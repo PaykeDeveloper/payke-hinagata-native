@@ -37,6 +37,7 @@ class MemberDetailPage extends Page {
 
 class MemberDetailScreen extends StatelessWidget {
   const MemberDetailScreen({
+    super.key,
     required DivisionId divisionId,
     required MemberId memberId,
   })  : _divisionId = divisionId,
@@ -74,6 +75,7 @@ class MemberDetailScreen extends StatelessWidget {
 
 class MemberDetail extends StatefulWidget {
   const MemberDetail({
+    super.key,
     required VoidCallback initState,
     required VoidCallback onPressedEdit,
     required StateStatus status,

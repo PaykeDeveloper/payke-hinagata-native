@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 class MembersNavigator extends StatelessWidget {
   const MembersNavigator({
+    super.key,
     required GlobalKey<NavigatorState>? navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
   })  : _navigatorKey = navigatorKey,

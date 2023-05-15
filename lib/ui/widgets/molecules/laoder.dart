@@ -3,6 +3,7 @@ import 'package:native_app/store/base/models/store_state.dart';
 
 class Loader extends StatelessWidget {
   const Loader({
+    super.key,
     required Widget child,
     bool? loading,
     StateStatus? status,

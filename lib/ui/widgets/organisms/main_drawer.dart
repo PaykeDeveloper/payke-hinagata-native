@@ -10,6 +10,8 @@ import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
+  const MainDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     final divisionId = context.select(divisionIdSelector);
@@ -32,7 +34,7 @@ class MainDrawer extends StatelessWidget {
             title: Text(division?.name ?? 'Divisions'),
             onTap: () async {
               Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
-                  builder: (context) => DivisionListScreen()));
+                  builder: (context) => const DivisionListScreen()));
             },
           ),
           ListTile(

@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 import './widgets/form.dart';
 
 class DivisionAddScreen extends StatelessWidget {
+  const DivisionAddScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     Future<StoreResult?> onSubmit(DivisionInput input) async {
@@ -40,6 +42,7 @@ typedef OnSubmit = Future<StoreResult?> Function(DivisionInput input);
 
 class DivisionAdd extends StatefulWidget {
   const DivisionAdd({
+    super.key,
     required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,

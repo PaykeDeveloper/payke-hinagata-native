@@ -12,6 +12,8 @@ import 'package:native_app/ui/widgets/atoms/validate_text_field.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     Future<StoreResult> onSubmit(String email, String password) async {
@@ -34,6 +36,7 @@ typedef OnSubmit = Future<StoreResult> Function(String email, String password);
 
 class Login extends StatefulWidget {
   const Login({
+    super.key,
     required OnSubmit onSubmit,
     required StateStatus status,
   })  : _onSubmit = onSubmit,
@@ -63,7 +66,7 @@ class _LoginState extends ValidateFormState<Login> {
           Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(10),
-            child: Logo(),
+            child: const Logo(),
           ),
           FormBuilder(
             key: formKey,

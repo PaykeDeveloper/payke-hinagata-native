@@ -38,6 +38,7 @@ class ProjectDetailPage extends Page {
 
 class ProjectDetailScreen extends StatelessWidget {
   const ProjectDetailScreen({
+    super.key,
     required DivisionId divisionId,
     required ProjectSlug projectSlug,
   })  : _divisionId = divisionId,
@@ -78,6 +79,7 @@ class ProjectDetailScreen extends StatelessWidget {
 
 class ProjectDetail extends StatefulWidget {
   const ProjectDetail({
+    super.key,
     required VoidCallback initState,
     required VoidCallback onPressedEdit,
     required StateStatus status,

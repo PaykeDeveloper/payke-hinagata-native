@@ -17,6 +17,7 @@ typedef MemberFormCallBack = Future<StoreResult?> Function(MemberInput input);
 
 class MemberForm extends StatefulWidget {
   const MemberForm({
+    super.key,
     required this.member,
     required this.users,
     required this.roles,

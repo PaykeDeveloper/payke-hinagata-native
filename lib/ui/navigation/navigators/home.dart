@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 class HomeNavigator extends StatelessWidget {
   const HomeNavigator({
+    super.key,
     required GlobalKey<NavigatorState> navigatorKey,
     required GlobalKey<ScaffoldState> scaffoldKey,
   })  : _navigatorKey = navigatorKey,
