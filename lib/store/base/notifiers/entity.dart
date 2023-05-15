@@ -146,7 +146,7 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await read<BackendClient>().patch(
+    final result = await ref.read(backendClientProvider).patch(
       decode: (data) => decodeEntity(data as Map<String, dynamic>),
       path: getEntityUrl(urlParams),
       data: data,
