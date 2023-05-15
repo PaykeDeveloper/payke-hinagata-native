@@ -40,7 +40,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
 
   Entity decodeEntity(Map<String, dynamic> json);
 
-  Future fetchEntities({
+  Future<StoreResult<List<EntitiesEntity>>> fetchEntities({
     required EntitiesUrl url,
     Map<String, dynamic>? queryParameters,
   }) async {
@@ -75,7 +75,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return result;
   }
 
-  Future fetchEntity({
+  Future<StoreResult<Entity>> fetchEntity({
     required EntityUrl url,
     Map<String, dynamic>? queryParameters,
   }) async {
@@ -154,7 +154,7 @@ abstract class EntitiesNotifier<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
 
   Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
-    required CreateInput data,
+    required UpdateInput data,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
