@@ -60,8 +60,7 @@ class ProjectAdd extends StatefulWidget {
     required OnSubmit onSubmit,
     required StateStatus status,
     required StoreError? error,
-  })
-      : _onSubmit = onSubmit,
+  })  : _onSubmit = onSubmit,
         _status = status,
         _error = error;
   final OnSubmit _onSubmit;

@@ -46,8 +46,7 @@ class Home extends StatefulWidget {
     super.key,
     required VoidCallback openDrawer,
     required Function0<Future> onPressedProjectList,
-  })
-      : _openDrawer = openDrawer,
+  })  : _openDrawer = openDrawer,
         _onPressedProjectList = onPressedProjectList;
 
   final VoidCallback _openDrawer;

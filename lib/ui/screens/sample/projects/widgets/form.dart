@@ -68,9 +68,8 @@ class _ProjectFormState extends ValidateFormState<ProjectForm> {
   @override
   Widget build(BuildContext context) {
     final project = widget.project;
-    final coverUrl = project?.coverUrl?.isNotEmpty == true
-        ? project!.coverUrl
-        : null;
+    final coverUrl =
+        project?.coverUrl?.isNotEmpty == true ? project!.coverUrl : null;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
