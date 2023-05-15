@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -6,7 +7,6 @@ import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 abstract class _EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
     extends Notifier<
