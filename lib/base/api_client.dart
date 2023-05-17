@@ -3,10 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
 abstract class ApiClient {
-  String? token;
-
-  String? language;
-
   Future<Response<Result>> get<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
@@ -62,7 +58,7 @@ class ApiClientImpl extends ApiClient {
     final response = await dio.get<Result>(
       path,
       queryParameters: queryParameters,
-      options: _mergeOptions(options),
+      options: options,
       cancelToken: cancelToken ?? _cancelToken,
     );
     return response;
@@ -85,7 +81,7 @@ class ApiClientImpl extends ApiClient {
       path,
       data: convertedData,
       queryParameters: queryParameters,
-      options: _mergeOptions(options),
+      options: options,
       cancelToken: cancelToken ?? _cancelToken,
     );
     return response;
@@ -101,16 +97,14 @@ class ApiClientImpl extends ApiClient {
     Options? options,
     CancelToken? cancelToken,
   }) async {
-    final mergeOptions = _mergeOptions(options);
-    mergeOptions.headers?['X-HTTP-Method-Override'] = 'PATCH';
     final convertedData = useFormData
         ? await _toFormData(data, containNull: containNull)
         : _toMapData(data, containNull: containNull);
-    final response = await dio.post<Result>(
+    final response = await dio.patch<Result>(
       path,
       data: convertedData,
       queryParameters: queryParameters,
-      options: mergeOptions,
+      options: options,
       cancelToken: cancelToken ?? _cancelToken,
     );
     return response;
@@ -126,7 +120,7 @@ class ApiClientImpl extends ApiClient {
     final response = await dio.delete<Result>(
       path,
       queryParameters: queryParameters,
-      options: _mergeOptions(options),
+      options: options,
       cancelToken: cancelToken ?? _cancelToken,
     );
     return response;
@@ -146,23 +140,6 @@ class ApiClientImpl extends ApiClient {
       ));
     }
     return dio;
-  }
-
-  Options _mergeOptions(Options? options) {
-    final Map<String, dynamic> headers = {
-      'Accept': 'application/json',
-    };
-
-    if (token != null) {
-      headers['Authorization'] = 'Bearer $token';
-    }
-
-    if (language != null) {
-      headers['Accept-Language'] = language;
-    }
-
-    headers.addAll(options?.headers ?? {});
-    return options?.copyWith(headers: headers) ?? Options(headers: headers);
   }
 
   Future<FormData> _toFormData(Map<String, dynamic> data,
