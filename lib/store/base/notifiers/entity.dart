@@ -4,6 +4,7 @@ import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
@@ -20,6 +21,8 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     implements _EntityState<Entity, EntityUrl> {
   final int _activeMinutes = 10;
   final bool _reset = true;
+
+  BackendClient get _backendClient => ref.read(backendClientProvider);
 
   EntityState<Entity, EntityUrl> buildDefault() {
     if (_reset) {
@@ -42,11 +45,11 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
       entityUrl: url,
       entityQueryParameters: queryParameters,
     );
-    final result = await ref.read(backendClientProvider).getObject(
-          decode: decodeEntity,
-          path: getEntityUrl(url),
-          queryParameters: queryParameters,
-        );
+    final result = await _backendClient.getObject(
+      decode: decodeEntity,
+      path: getEntityUrl(url),
+      queryParameters: queryParameters,
+    );
     result.when(
       success: (data) {
         state = state.copyWith(
@@ -74,13 +77,13 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await ref.read(backendClientProvider).postObject(
-          decode: decodeEntity,
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
+    final result = await _backendClient.postObject(
+      decode: decodeEntity,
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
@@ -98,13 +101,13 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await ref.read(backendClientProvider).post(
-          decode: (data) => decodeEntity(data as Map<String, dynamic>),
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
+    final result = await _backendClient.post(
+      decode: (data) => decodeEntity(data as Map<String, dynamic>),
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
@@ -122,13 +125,13 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await ref.read(backendClientProvider).patchObject(
-          decode: decodeEntity,
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
+    final result = await _backendClient.patchObject(
+      decode: decodeEntity,
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
@@ -146,13 +149,13 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await ref.read(backendClientProvider).patch(
-          decode: (data) => decodeEntity(data as Map<String, dynamic>),
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
+    final result = await _backendClient.patch(
+      decode: (data) => decodeEntity(data as Map<String, dynamic>),
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
     if (result is Success<Entity>) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(
@@ -168,11 +171,11 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     required EntityUrl urlParams,
     Map<String, dynamic>? queryParameters,
   }) async {
-    final result = await ref.read(backendClientProvider).delete(
-          decode: (json) {},
-          path: getEntityUrl(urlParams),
-          queryParameters: queryParameters,
-        );
+    final result = await _backendClient.delete(
+      decode: (json) {},
+      path: getEntityUrl(urlParams),
+      queryParameters: queryParameters,
+    );
     if (result is Success) {
       if (state.entityStatus == StateStatus.done) {
         state = state.copyWith(

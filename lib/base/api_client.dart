@@ -10,6 +10,7 @@ abstract class ApiClient {
   Future<Response<Result>> get<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   });
 
@@ -19,6 +20,7 @@ abstract class ApiClient {
     required bool useFormData,
     required bool containNull,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   });
 
@@ -28,12 +30,14 @@ abstract class ApiClient {
     required bool useFormData,
     required bool containNull,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   });
 
   Future<Response<Result>> delete<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   });
 }
@@ -52,13 +56,13 @@ class ApiClientImpl extends ApiClient {
   Future<Response<Result>> get<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   }) async {
-    final options = await _getOptions();
     final response = await dio.get<Result>(
       path,
       queryParameters: queryParameters,
-      options: options,
+      options: _mergeOptions(options),
       cancelToken: cancelToken ?? _cancelToken,
     );
     return response;
@@ -71,9 +75,9 @@ class ApiClientImpl extends ApiClient {
     required bool useFormData,
     required bool containNull,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   }) async {
-    final options = await _getOptions();
     final convertedData = useFormData
         ? await _toFormData(data, containNull: containNull)
         : _toMapData(data, containNull: containNull);
@@ -81,7 +85,7 @@ class ApiClientImpl extends ApiClient {
       path,
       data: convertedData,
       queryParameters: queryParameters,
-      options: options,
+      options: _mergeOptions(options),
       cancelToken: cancelToken ?? _cancelToken,
     );
     return response;
@@ -94,10 +98,11 @@ class ApiClientImpl extends ApiClient {
     required bool useFormData,
     required bool containNull,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   }) async {
-    final options = await _getOptions();
-    options.headers?['X-HTTP-Method-Override'] = 'PATCH';
+    final mergeOptions = _mergeOptions(options);
+    mergeOptions.headers?['X-HTTP-Method-Override'] = 'PATCH';
     final convertedData = useFormData
         ? await _toFormData(data, containNull: containNull)
         : _toMapData(data, containNull: containNull);
@@ -105,7 +110,7 @@ class ApiClientImpl extends ApiClient {
       path,
       data: convertedData,
       queryParameters: queryParameters,
-      options: options,
+      options: mergeOptions,
       cancelToken: cancelToken ?? _cancelToken,
     );
     return response;
@@ -115,13 +120,13 @@ class ApiClientImpl extends ApiClient {
   Future<Response<Result>> delete<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   }) async {
-    final options = await _getOptions();
     final response = await dio.delete<Result>(
       path,
       queryParameters: queryParameters,
-      options: options,
+      options: _mergeOptions(options),
       cancelToken: cancelToken ?? _cancelToken,
     );
     return response;
@@ -143,7 +148,7 @@ class ApiClientImpl extends ApiClient {
     return dio;
   }
 
-  Future<Options> _getOptions() async {
+  Options _mergeOptions(Options? options) {
     final Map<String, dynamic> headers = {
       'Accept': 'application/json',
     };
@@ -156,7 +161,8 @@ class ApiClientImpl extends ApiClient {
       headers['Accept-Language'] = language;
     }
 
-    return Options(headers: headers);
+    headers.addAll(options?.headers ?? {});
+    return options?.copyWith(headers: headers) ?? Options(headers: headers);
   }
 
   Future<FormData> _toFormData(Map<String, dynamic> data,

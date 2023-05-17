@@ -19,3 +19,7 @@ enum StateStatus {
   done,
   failed,
 }
+
+extension StateStatusExtension on StateStatus {
+  bool get isFinished => [StateStatus.done, StateStatus.failed].contains(this);
+}
