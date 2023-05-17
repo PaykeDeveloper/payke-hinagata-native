@@ -3,7 +3,6 @@ import 'package:native_app/store/base/notifiers/entities.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/user.dart';
-import './models/user_input.dart';
 import './models/user_url.dart';
 import './models/users_url.dart';
 
@@ -11,7 +10,9 @@ part 'notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class UsersState extends _$UsersState
-    with EntitiesMixin<User, UserUrl, User, UsersUrl, UserInput, UserInput> {
+    with
+        EntitiesMixin<User, UserUrl, User, UsersUrl>,
+        FetchEntitiesMixin<User, UserUrl, User, UsersUrl> {
   @override
   EntitiesState<User, UserUrl, User, UsersUrl> build() => buildDefault();
 

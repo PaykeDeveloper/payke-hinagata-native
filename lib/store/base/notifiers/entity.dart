@@ -16,13 +16,14 @@ abstract class _EntityState<Entity, EntityUrl>
   Entity decodeEntity(Map<String, dynamic> json);
 }
 
-mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
-        UpdateInput extends JsonGenerator>
+mixin EntityMixIn<Entity, EntityUrl>
     implements _EntityState<Entity, EntityUrl> {
+  BackendClient get _backendClient => ref.read(backendClientProvider);
+}
+
+mixin FetchEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
   final int _activeMinutes = 10;
   final bool _reset = true;
-
-  BackendClient get _backendClient => ref.read(backendClientProvider);
 
   EntityState<Entity, EntityUrl> buildDefault() {
     if (_reset) {
@@ -34,6 +35,23 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
       });
     }
     return EntityState<Entity, EntityUrl>();
+  }
+
+  Future resetEntity() async {
+    state = state.copyWith(
+      entity: null,
+      entityStatus: StateStatus.initial,
+      entityUrl: null,
+      entityQueryParameters: null,
+      entityTimestamp: null,
+      entityError: null,
+    );
+  }
+
+  Future resetEntityIfNeeded() async {
+    if (state.entityStatus != StateStatus.initial) {
+      await resetEntity();
+    }
   }
 
   Future<StoreResult<Entity>> fetchEntity({
@@ -71,6 +89,49 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     return result;
   }
 
+  bool _checkInActivePeriod(DateTime? timestamp) {
+    final now = DateTime.now();
+    return timestamp != null &&
+        now.difference(timestamp).inMinutes < _activeMinutes;
+  }
+
+  bool _shouldFetchEntity({
+    required EntityUrl url,
+    Map<String, dynamic>? queryParameters,
+  }) {
+    switch (state.entityStatus) {
+      case StateStatus.initial:
+      case StateStatus.failed:
+        return true;
+      case StateStatus.started:
+        return false;
+      case StateStatus.done:
+        final preferState = _checkInActivePeriod(state.entityTimestamp) &&
+            state.entityUrl == url &&
+            mapEquals(state.entityQueryParameters, queryParameters);
+        return !preferState;
+    }
+  }
+
+  Future fetchEntityIfNeeded({
+    required EntityUrl url,
+    Map<String, dynamic>? queryParameters,
+    bool? reset,
+  }) async {
+    if (!_shouldFetchEntity(url: url, queryParameters: queryParameters)) {
+      return null;
+    }
+
+    if (reset == true) {
+      await resetEntityIfNeeded();
+    }
+
+    return fetchEntity(url: url, queryParameters: queryParameters);
+  }
+}
+
+mixin CreateEntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator>
+    on EntityMixIn<Entity, EntityUrl> {
   Future<StoreResult<Entity>> addEntity({
     required EntityUrl urlParams,
     required CreateInput data,
@@ -118,7 +179,10 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     }
     return result;
   }
+}
 
+mixin UpdateEntityMixin<Entity, EntityUrl, UpdateInput extends JsonGenerator>
+    on EntityMixIn<Entity, EntityUrl> {
   Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
     required UpdateInput data,
@@ -166,7 +230,9 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     }
     return result;
   }
+}
 
+mixin DeleteEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
   Future<StoreResult<void>> deleteEntity({
     required EntityUrl urlParams,
     Map<String, dynamic>? queryParameters,
@@ -185,62 +251,5 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
       }
     }
     return result;
-  }
-
-  bool _checkInActivePeriod(DateTime? timestamp) {
-    final now = DateTime.now();
-    return timestamp != null &&
-        now.difference(timestamp).inMinutes < _activeMinutes;
-  }
-
-  bool _shouldFetchEntity({
-    required EntityUrl url,
-    Map<String, dynamic>? queryParameters,
-  }) {
-    switch (state.entityStatus) {
-      case StateStatus.initial:
-      case StateStatus.failed:
-        return true;
-      case StateStatus.started:
-        return false;
-      case StateStatus.done:
-        final preferState = _checkInActivePeriod(state.entityTimestamp) &&
-            state.entityUrl == url &&
-            mapEquals(state.entityQueryParameters, queryParameters);
-        return !preferState;
-    }
-  }
-
-  Future fetchEntityIfNeeded({
-    required EntityUrl url,
-    Map<String, dynamic>? queryParameters,
-    bool? reset,
-  }) async {
-    if (!_shouldFetchEntity(url: url, queryParameters: queryParameters)) {
-      return null;
-    }
-
-    if (reset == true) {
-      await resetEntityIfNeeded();
-    }
-
-    return fetchEntity(url: url, queryParameters: queryParameters);
-  }
-
-  Future resetEntity() async {
-    state = state.copyWith(
-      entity: null,
-      entityStatus: StateStatus.initial,
-      entityUrl: null,
-      entityQueryParameters: null,
-      entityTimestamp: null,
-      entityError: null,
-    );
-  }
-
-  Future resetEntityIfNeeded() async {
-    if (state.entityStatus != StateStatus.initial) {
-      await resetEntity();
-    }
   }
 }

@@ -21,13 +21,26 @@ abstract class _EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
   Entity decodeEntity(Map<String, dynamic> json);
 }
 
-mixin EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
-        CreateInput extends JsonGenerator, UpdateInput extends JsonGenerator>
+mixin EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
     implements _EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> {
+  BackendClient get _backendClient => ref.read(backendClientProvider);
+
+  Future resetEntities() async {
+    state = state.copyWith(
+      entities: [],
+      entitiesStatus: StateStatus.initial,
+      entitiesUrl: null,
+      entitiesQueryParameters: null,
+      entitiesTimestamp: null,
+      entitiesError: null,
+    );
+  }
+}
+
+mixin FetchEntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
+    on EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> {
   final int _activeMinutes = 10;
   final bool _reset = true;
-
-  BackendClient get _backendClient => ref.read(backendClientProvider);
 
   EntitiesState<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> buildDefault() {
     if (_reset) {
@@ -111,125 +124,6 @@ mixin EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return result;
   }
 
-  Future<StoreResult<Entity>> addEntity({
-    required EntitiesUrl urlParams,
-    required CreateInput data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await _backendClient.postObject(
-      decode: decodeEntity,
-      path: getEntitiesUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
-    if (result is Success<Entity>) {
-      if (state.entitiesStatus == StateStatus.done) {
-        await resetEntities();
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<Entity>> add({
-    required EntitiesUrl urlParams,
-    required Map<String, dynamic> data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await _backendClient.post(
-      decode: (data) => decodeEntity(data as Map<String, dynamic>),
-      path: getEntitiesUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
-    if (result is Success<Entity>) {
-      if (state.entitiesStatus == StateStatus.done) {
-        await resetEntities();
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<Entity>> mergeEntity({
-    required EntityUrl urlParams,
-    required UpdateInput data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await _backendClient.patchObject(
-      decode: decodeEntity,
-      path: getEntityUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
-    if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: result.data,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-      if (state.entitiesStatus == StateStatus.done) {
-        await resetEntities();
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<Entity>> merge({
-    required EntityUrl urlParams,
-    required Map<String, dynamic> data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await _backendClient.patch(
-      decode: (data) => decodeEntity(data as Map<String, dynamic>),
-      path: getEntityUrl(urlParams),
-      data: data,
-      queryParameters: queryParameters,
-      useFormData: useFormData,
-    );
-    if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: result.data,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-      if (state.entitiesStatus == StateStatus.done) {
-        await resetEntities();
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<void>> deleteEntity({
-    required EntityUrl urlParams,
-    Map<String, dynamic>? queryParameters,
-  }) async {
-    final result = await _backendClient.delete(
-      decode: (json) {},
-      path: getEntityUrl(urlParams),
-      queryParameters: queryParameters,
-    );
-    if (result is Success) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: null,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-      if (state.entitiesStatus == StateStatus.done) {
-        await resetEntities();
-      }
-    }
-    return result;
-  }
-
   bool _checkInActivePeriod(DateTime? timestamp) {
     final now = DateTime.now();
     return timestamp != null &&
@@ -304,17 +198,6 @@ mixin EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
     return fetchEntity(url: url, queryParameters: queryParameters);
   }
 
-  Future resetEntities() async {
-    state = state.copyWith(
-      entities: [],
-      entitiesStatus: StateStatus.initial,
-      entitiesUrl: null,
-      entitiesQueryParameters: null,
-      entitiesTimestamp: null,
-      entitiesError: null,
-    );
-  }
-
   Future resetEntitiesIfNeeded() async {
     if (state.entitiesStatus != StateStatus.initial) {
       await resetEntities();
@@ -341,5 +224,135 @@ mixin EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
   Future resetAllIfNeeded() async {
     await resetEntitiesIfNeeded();
     await resetEntityIfNeeded();
+  }
+}
+
+mixin CreateEntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
+        CreateInput extends JsonGenerator>
+    on EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> {
+  Future<StoreResult<Entity>> addEntity({
+    required EntitiesUrl urlParams,
+    required CreateInput data,
+    Map<String, dynamic>? queryParameters,
+    bool useFormData = false,
+  }) async {
+    final result = await _backendClient.postObject(
+      decode: decodeEntity,
+      path: getEntitiesUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
+      }
+    }
+    return result;
+  }
+
+  Future<StoreResult<Entity>> add({
+    required EntitiesUrl urlParams,
+    required Map<String, dynamic> data,
+    Map<String, dynamic>? queryParameters,
+    bool useFormData = false,
+  }) async {
+    final result = await _backendClient.post(
+      decode: (data) => decodeEntity(data as Map<String, dynamic>),
+      path: getEntitiesUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
+      }
+    }
+    return result;
+  }
+}
+
+mixin UpdateEntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl,
+        UpdateInput extends JsonGenerator>
+    on EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> {
+  Future<StoreResult<Entity>> mergeEntity({
+    required EntityUrl urlParams,
+    required UpdateInput data,
+    Map<String, dynamic>? queryParameters,
+    bool useFormData = false,
+  }) async {
+    final result = await _backendClient.patchObject(
+      decode: decodeEntity,
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
+      }
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
+      }
+    }
+    return result;
+  }
+
+  Future<StoreResult<Entity>> merge({
+    required EntityUrl urlParams,
+    required Map<String, dynamic> data,
+    Map<String, dynamic>? queryParameters,
+    bool useFormData = false,
+  }) async {
+    final result = await _backendClient.patch(
+      decode: (data) => decodeEntity(data as Map<String, dynamic>),
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
+      }
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
+      }
+    }
+    return result;
+  }
+}
+
+mixin DeleteEntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl>
+    on EntitiesMixin<Entity, EntityUrl, EntitiesEntity, EntitiesUrl> {
+  Future<StoreResult<void>> deleteEntity({
+    required EntityUrl urlParams,
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    final result = await _backendClient.delete(
+      decode: (json) {},
+      path: getEntityUrl(urlParams),
+      queryParameters: queryParameters,
+    );
+    if (result is Success) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: null,
+          entityTimestamp: DateTime.now(),
+        );
+      }
+      if (state.entitiesStatus == StateStatus.done) {
+        await resetEntities();
+      }
+    }
+    return result;
   }
 }

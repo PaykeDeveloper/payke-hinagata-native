@@ -3,7 +3,6 @@ import 'package:native_app/store/base/notifiers/entities.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/role.dart';
-import './models/role_input.dart';
 import './models/role_url.dart';
 import './models/roles_url.dart';
 
@@ -11,7 +10,9 @@ part 'notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class RolesState extends _$RolesState
-    with EntitiesMixin<Role, RoleUrl, Role, RolesUrl, RoleInput, RoleInput> {
+    with
+        EntitiesMixin<Role, RoleUrl, Role, RolesUrl>,
+        FetchEntitiesMixin<Role, RoleUrl, Role, RolesUrl> {
   @override
   EntitiesState<Role, RoleUrl, Role, RolesUrl> build() => buildDefault();
 
