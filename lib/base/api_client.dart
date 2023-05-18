@@ -3,13 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:native_app/base/constants.dart';
 
 abstract class ApiClient {
-  String? token;
-
-  String? language;
-
   Future<Response<Result>> get<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   });
 
@@ -19,6 +16,7 @@ abstract class ApiClient {
     required bool useFormData,
     required bool containNull,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   });
 
@@ -28,12 +26,14 @@ abstract class ApiClient {
     required bool useFormData,
     required bool containNull,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   });
 
   Future<Response<Result>> delete<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   });
 }
@@ -52,9 +52,9 @@ class ApiClientImpl extends ApiClient {
   Future<Response<Result>> get<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   }) async {
-    final options = await _getOptions();
     final response = await dio.get<Result>(
       path,
       queryParameters: queryParameters,
@@ -71,9 +71,9 @@ class ApiClientImpl extends ApiClient {
     required bool useFormData,
     required bool containNull,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   }) async {
-    final options = await _getOptions();
     final convertedData = useFormData
         ? await _toFormData(data, containNull: containNull)
         : _toMapData(data, containNull: containNull);
@@ -94,14 +94,13 @@ class ApiClientImpl extends ApiClient {
     required bool useFormData,
     required bool containNull,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   }) async {
-    final options = await _getOptions();
-    options.headers?['X-HTTP-Method-Override'] = 'PATCH';
     final convertedData = useFormData
         ? await _toFormData(data, containNull: containNull)
         : _toMapData(data, containNull: containNull);
-    final response = await dio.post<Result>(
+    final response = await dio.patch<Result>(
       path,
       data: convertedData,
       queryParameters: queryParameters,
@@ -115,9 +114,9 @@ class ApiClientImpl extends ApiClient {
   Future<Response<Result>> delete<Result>({
     required String path,
     Map<String, dynamic>? queryParameters,
+    Options? options,
     CancelToken? cancelToken,
   }) async {
-    final options = await _getOptions();
     final response = await dio.delete<Result>(
       path,
       queryParameters: queryParameters,
@@ -141,22 +140,6 @@ class ApiClientImpl extends ApiClient {
       ));
     }
     return dio;
-  }
-
-  Future<Options> _getOptions() async {
-    final Map<String, dynamic> headers = {
-      'Accept': 'application/json',
-    };
-
-    if (token != null) {
-      headers['Authorization'] = 'Bearer $token';
-    }
-
-    if (language != null) {
-      headers['Accept-Language'] = language;
-    }
-
-    return Options(headers: headers);
   }
 
   Future<FormData> _toFormData(Map<String, dynamic> data,

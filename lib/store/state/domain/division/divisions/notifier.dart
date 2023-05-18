@@ -13,8 +13,13 @@ part 'notifier.g.dart';
 @Riverpod(keepAlive: true)
 class DivisionsState extends _$DivisionsState
     with
-        EntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl,
-            DivisionInput, DivisionInput> {
+        EntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl>,
+        FetchEntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl>,
+        CreateEntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl,
+            DivisionInput>,
+        UpdateEntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl,
+            DivisionInput>,
+        DeleteEntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl> {
   @override
   EntitiesState<Division, DivisionUrl, Division, DivisionsUrl> build() =>
       buildDefault();

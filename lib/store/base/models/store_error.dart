@@ -22,7 +22,7 @@ class StoreError with _$StoreError {
 
   const factory StoreError.requestTimeout() = RequestTimeout;
 
-  const factory StoreError.serviceUnavailable(ErrorResult result) =
+  const factory StoreError.serviceUnavailable(ErrorResult? result) =
       ServiceUnavailable;
 
   const factory StoreError.noInternetConnection() = NoInternetConnection;
@@ -62,6 +62,9 @@ StoreError getStateError(Exception exception) {
       case DioErrorType.badCertificate:
         return const StoreError.unauthorisedRequest(null);
       case DioErrorType.unknown:
+        if (exception.error is SocketException) {
+          return const StoreError.serviceUnavailable(null);
+        }
         break;
     }
   }
@@ -77,7 +80,7 @@ extension StateErrorExt on StoreError {
       badRequest: (error) => error.result.message,
       notFound: (error) => error.result.message,
       requestTimeout: (error) => null,
-      serviceUnavailable: (error) => error.result.message,
+      serviceUnavailable: (error) => error.result?.message,
       noInternetConnection: (error) => null,
       unexpectedError: (error) => null,
     );

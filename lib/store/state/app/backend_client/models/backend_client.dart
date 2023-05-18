@@ -11,15 +11,17 @@ import 'package:native_app/ui/utils.dart';
 
 class BackendClient {
   final _client = getIt<ApiClient>(param1: backendBaseUrl);
+  String? _token;
+  String? _language;
 
-  bool get authenticated => _client.token != null;
+  bool get authenticated => _token != null;
 
   void setToken(BackendToken? token) {
-    _client.token = token?.value;
+    _token = token?.value;
   }
 
   void setLocale(Locale? locale) {
-    _client.language = locale?.toLanguageTag();
+    _language = locale?.toLanguageTag();
   }
 
   Future<StoreResult<Result>> get<Result>({
@@ -28,7 +30,11 @@ class BackendClient {
     Map<String, dynamic>? queryParameters,
   }) async {
     return _call(
-      request: _client.get(path: path, queryParameters: queryParameters),
+      request: _client.get(
+        path: path,
+        queryParameters: queryParameters,
+        options: _createOptions(),
+      ),
       decode: decode,
     );
   }
@@ -74,6 +80,7 @@ class BackendClient {
         queryParameters: queryParameters,
         useFormData: useFormData,
         containNull: containNull,
+        options: _createOptions(),
       ),
       decode: decode,
     );
@@ -104,12 +111,13 @@ class BackendClient {
     bool containNull = true,
   }) async {
     return _call(
-      request: _client.patch(
+      request: _client.post(
         path: path,
         data: data ?? {},
         queryParameters: queryParameters,
         useFormData: useFormData,
         containNull: containNull,
+        options: _createOptions(headers: {'X-HTTP-Method-Override': 'PATCH'}),
       ),
       decode: decode,
     );
@@ -137,7 +145,11 @@ class BackendClient {
     Map<String, dynamic>? queryParameters,
   }) async {
     return _call(
-      request: _client.delete(path: path, queryParameters: queryParameters),
+      request: _client.delete(
+        path: path,
+        queryParameters: queryParameters,
+        options: _createOptions(),
+      ),
       decode: decode,
     );
   }
@@ -157,5 +169,19 @@ class BackendClient {
         return const StoreResult.failure(StoreError.unexpectedError());
       }
     }
+  }
+
+  Options _createOptions({Map<String, dynamic>? headers}) {
+    final Map<String, dynamic> results = {'Accept': 'application/json'};
+    if (_token != null) {
+      results['Authorization'] = 'Bearer $_token';
+    }
+    if (_language != null) {
+      results['Accept-Language'] = _language;
+    }
+    if (headers != null) {
+      results.addAll(headers);
+    }
+    return Options(headers: results);
   }
 }

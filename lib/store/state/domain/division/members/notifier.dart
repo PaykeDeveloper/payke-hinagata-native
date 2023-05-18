@@ -13,8 +13,11 @@ part 'notifier.g.dart';
 @Riverpod(keepAlive: true)
 class MembersState extends _$MembersState
     with
-        EntitiesMixin<Member, MemberUrl, Member, MembersUrl, MemberInput,
-            MemberInput> {
+        EntitiesMixin<Member, MemberUrl, Member, MembersUrl>,
+        FetchEntitiesMixin<Member, MemberUrl, Member, MembersUrl>,
+        CreateEntitiesMixin<Member, MemberUrl, Member, MembersUrl, MemberInput>,
+        UpdateEntitiesMixin<Member, MemberUrl, Member, MembersUrl, MemberInput>,
+        DeleteEntitiesMixin<Member, MemberUrl, Member, MembersUrl> {
   @override
   EntitiesState<Member, MemberUrl, Member, MembersUrl> build() =>
       buildDefault();

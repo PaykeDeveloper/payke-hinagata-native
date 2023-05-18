@@ -4,6 +4,7 @@ import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
@@ -15,9 +16,12 @@ abstract class _EntityState<Entity, EntityUrl>
   Entity decodeEntity(Map<String, dynamic> json);
 }
 
-mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
-        UpdateInput extends JsonGenerator>
+mixin EntityMixIn<Entity, EntityUrl>
     implements _EntityState<Entity, EntityUrl> {
+  BackendClient get _backendClient => ref.read(backendClientProvider);
+}
+
+mixin FetchEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
   final int _activeMinutes = 10;
   final bool _reset = true;
 
@@ -33,6 +37,23 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
     return EntityState<Entity, EntityUrl>();
   }
 
+  Future resetEntity() async {
+    state = state.copyWith(
+      entity: null,
+      entityStatus: StateStatus.initial,
+      entityUrl: null,
+      entityQueryParameters: null,
+      entityTimestamp: null,
+      entityError: null,
+    );
+  }
+
+  Future resetEntityIfNeeded() async {
+    if (state.entityStatus != StateStatus.initial) {
+      await resetEntity();
+    }
+  }
+
   Future<StoreResult<Entity>> fetchEntity({
     required EntityUrl url,
     Map<String, dynamic>? queryParameters,
@@ -42,11 +63,11 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
       entityUrl: url,
       entityQueryParameters: queryParameters,
     );
-    final result = await ref.read(backendClientProvider).getObject(
-          decode: decodeEntity,
-          path: getEntityUrl(url),
-          queryParameters: queryParameters,
-        );
+    final result = await _backendClient.getObject(
+      decode: decodeEntity,
+      path: getEntityUrl(url),
+      queryParameters: queryParameters,
+    );
     result.when(
       success: (data) {
         state = state.copyWith(
@@ -65,122 +86,6 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
         );
       },
     );
-    return result;
-  }
-
-  Future<StoreResult<Entity>> addEntity({
-    required EntityUrl urlParams,
-    required CreateInput data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await ref.read(backendClientProvider).postObject(
-          decode: decodeEntity,
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
-    if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: result.data,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<Entity>> add({
-    required EntityUrl urlParams,
-    required Map<String, dynamic> data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await ref.read(backendClientProvider).post(
-          decode: (data) => decodeEntity(data as Map<String, dynamic>),
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
-    if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: result.data,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<Entity>> mergeEntity({
-    required EntityUrl urlParams,
-    required UpdateInput data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await ref.read(backendClientProvider).patchObject(
-          decode: decodeEntity,
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
-    if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: result.data,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<Entity>> merge({
-    required EntityUrl urlParams,
-    required Map<String, dynamic> data,
-    Map<String, dynamic>? queryParameters,
-    bool useFormData = false,
-  }) async {
-    final result = await ref.read(backendClientProvider).patch(
-          decode: (data) => decodeEntity(data as Map<String, dynamic>),
-          path: getEntityUrl(urlParams),
-          data: data,
-          queryParameters: queryParameters,
-          useFormData: useFormData,
-        );
-    if (result is Success<Entity>) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: result.data,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-    }
-    return result;
-  }
-
-  Future<StoreResult<void>> deleteEntity({
-    required EntityUrl urlParams,
-    Map<String, dynamic>? queryParameters,
-  }) async {
-    final result = await ref.read(backendClientProvider).delete(
-          decode: (json) {},
-          path: getEntityUrl(urlParams),
-          queryParameters: queryParameters,
-        );
-    if (result is Success) {
-      if (state.entityStatus == StateStatus.done) {
-        state = state.copyWith(
-          entity: null,
-          entityTimestamp: DateTime.now(),
-        );
-      }
-    }
     return result;
   }
 
@@ -223,21 +128,128 @@ mixin EntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator,
 
     return fetchEntity(url: url, queryParameters: queryParameters);
   }
+}
 
-  Future resetEntity() async {
-    state = state.copyWith(
-      entity: null,
-      entityStatus: StateStatus.initial,
-      entityUrl: null,
-      entityQueryParameters: null,
-      entityTimestamp: null,
-      entityError: null,
+mixin CreateEntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator>
+    on EntityMixIn<Entity, EntityUrl> {
+  Future<StoreResult<Entity>> addEntity({
+    required EntityUrl urlParams,
+    required CreateInput data,
+    Map<String, dynamic>? queryParameters,
+    bool useFormData = false,
+  }) async {
+    final result = await _backendClient.postObject(
+      decode: decodeEntity,
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
     );
+    if (result is Success<Entity>) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
+      }
+    }
+    return result;
   }
 
-  Future resetEntityIfNeeded() async {
-    if (state.entityStatus != StateStatus.initial) {
-      await resetEntity();
+  Future<StoreResult<Entity>> add({
+    required EntityUrl urlParams,
+    required Map<String, dynamic> data,
+    Map<String, dynamic>? queryParameters,
+    bool useFormData = false,
+  }) async {
+    final result = await _backendClient.post(
+      decode: (data) => decodeEntity(data as Map<String, dynamic>),
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
+      }
     }
+    return result;
+  }
+}
+
+mixin UpdateEntityMixin<Entity, EntityUrl, UpdateInput extends JsonGenerator>
+    on EntityMixIn<Entity, EntityUrl> {
+  Future<StoreResult<Entity>> mergeEntity({
+    required EntityUrl urlParams,
+    required UpdateInput data,
+    Map<String, dynamic>? queryParameters,
+    bool useFormData = false,
+  }) async {
+    final result = await _backendClient.patchObject(
+      decode: decodeEntity,
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
+      }
+    }
+    return result;
+  }
+
+  Future<StoreResult<Entity>> merge({
+    required EntityUrl urlParams,
+    required Map<String, dynamic> data,
+    Map<String, dynamic>? queryParameters,
+    bool useFormData = false,
+  }) async {
+    final result = await _backendClient.patch(
+      decode: (data) => decodeEntity(data as Map<String, dynamic>),
+      path: getEntityUrl(urlParams),
+      data: data,
+      queryParameters: queryParameters,
+      useFormData: useFormData,
+    );
+    if (result is Success<Entity>) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: result.data,
+          entityTimestamp: DateTime.now(),
+        );
+      }
+    }
+    return result;
+  }
+}
+
+mixin DeleteEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
+  Future<StoreResult<void>> deleteEntity({
+    required EntityUrl urlParams,
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    final result = await _backendClient.delete(
+      decode: (json) {},
+      path: getEntityUrl(urlParams),
+      queryParameters: queryParameters,
+    );
+    if (result is Success) {
+      if (state.entityStatus == StateStatus.done) {
+        state = state.copyWith(
+          entity: null,
+          entityTimestamp: DateTime.now(),
+        );
+      }
+    }
+    return result;
   }
 }

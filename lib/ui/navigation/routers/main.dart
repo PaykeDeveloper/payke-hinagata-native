@@ -12,6 +12,7 @@ import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/notifier.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
+import 'package:native_app/ui/screens/common/error.dart';
 import 'package:native_app/ui/screens/common/loading.dart';
 import 'package:native_app/ui/screens/division/divisions/list.dart';
 import 'package:native_app/ui/screens/main.dart';
@@ -45,10 +46,19 @@ class MainRouter extends HookConsumerWidget {
     final divisionIdStatus = ref.watch(divisionIdStateSelector);
     final divisions = ref.watch(divisionsSelector);
     final divisionsStatus = ref.watch(divisionsStatusSelector);
+    final divisionsError = ref.watch(divisionsErrorSelector);
 
-    if (divisionIdStatus != StateStatus.done ||
-        divisionsStatus != StateStatus.done) {
+    if (divisionIdStatus != StateStatus.done || !divisionsStatus.isFinished) {
       return const LoadingScreen();
+    }
+
+    if (divisionsError != null) {
+      return ErrorScreen(
+        error: divisionsError,
+        onPressedReload: () => ref
+            .read(divisionsStateProvider.notifier)
+            .fetchEntitiesIfNeeded(url: const DivisionsUrl()),
+      );
     }
 
     final division = divisionId != null
