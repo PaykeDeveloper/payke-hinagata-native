@@ -5,7 +5,7 @@ part 'login_input.freezed.dart';
 part 'login_input.g.dart';
 
 @freezed
-class LoginInput with _$LoginInput, JsonGenerator {
+class LoginInput with _$LoginInput implements JsonGenerator {
   const factory LoginInput({
     required String email,
     required String password,

@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/division/divisions/models/divisions_url.dart';
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/store/state/ui/division_id/notifier.dart';
@@ -24,13 +23,11 @@ class DivisionListScreen extends ConsumerWidget {
     Future initState() async {
       await ref
           .read(divisionsStateProvider.notifier)
-          .fetchEntitiesIfNeeded(url: const DivisionsUrl(), reset: true);
+          .fetchEntitiesIfNeeded(url: null, reset: true);
     }
 
     Future onRefresh() async {
-      await ref
-          .read(divisionsStateProvider.notifier)
-          .fetchEntities(url: const DivisionsUrl());
+      await ref.read(divisionsStateProvider.notifier).fetchEntities(url: null);
     }
 
     Future setDivisionId(DivisionId divisionId) async {

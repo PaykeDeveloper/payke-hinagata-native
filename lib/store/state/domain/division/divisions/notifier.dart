@@ -6,26 +6,25 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import './models/division.dart';
 import './models/division_input.dart';
 import './models/division_url.dart';
-import './models/divisions_url.dart';
 
 part 'notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class DivisionsState extends _$DivisionsState
     with
-        EntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl>,
-        FetchEntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl>,
-        CreateEntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl,
+        EntitiesMixin<Division, DivisionUrl, Division, void>,
+        FetchEntitiesMixin<Division, DivisionUrl, Division, void>,
+        CreateEntitiesMixin<Division, DivisionUrl, Division, void,
             DivisionInput>,
-        UpdateEntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl,
+        UpdateEntitiesMixin<Division, DivisionUrl, Division, void,
             DivisionInput>,
-        DeleteEntitiesMixin<Division, DivisionUrl, Division, DivisionsUrl> {
+        DeleteEntitiesMixin<Division, DivisionUrl, Division, void> {
   @override
-  EntitiesState<Division, DivisionUrl, Division, DivisionsUrl> build() =>
+  EntitiesState<Division, DivisionUrl, Division, void> build() =>
       buildDefault();
 
   @override
-  String getEntitiesUrl(DivisionsUrl url) => '/api/v1/divisions';
+  String getEntitiesUrl(void url) => '/api/v1/divisions';
 
   @override
   String getEntityUrl(DivisionUrl url) => '/api/v1/divisions/${url.id.value}';

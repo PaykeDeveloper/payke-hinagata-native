@@ -10,7 +10,7 @@ part 'project_input.freezed.dart';
 part 'project_input.g.dart';
 
 @freezed
-class ProjectInput extends JsonGenerator with _$ProjectInput {
+class ProjectInput with _$ProjectInput implements JsonGenerator {
   const factory ProjectInput({
     String? name,
     String? description,

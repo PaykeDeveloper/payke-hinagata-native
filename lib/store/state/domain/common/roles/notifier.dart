@@ -4,20 +4,19 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/role.dart';
 import './models/role_url.dart';
-import './models/roles_url.dart';
 
 part 'notifier.g.dart';
 
 @Riverpod(keepAlive: true)
 class RolesState extends _$RolesState
     with
-        EntitiesMixin<Role, RoleUrl, Role, RolesUrl>,
-        FetchEntitiesMixin<Role, RoleUrl, Role, RolesUrl> {
+        EntitiesMixin<Role, RoleUrl, Role, void>,
+        FetchEntitiesMixin<Role, RoleUrl, Role, void> {
   @override
-  EntitiesState<Role, RoleUrl, Role, RolesUrl> build() => buildDefault();
+  EntitiesState<Role, RoleUrl, Role, void> build() => buildDefault();
 
   @override
-  String getEntitiesUrl(RolesUrl url) => '/api/v1/roles';
+  String getEntitiesUrl(void url) => '/api/v1/roles';
 
   @override
   String getEntityUrl(RoleUrl url) => '/api/v1/roles/${url.id.value}';

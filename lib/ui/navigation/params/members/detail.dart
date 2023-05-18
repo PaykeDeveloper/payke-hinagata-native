@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:native_app/store/state/app/route/models/route_params.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
 import 'package:native_app/ui/screens/division/members/detail.dart';
 
-class MemberDetailParams extends RouteParams {
-  MemberDetailParams({required this.divisionId, required this.memberId});
+part 'detail.freezed.dart';
 
-  final DivisionId divisionId;
-  final MemberId memberId;
+@freezed
+class MemberDetailParams with _$MemberDetailParams implements RouteParams {
+  const factory MemberDetailParams({
+    required DivisionId divisionId,
+    required MemberId memberId,
+  }) = _MemberDetailParams;
 
   @override
   Page toPage() => MemberDetailPage(

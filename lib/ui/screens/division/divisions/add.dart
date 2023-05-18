@@ -5,7 +5,6 @@ import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_input.dart';
-import 'package:native_app/store/state/domain/division/divisions/models/divisions_url.dart';
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
@@ -21,7 +20,7 @@ class DivisionAddScreen extends ConsumerWidget {
     Future<StoreResult?> onSubmit(DivisionInput input) async {
       final result = await ref
           .read(divisionsStateProvider.notifier)
-          .addEntity(urlParams: const DivisionsUrl(), data: input);
+          .addEntity(urlParams: null, data: input);
       if (result is Success) {
         Navigator.of(context).pop();
       }
