@@ -1,48 +1,36 @@
-import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:native_app/store/base/models/backend_client.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
-import 'package:native_app/store/state/app/backend_client/notifier.dart';
-import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
-import 'package:native_app/store/state/app/backend_token/notifier.dart';
 
-abstract class _EntityState<Entity, EntityUrl>
-    extends Notifier<EntityState<Entity, EntityUrl>> {
+abstract class _EntityState<Entity, EntityUrl,
+        EntityQuery extends JsonGenerator>
+    extends Notifier<EntityState<Entity, EntityUrl, EntityQuery>> {
+  BackendClient getBackendClient();
+
   String getEntityUrl(EntityUrl url);
 
   Entity decodeEntity(Map<String, dynamic> json);
 }
 
-mixin EntityMixIn<Entity, EntityUrl>
-    implements _EntityState<Entity, EntityUrl> {
-  BackendClient get _backendClient => ref.read(backendClientProvider);
-}
+mixin EntityMixIn<Entity, EntityUrl, EntityQuery extends JsonGenerator>
+    implements _EntityState<Entity, EntityUrl, EntityQuery> {}
 
-mixin FetchEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
+mixin FetchEntityMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator>
+    on EntityMixIn<Entity, EntityUrl, EntityQuery> {
   final int _activeMinutes = 10;
-  final bool _reset = true;
 
-  EntityState<Entity, EntityUrl> buildDefault() {
-    if (_reset) {
-      ref.listen<StoreState<BackendToken?>>(backendTokenStateProvider,
-          (previous, next) {
-        if (next.data == null) {
-          resetEntityIfNeeded();
-        }
-      });
-    }
-    return EntityState<Entity, EntityUrl>();
-  }
+  EntityState<Entity, EntityUrl, EntityQuery> buildDefault() =>
+      EntityState<Entity, EntityUrl, EntityQuery>();
 
   Future resetEntity() async {
     state = state.copyWith(
       entity: null,
       entityStatus: StateStatus.initial,
       entityUrl: null,
-      entityQueryParameters: null,
+      entityQuery: null,
       entityTimestamp: null,
       entityError: null,
     );
@@ -56,17 +44,17 @@ mixin FetchEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
 
   Future<StoreResult<Entity>> fetchEntity({
     required EntityUrl url,
-    Map<String, dynamic>? queryParameters,
+    EntityQuery? query,
   }) async {
     state = state.copyWith(
       entityStatus: StateStatus.started,
       entityUrl: url,
-      entityQueryParameters: queryParameters,
+      entityQuery: query,
     );
-    final result = await _backendClient.getObject(
+    final result = await getBackendClient().getObject(
       decode: decodeEntity,
       path: getEntityUrl(url),
-      queryParameters: queryParameters,
+      queryParameters: query?.toJson(),
     );
     result.when(
       success: (data) {
@@ -97,7 +85,7 @@ mixin FetchEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
 
   bool _shouldFetchEntity({
     required EntityUrl url,
-    Map<String, dynamic>? queryParameters,
+    EntityQuery? query,
   }) {
     switch (state.entityStatus) {
       case StateStatus.initial:
@@ -108,17 +96,17 @@ mixin FetchEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
       case StateStatus.done:
         final preferState = _checkInActivePeriod(state.entityTimestamp) &&
             state.entityUrl == url &&
-            mapEquals(state.entityQueryParameters, queryParameters);
+            state.entityQuery == query;
         return !preferState;
     }
   }
 
   Future fetchEntityIfNeeded({
     required EntityUrl url,
-    Map<String, dynamic>? queryParameters,
+    EntityQuery? query,
     bool? reset,
   }) async {
-    if (!_shouldFetchEntity(url: url, queryParameters: queryParameters)) {
+    if (!_shouldFetchEntity(url: url, query: query)) {
       return null;
     }
 
@@ -126,23 +114,24 @@ mixin FetchEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
       await resetEntityIfNeeded();
     }
 
-    return fetchEntity(url: url, queryParameters: queryParameters);
+    return fetchEntity(url: url, query: query);
   }
 }
 
-mixin CreateEntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator>
-    on EntityMixIn<Entity, EntityUrl> {
+mixin CreateEntityMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator,
+        CreateInput extends JsonGenerator, CreateQuery extends JsonGenerator>
+    on EntityMixIn<Entity, EntityUrl, EntityQuery> {
   Future<StoreResult<Entity>> addEntity({
     required EntityUrl urlParams,
     required CreateInput data,
-    Map<String, dynamic>? queryParameters,
+    CreateQuery? query,
     bool useFormData = false,
   }) async {
-    final result = await _backendClient.postObject(
+    final result = await getBackendClient().postObject(
       decode: decodeEntity,
       path: getEntityUrl(urlParams),
       data: data,
-      queryParameters: queryParameters,
+      queryParameters: query?.toJson(),
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
@@ -162,7 +151,7 @@ mixin CreateEntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator>
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await _backendClient.post(
+    final result = await getBackendClient().post(
       decode: (data) => decodeEntity(data as Map<String, dynamic>),
       path: getEntityUrl(urlParams),
       data: data,
@@ -181,19 +170,20 @@ mixin CreateEntityMixin<Entity, EntityUrl, CreateInput extends JsonGenerator>
   }
 }
 
-mixin UpdateEntityMixin<Entity, EntityUrl, UpdateInput extends JsonGenerator>
-    on EntityMixIn<Entity, EntityUrl> {
+mixin UpdateEntityMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator,
+        UpdateInput extends JsonGenerator, UpdateQuery extends JsonGenerator>
+    on EntityMixIn<Entity, EntityUrl, EntityQuery> {
   Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
     required UpdateInput data,
-    Map<String, dynamic>? queryParameters,
+    UpdateQuery? query,
     bool useFormData = false,
   }) async {
-    final result = await _backendClient.patchObject(
+    final result = await getBackendClient().patchObject(
       decode: decodeEntity,
       path: getEntityUrl(urlParams),
       data: data,
-      queryParameters: queryParameters,
+      queryParameters: query?.toJson(),
       useFormData: useFormData,
     );
     if (result is Success<Entity>) {
@@ -213,7 +203,7 @@ mixin UpdateEntityMixin<Entity, EntityUrl, UpdateInput extends JsonGenerator>
     Map<String, dynamic>? queryParameters,
     bool useFormData = false,
   }) async {
-    final result = await _backendClient.patch(
+    final result = await getBackendClient().patch(
       decode: (data) => decodeEntity(data as Map<String, dynamic>),
       path: getEntityUrl(urlParams),
       data: data,
@@ -232,15 +222,17 @@ mixin UpdateEntityMixin<Entity, EntityUrl, UpdateInput extends JsonGenerator>
   }
 }
 
-mixin DeleteEntityMixin<Entity, EntityUrl> on EntityMixIn<Entity, EntityUrl> {
+mixin DeleteEntityMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator,
+        DeleteQuery extends JsonGenerator>
+    on EntityMixIn<Entity, EntityUrl, EntityQuery> {
   Future<StoreResult<void>> deleteEntity({
     required EntityUrl urlParams,
-    Map<String, dynamic>? queryParameters,
+    DeleteQuery? query,
   }) async {
-    final result = await _backendClient.delete(
+    final result = await getBackendClient().delete(
       decode: (json) {},
       path: getEntityUrl(urlParams),
-      queryParameters: queryParameters,
+      queryParameters: query?.toJson(),
     );
     if (result is Success) {
       if (state.entityStatus == StateStatus.done) {

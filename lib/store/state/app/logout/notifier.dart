@@ -1,5 +1,11 @@
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
+import 'package:native_app/store/state/domain/common/roles/notifier.dart';
+import 'package:native_app/store/state/domain/common/users/notifier.dart';
+import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
+import 'package:native_app/store/state/domain/division/members/notifier.dart';
+import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
+import 'package:native_app/store/state/ui/division_id/notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'notifier.g.dart';
@@ -15,7 +21,13 @@ class LogoutState extends _$LogoutState {
       decode: (json) => null,
       path: '/api/v1/logout',
     );
-    final notifier = ref.read(backendTokenStateProvider.notifier);
-    await notifier.removeToken();
+
+    ref.read(backendTokenStateProvider.notifier).removeToken();
+    ref.read(divisionIdStateProvider.notifier).reset();
+    ref.read(rolesStateProvider.notifier).resetAllIfNeeded();
+    ref.read(usersStateProvider.notifier).resetAllIfNeeded();
+    ref.read(divisionsStateProvider.notifier).resetAllIfNeeded();
+    ref.read(membersStateProvider.notifier).resetAllIfNeeded();
+    ref.read(projectsStateProvider.notifier).resetAllIfNeeded();
   }
 }

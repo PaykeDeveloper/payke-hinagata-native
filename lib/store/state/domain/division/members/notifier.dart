@@ -1,6 +1,9 @@
 // FIXME: SAMPLE CODE
 import 'package:native_app/store/base/models/entities_state.dart';
+import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/notifiers/entities.dart';
+import 'package:native_app/store/state/app/backend_client/models/backend_client.dart';
+import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/member.dart';
@@ -13,14 +16,22 @@ part 'notifier.g.dart';
 @Riverpod(keepAlive: true)
 class MembersState extends _$MembersState
     with
-        EntitiesMixin<Member, MemberUrl, Member, MembersUrl>,
-        FetchEntitiesMixin<Member, MemberUrl, Member, MembersUrl>,
-        CreateEntitiesMixin<Member, MemberUrl, Member, MembersUrl, MemberInput>,
-        UpdateEntitiesMixin<Member, MemberUrl, Member, MembersUrl, MemberInput>,
-        DeleteEntitiesMixin<Member, MemberUrl, Member, MembersUrl> {
+        EntitiesMixin<Member, MemberUrl, JsonGenerator, Member, MembersUrl,
+            JsonGenerator>,
+        FetchEntitiesMixin<Member, MemberUrl, JsonGenerator, Member, MembersUrl,
+            JsonGenerator>,
+        CreateEntitiesMixin<Member, MemberUrl, JsonGenerator, Member,
+            MembersUrl, JsonGenerator, MemberInput, JsonGenerator>,
+        UpdateEntitiesMixin<Member, MemberUrl, JsonGenerator, Member,
+            MembersUrl, JsonGenerator, MemberInput, JsonGenerator>,
+        DeleteEntitiesMixin<Member, MemberUrl, JsonGenerator, Member,
+            MembersUrl, JsonGenerator, JsonGenerator> {
   @override
-  EntitiesState<Member, MemberUrl, Member, MembersUrl> build() =>
-      buildDefault();
+  EntitiesState<Member, MemberUrl, JsonGenerator, Member, MembersUrl,
+      JsonGenerator> build() => buildDefault();
+
+  @override
+  BackendClient getBackendClient() => ref.read(backendClientProvider);
 
   @override
   String getEntitiesUrl(MembersUrl url) =>
