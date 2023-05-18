@@ -4,7 +4,7 @@ import 'package:native_app/store/state/domain/division/divisions/models/division
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
 import 'package:native_app/ui/screens/division/members/edit.dart';
 
-class MemberEditParams extends RouteParams {
+class MemberEditParams implements RouteParams {
   MemberEditParams({required this.divisionId, required this.memberId});
 
   final DivisionId divisionId;

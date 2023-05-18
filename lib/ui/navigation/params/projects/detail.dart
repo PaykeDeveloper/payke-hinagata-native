@@ -4,7 +4,7 @@ import 'package:native_app/store/state/domain/division/divisions/models/division
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/ui/screens/sample/projects/detail.dart';
 
-class ProjectDetailParams extends RouteParams {
+class ProjectDetailParams implements RouteParams {
   ProjectDetailParams({required this.divisionId, required this.projectSlug});
 
   final DivisionId divisionId;

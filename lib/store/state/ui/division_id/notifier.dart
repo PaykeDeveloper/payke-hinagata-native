@@ -24,4 +24,10 @@ class DivisionIdState extends _$DivisionIdState {
     state = state.copyWith(data: divisionId);
     return result;
   }
+
+  Future<bool?> reset() async {
+    final result = await Preferences.divisionId.remove();
+    state = build();
+    return result;
+  }
 }

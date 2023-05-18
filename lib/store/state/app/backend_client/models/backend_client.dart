@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:native_app/base/api_client.dart';
 import 'package:native_app/base/constants.dart';
 import 'package:native_app/base/utils.dart';
+import 'package:native_app/store/base/models/backend_client.dart' as i;
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
 import 'package:native_app/ui/utils.dart';
 
-class BackendClient {
+class BackendClient implements i.BackendClient {
   final _client = getIt<ApiClient>(param1: backendBaseUrl);
   String? _token;
   String? _language;
@@ -24,6 +25,7 @@ class BackendClient {
     _language = locale?.toLanguageTag();
   }
 
+  @override
   Future<StoreResult<Result>> get<Result>({
     required Result Function(dynamic) decode,
     required String path,
@@ -39,6 +41,7 @@ class BackendClient {
     );
   }
 
+  @override
   Future<StoreResult<Result>> getObject<Result>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
@@ -51,6 +54,7 @@ class BackendClient {
     );
   }
 
+  @override
   Future<StoreResult<List<Result>>> getList<Result>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
@@ -65,6 +69,8 @@ class BackendClient {
     );
   }
 
+  @override
+  @override
   Future<StoreResult<Result>> post<Result>({
     required Result Function(dynamic) decode,
     required String path,
@@ -86,6 +92,7 @@ class BackendClient {
     );
   }
 
+  @override
   Future<StoreResult<Result>> postObject<Result, Data extends JsonGenerator>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
@@ -102,6 +109,7 @@ class BackendClient {
     );
   }
 
+  @override
   Future<StoreResult<Result>> patch<Result>({
     required Result Function(dynamic) decode,
     required String path,
@@ -123,6 +131,7 @@ class BackendClient {
     );
   }
 
+  @override
   Future<StoreResult<Result>> patchObject<Result, Data extends JsonGenerator>({
     required Result Function(Map<String, dynamic>) decode,
     required String path,
@@ -139,6 +148,7 @@ class BackendClient {
     );
   }
 
+  @override
   Future<StoreResult<Result>> delete<Result>({
     required Result Function(dynamic) decode,
     required String path,

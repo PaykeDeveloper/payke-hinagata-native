@@ -6,7 +6,7 @@ part 'division_input.freezed.dart';
 part 'division_input.g.dart';
 
 @freezed
-class DivisionInput extends JsonGenerator with _$DivisionInput {
+class DivisionInput with _$DivisionInput implements JsonGenerator {
   const factory DivisionInput({
     required String name,
   }) = _DivisionInput;

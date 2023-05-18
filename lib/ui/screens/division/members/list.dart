@@ -6,7 +6,6 @@ import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
-import 'package:native_app/store/state/domain/common/users/models/users_url.dart';
 import 'package:native_app/store/state/domain/common/users/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
@@ -60,9 +59,7 @@ class MemberListScreen extends ConsumerWidget {
         ref
             .read(membersStateProvider.notifier)
             .fetchEntitiesIfNeeded(url: memberUrl, reset: true),
-        ref
-            .read(usersStateProvider.notifier)
-            .fetchEntitiesIfNeeded(url: const UsersUrl())
+        ref.read(usersStateProvider.notifier).fetchEntitiesIfNeeded(url: null)
       ]);
     }
 
@@ -71,7 +68,7 @@ class MemberListScreen extends ConsumerWidget {
         ref.read(membersStateProvider.notifier).fetchEntities(url: memberUrl),
         ref
             .read(usersStateProvider.notifier)
-            .fetchEntitiesIfNeeded(url: const UsersUrl(), reset: true),
+            .fetchEntitiesIfNeeded(url: null, reset: true),
       ]);
     }
 
