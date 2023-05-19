@@ -1,6 +1,6 @@
 // FIXME: SAMPLE CODE
-import 'package:native_app/base/preferences.dart';
 import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/app/preference.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,19 +14,19 @@ class DivisionIdState extends _$DivisionIdState {
   Future initialize() async {
     state = state.copyWith(status: StateStatus.started);
 
-    final value = await Preferences.divisionId.get();
-    final divisionId = value != null ? DivisionId(value) : null;
-    state = state.copyWith(data: divisionId, status: StateStatus.done);
+    final value = await divisionId.get();
+    final data = value != null ? DivisionId(value) : null;
+    state = state.copyWith(data: data, status: StateStatus.done);
   }
 
-  Future<bool> setDivisionId(DivisionId divisionId) async {
-    final result = await Preferences.divisionId.set(divisionId.value);
-    state = state.copyWith(data: divisionId);
+  Future<bool> setDivisionId(DivisionId data) async {
+    final result = await divisionId.set(data.value);
+    state = state.copyWith(data: data);
     return result;
   }
 
   Future<bool?> reset() async {
-    final result = await Preferences.divisionId.remove();
+    final result = await divisionId.remove();
     state = build();
     return result;
   }

@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:native_app/base/api_client.dart';
-import 'package:native_app/base/preferences.dart';
 import 'package:native_app/main.dart' as app;
+import 'package:native_app/store/state/app/preference.dart';
 import 'package:native_app/ui/utils.dart';
 
 const _divisionName = 'Division1';
@@ -34,7 +34,7 @@ void main() {
     });
 
     testWidgets("Existing user", (tester) async {
-      await Preferences.backendToken.set("test");
+      await backendToken.set("test");
       app.main();
       await tester.pumpAndSettle();
 
