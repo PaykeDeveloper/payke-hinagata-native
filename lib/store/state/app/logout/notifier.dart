@@ -23,9 +23,9 @@ class LogoutState extends _$LogoutState {
       path: '/api/v1/logout',
     );
 
-    ref.read(backendTokenStateProvider.notifier).removeToken();
+    ref.read(backendTokenStateProvider.notifier).remove();
+    ref.read(divisionIdStateProvider.notifier).remove();
     ref.read(routeStateProvider.notifier).resetAll();
-    ref.read(divisionIdStateProvider.notifier).reset();
     ref.read(rolesStateProvider.notifier).resetAllIfNeeded();
     ref.read(usersStateProvider.notifier).resetAllIfNeeded();
     ref.read(divisionsStateProvider.notifier).resetAllIfNeeded();

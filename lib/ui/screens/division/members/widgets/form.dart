@@ -47,9 +47,6 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
     final member = widget.member;
     final users = widget.users;
     final roles = widget.roles;
-
-    final initialUserValue = member?.userId;
-
     final initialRolesValue = member?.roleNames ?? [];
 
     final List<DropdownMenuItem<UserId>> userNameItems = [
@@ -82,8 +79,8 @@ class _MemberFormState extends ValidateFormState<MemberForm> {
                   name: 'user_id',
                   labelText: 'User',
                   items: userNameItems,
-                  initialValue: initialUserValue,
-                  valueTransformer: (value) => (value as UserId?)?.value,
+                  initialValue: member?.userId,
+                  valueTransformer: (value) => value?.value,
                   validators: [
                     FormBuilderValidators.required(),
                   ],
