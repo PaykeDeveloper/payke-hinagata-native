@@ -1,6 +1,3 @@
-import 'package:native_app/store/base/models/store_state.dart';
-import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
-import 'package:native_app/store/state/app/backend_token/notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/route_params.dart';
@@ -13,15 +10,7 @@ const initialTab = BottomTab.home;
 @Riverpod(keepAlive: true)
 class RouteState extends _$RouteState {
   @override
-  Router build() {
-    ref.listen<StoreState<BackendToken?>>(backendTokenStateProvider,
-        (previous, next) {
-      if (next.data == null) {
-        _resetAll();
-      }
-    });
-    return const Router(tab: initialTab);
-  }
+  Router build() => const Router(tab: initialTab);
 
   Future changeIndex(BottomTab tab) async {
     state = state.copyWith(
@@ -89,7 +78,7 @@ class RouteState extends _$RouteState {
     }
   }
 
-  Future _resetAll() async {
+  Future resetAll() async {
     for (final tab in BottomTab.values) {
       await _reset(tab);
     }
