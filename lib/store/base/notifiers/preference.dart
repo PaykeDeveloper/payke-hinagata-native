@@ -25,7 +25,9 @@ mixin PreferenceMixin<S, P> implements _PreferenceState<S, P> {
 
   Future<bool?> remove() async {
     final result = await getPreference().remove();
-    state = const AsyncValue.data(null);
+    state = AsyncValue<S?>.data(null);
     return result;
   }
+
+  Future<bool?> containsKey() async => await getPreference().containsKey();
 }

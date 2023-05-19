@@ -18,18 +18,26 @@ abstract class Preference<T> {
 
   Future<bool> set(T value);
 
-  Future<bool?> remove() async {
+  Future<bool> containsKey() async {
     final pref = await getInstance();
-    if (!pref.containsKey(_key)) {
+    return pref.containsKey(_key);
+  }
+
+  Future<bool?> remove() async {
+    if (!await containsKey()) {
       return null;
     }
 
+    return removeOrThrow();
+  }
+
+  Future<bool> removeOrThrow() async {
+    final pref = await getInstance();
     return pref.remove(_key);
   }
 
   Future<T?> get({T? defaultValue}) async {
-    final pref = await getInstance();
-    if (!pref.containsKey(_key)) {
+    if (!await containsKey()) {
       return defaultValue;
     }
     return getOrThrow(defaultValue: defaultValue);
