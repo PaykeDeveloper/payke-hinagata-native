@@ -31,9 +31,7 @@ class DivisionListScreen extends ConsumerWidget {
     }
 
     Future setDivisionId(DivisionId divisionId) async {
-      await ref
-          .read(divisionIdStateProvider.notifier)
-          .setDivisionId(divisionId);
+      await ref.read(divisionIdStateProvider.notifier).set(divisionId);
     }
 
     final error = ref.watch(divisionsErrorSelector);

@@ -1,5 +1,6 @@
 import 'package:native_app/store/state/app/backend_client/notifier.dart';
 import 'package:native_app/store/state/app/backend_token/notifier.dart';
+import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/common/roles/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
@@ -22,8 +23,9 @@ class LogoutState extends _$LogoutState {
       path: '/api/v1/logout',
     );
 
-    ref.read(backendTokenStateProvider.notifier).removeToken();
-    ref.read(divisionIdStateProvider.notifier).reset();
+    ref.read(backendTokenStateProvider.notifier).remove();
+    ref.read(divisionIdStateProvider.notifier).remove();
+    ref.read(routeStateProvider.notifier).resetAll();
     ref.read(rolesStateProvider.notifier).resetAllIfNeeded();
     ref.read(usersStateProvider.notifier).resetAllIfNeeded();
     ref.read(divisionsStateProvider.notifier).resetAllIfNeeded();

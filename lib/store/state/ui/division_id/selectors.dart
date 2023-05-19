@@ -2,7 +2,7 @@
 import './notifier.dart';
 
 final divisionIdSelector =
-    divisionIdStateProvider.select((state) => state.data);
+    divisionIdStateProvider.select((state) => state.value);
 
-final divisionIdStateSelector =
-    divisionIdStateProvider.select((state) => state.status);
+final divisionIdHasValueSelector =
+    divisionIdStateProvider.select((state) => state.hasValue);

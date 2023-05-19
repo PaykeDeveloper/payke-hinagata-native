@@ -7,7 +7,6 @@ import 'package:native_app/store/state/domain/common/roles/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
 import 'package:native_app/store/state/domain/division/divisions/selectors.dart';
-import 'package:native_app/store/state/ui/division_id/notifier.dart';
 import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/screens/common/error.dart';
 import 'package:native_app/ui/screens/common/loading.dart';
@@ -21,7 +20,6 @@ class MainRouter extends HookConsumerWidget {
     ref.read(divisionsStateProvider.notifier).fetchEntitiesIfNeeded(url: null);
     ref.read(usersStateProvider.notifier).fetchEntitiesIfNeeded(url: null);
     ref.read(rolesStateProvider.notifier).fetchEntitiesIfNeeded(url: null);
-    ref.read(divisionIdStateProvider.notifier).initialize();
   }
 
   @override
@@ -34,12 +32,12 @@ class MainRouter extends HookConsumerWidget {
     }, []);
 
     final divisionId = ref.watch(divisionIdSelector);
-    final divisionIdStatus = ref.watch(divisionIdStateSelector);
+    final hasDivisionId = ref.watch(divisionIdHasValueSelector);
     final divisions = ref.watch(divisionsSelector);
     final divisionsStatus = ref.watch(divisionsStatusSelector);
     final divisionsError = ref.watch(divisionsErrorSelector);
 
-    if (divisionIdStatus != StateStatus.done || !divisionsStatus.isFinished) {
+    if (!hasDivisionId || !divisionsStatus.isFinished) {
       return const LoadingScreen();
     }
 

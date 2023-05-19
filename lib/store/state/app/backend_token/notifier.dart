@@ -1,5 +1,6 @@
-import 'package:native_app/base/preferences.dart';
-import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/base/preference.dart';
+import 'package:native_app/store/base/notifiers/preference.dart';
+import 'package:native_app/store/state/app/preference.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import './models/backend_token.dart';
@@ -7,27 +8,17 @@ import './models/backend_token.dart';
 part 'notifier.g.dart';
 
 @Riverpod(keepAlive: true)
-class BackendTokenState extends _$BackendTokenState {
+class BackendTokenState extends _$BackendTokenState
+    with PreferenceMixin<BackendToken, String> {
   @override
-  StoreState<BackendToken?> build() => const StoreState(null);
+  FutureOr<BackendToken?> build() async => buildDefault();
 
-  Future initialize() async {
-    state = state.copyWith(status: StateStatus.started);
+  @override
+  Preference<String> getPreference() => backendToken;
 
-    final value = await Preferences.backendToken.get();
-    final token = value != null ? BackendToken(value) : null;
-    state = state.copyWith(data: token, status: StateStatus.done);
-  }
+  @override
+  String serialize(BackendToken state) => state.value;
 
-  Future<bool> setToken(BackendToken token) async {
-    final result = await Preferences.backendToken.set(token.value);
-    state = state.copyWith(data: token, status: StateStatus.done);
-    return result;
-  }
-
-  Future<bool?> removeToken() async {
-    final result = await Preferences.backendToken.remove();
-    state = state.copyWith(data: null, status: StateStatus.done);
-    return result;
-  }
+  @override
+  BackendToken deserialize(String preference) => BackendToken(preference);
 }

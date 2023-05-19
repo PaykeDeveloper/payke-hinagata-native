@@ -1,13 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-// ignore: avoid_classes_with_only_static_members
-class Preferences {
-  static final backendToken = StringPreference('backendToken');
-  static final divisionId = IntPreference('divisionId');
-}
-
-abstract class _Property<T> {
-  _Property(this._key);
+abstract class Preference<T> {
+  Preference(this._key);
 
   final String _key;
   SharedPreferences? _pref;
@@ -24,18 +18,26 @@ abstract class _Property<T> {
 
   Future<bool> set(T value);
 
-  Future<bool?> remove() async {
+  Future<bool> containsKey() async {
     final pref = await getInstance();
-    if (!pref.containsKey(_key)) {
+    return pref.containsKey(_key);
+  }
+
+  Future<bool?> remove() async {
+    if (!await containsKey()) {
       return null;
     }
 
+    return removeOrThrow();
+  }
+
+  Future<bool> removeOrThrow() async {
+    final pref = await getInstance();
     return pref.remove(_key);
   }
 
   Future<T?> get({T? defaultValue}) async {
-    final pref = await getInstance();
-    if (!pref.containsKey(_key)) {
+    if (!await containsKey()) {
       return defaultValue;
     }
     return getOrThrow(defaultValue: defaultValue);
@@ -44,7 +46,7 @@ abstract class _Property<T> {
   Future<T> getOrThrow({T? defaultValue});
 }
 
-class BoolPreference extends _Property<bool> {
+class BoolPreference extends Preference<bool> {
   BoolPreference(String key) : super(key);
 
   @override
@@ -60,7 +62,7 @@ class BoolPreference extends _Property<bool> {
   }
 }
 
-class IntPreference extends _Property<int> {
+class IntPreference extends Preference<int> {
   IntPreference(String key) : super(key);
 
   @override
@@ -76,7 +78,7 @@ class IntPreference extends _Property<int> {
   }
 }
 
-class DoublePreference extends _Property<double> {
+class DoublePreference extends Preference<double> {
   DoublePreference(String key) : super(key);
 
   @override
@@ -92,7 +94,7 @@ class DoublePreference extends _Property<double> {
   }
 }
 
-class StringPreference extends _Property<String> {
+class StringPreference extends Preference<String> {
   StringPreference(String key) : super(key);
 
   @override
@@ -108,7 +110,7 @@ class StringPreference extends _Property<String> {
   }
 }
 
-class StringListPreference extends _Property<List<String>> {
+class StringListPreference extends Preference<List<String>> {
   StringListPreference(String key) : super(key);
 
   @override

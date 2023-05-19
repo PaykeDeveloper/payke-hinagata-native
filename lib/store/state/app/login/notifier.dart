@@ -40,9 +40,7 @@ class LoginState extends _$LoginState {
         data: input);
     if (result is Success<LoginOutput>) {
       state = state.copyWith(status: StateStatus.done, error: null);
-      await ref
-          .read(backendTokenStateProvider.notifier)
-          .setToken(result.data.token);
+      await ref.read(backendTokenStateProvider.notifier).set(result.data.token);
     } else if (result is Failure<LoginOutput>) {
       state = state.copyWith(status: StateStatus.failed, error: result.error);
     }
