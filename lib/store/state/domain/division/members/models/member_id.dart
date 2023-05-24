@@ -10,3 +10,13 @@ class MemberId with _$MemberId {
 
   factory MemberId.fromJson(dynamic value) => MemberId(value as int);
 }
+
+class MemberIdConverter implements JsonConverter<MemberId, int> {
+  const MemberIdConverter();
+
+  @override
+  MemberId fromJson(int json) => MemberId(json);
+
+  @override
+  int toJson(MemberId object) => object.value;
+}

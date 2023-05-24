@@ -10,3 +10,13 @@ class DivisionId with _$DivisionId {
 
   factory DivisionId.fromJson(dynamic value) => DivisionId(value as int);
 }
+
+class DivisionIdConverter implements JsonConverter<DivisionId, int> {
+  const DivisionIdConverter();
+
+  @override
+  DivisionId fromJson(int json) => DivisionId(json);
+
+  @override
+  int toJson(DivisionId object) => object.value;
+}
