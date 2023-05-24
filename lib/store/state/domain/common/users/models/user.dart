@@ -10,7 +10,7 @@ class User with _$User {
   const factory User({
     required UserId id,
     required String name,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
+    required DateTime createdAt,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

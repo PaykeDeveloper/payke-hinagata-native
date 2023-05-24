@@ -12,10 +12,10 @@ part 'member.g.dart';
 class Member with _$Member {
   const factory Member({
     required MemberId id,
-    @JsonKey(name: 'role_names') required List<String> roleNames,
-    @JsonKey(name: 'user_id') required UserId userId,
-    @JsonKey(name: 'division_id') required DivisionId divisionId,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
+    required List<String> roleNames,
+    required UserId userId,
+    required DivisionId divisionId,
+    required DateTime createdAt,
   }) = _Member;
 
   factory Member.fromJson(Map<String, dynamic> json) => _$MemberFromJson(json);

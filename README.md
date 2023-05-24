@@ -24,7 +24,7 @@ Android/iOSのエミュレーターを起動した状態で、
 
 ### freezedの生成ファイル作成
 ```shell script
-% flutter pub run build_runner build --delete-conflicting-outputs
+% dart run build_runner build --delete-conflicting-outputs
 ```
 
 ### Deep linking
