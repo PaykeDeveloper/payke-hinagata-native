@@ -7,7 +7,6 @@ import './project_id.dart';
 import './project_slug.dart';
 
 part 'project.freezed.dart';
-
 part 'project.g.dart';
 
 @freezed

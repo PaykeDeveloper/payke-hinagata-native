@@ -4,7 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import './division_id.dart';
 
 part 'division.freezed.dart';
-
 part 'division.g.dart';
 
 @freezed
