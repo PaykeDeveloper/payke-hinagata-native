@@ -7,6 +7,7 @@ import 'package:native_app/store/base/models/json_generator.dart';
 import './priority.dart';
 
 part 'project_input.freezed.dart';
+
 part 'project_input.g.dart';
 
 @freezed
@@ -16,13 +17,13 @@ class ProjectInput with _$ProjectInput implements JsonGenerator {
     String? description,
     Priority? priority,
     bool? approved,
-    @JsonKey(name: 'start_date') DateTime? startDate,
-    @JsonKey(name: 'finished_at') DateTime? finishedAt,
+    DateTime? startDate,
+    DateTime? finishedAt,
     int? difficulty,
     double? coefficient,
     double? productivity,
     @JsonKey(includeFromJson: false, includeToJson: false) File? cover,
-    @JsonKey(name: 'lock_version') int? lockVersion,
+    int? lockVersion,
   }) = _ProjectInput;
 
   factory ProjectInput.fromJson(Map<String, dynamic> json) =>
