@@ -82,7 +82,7 @@ class AuthRouter extends HookConsumerWidget {
 
     final locale = ref.watch(localeStateProvider);
     final token = ref.watch(backendTokenSelector);
-    final hasToken = ref.watch(backendTokenHasValueLoSelector);
+    final hasToken = ref.watch(backendTokenHasValueSelector);
 
     if (locale == null || !hasToken) {
       return const LoadingScreen();
