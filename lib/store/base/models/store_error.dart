@@ -31,15 +31,15 @@ class StoreError with _$StoreError {
 }
 
 StoreError getStateError(Exception exception) {
-  if (exception is DioError) {
+  if (exception is DioException) {
     switch (exception.type) {
-      case DioErrorType.connectionTimeout:
-      case DioErrorType.sendTimeout:
-      case DioErrorType.receiveTimeout:
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+      case DioExceptionType.receiveTimeout:
         return const StoreError.sendTimeout();
-      case DioErrorType.cancel:
+      case DioExceptionType.cancel:
         return const StoreError.requestCancelled();
-      case DioErrorType.badResponse:
+      case DioExceptionType.badResponse:
         final statusCode = exception.response?.statusCode;
         if (statusCode == null) {
           break;
@@ -57,11 +57,11 @@ StoreError getStateError(Exception exception) {
           return StoreError.serviceUnavailable(ErrorResult.fromJson(json));
         }
         break;
-      case DioErrorType.connectionError:
+      case DioExceptionType.connectionError:
         return const StoreError.noInternetConnection();
-      case DioErrorType.badCertificate:
+      case DioExceptionType.badCertificate:
         return const StoreError.unauthorisedRequest(null);
-      case DioErrorType.unknown:
+      case DioExceptionType.unknown:
         if (exception.error is SocketException) {
           return const StoreError.serviceUnavailable(null);
         }

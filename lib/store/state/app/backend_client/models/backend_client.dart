@@ -7,8 +7,8 @@ import 'package:native_app/store/base/models/backend_client.dart' as i;
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
+import 'package:native_app/store/base/utils.dart';
 import 'package:native_app/store/state/app/backend_token/models/backend_token.dart';
-import 'package:native_app/ui/utils.dart';
 
 class BackendClient implements i.BackendClient {
   final _client = getIt<ApiClient>(param1: backendBaseUrl);

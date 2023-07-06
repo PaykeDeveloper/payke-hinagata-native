@@ -1,6 +1,7 @@
 import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
-import 'package:native_app/base/constants.dart';
+
+import './constants.dart';
 
 abstract class ApiClient {
   Future<Response<Result>> get<Result>({
