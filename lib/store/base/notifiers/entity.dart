@@ -1,13 +1,16 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+// ignore_for_file: invalid_use_of_internal_member
 import 'package:native_app/store/base/models/backend_client.dart';
 import 'package:native_app/store/base/models/entity_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 
+// ignore: implementation_imports,depend_on_referenced_packages
+import 'package:riverpod/src/notifier.dart';
+
 abstract class _EntityState<Entity, EntityUrl,
         EntityQuery extends JsonGenerator>
-    extends Notifier<EntityState<Entity, EntityUrl, EntityQuery>> {
+    extends NotifierBase<EntityState<Entity, EntityUrl, EntityQuery>> {
   BackendClient getBackendClient();
 
   String getEntityUrl(EntityUrl url);
