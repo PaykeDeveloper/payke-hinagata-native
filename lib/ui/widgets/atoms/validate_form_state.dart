@@ -41,10 +41,10 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
   }
 
   void _reflectResult(StoreResult result) {
-    final error = result.map(
-      success: (_) => null,
-      failure: (result) => result.error,
-    );
+    final error = switch (result) {
+      Success() => null,
+      Failure(error: final error) => error,
+    };
     _setError(error);
     formKey.currentState?.validate();
   }
@@ -69,10 +69,10 @@ abstract class ValidateFormState<T extends StatefulWidget> extends State<T> {
   }
 
   Map<String, List<String>>? _getErrors(StoreError error) {
-    if (error is BadRequest) {
-      return error.result.errors;
-    }
-    return null;
+    return switch (error) {
+      BadRequest(result: final result) => result.errors,
+      _ => null,
+    };
   }
 
   void _setLoading(bool value) {

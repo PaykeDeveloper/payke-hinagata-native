@@ -1,8 +1,10 @@
 // FIXME: SAMPLE CODE
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
+import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/divisions/notifier.dart';
@@ -15,33 +17,62 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 import './add.dart';
 import './edit.dart';
 
-class DivisionListScreen extends ConsumerWidget {
+class DivisionListScreen extends HookConsumerWidget {
   const DivisionListScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future initState() async {
+    final initState = useCallback(() async {
       await ref
           .read(divisionsStateProvider.notifier)
           .fetchEntitiesIfNeeded(url: null, reset: true);
-    }
+    }, []);
 
-    Future onRefresh() async {
+    useEffect(() {
+      Future.delayed(Duration.zero, initState);
+      return null;
+    }, [initState]);
+
+    final onRefresh = useCallback(() async {
+      await ref
+          .read(divisionsStateProvider.notifier)
+          .fetchEntities(url: null, silent: true);
+    }, []);
+
+    final onBack = useCallback(() async {
       await ref.read(divisionsStateProvider.notifier).fetchEntities(url: null);
-    }
+    }, []);
+    final onPressedNew = useCallback(
+        () => Navigator.of(context)
+            .push(MaterialPageRoute(
+                builder: (context) => const DivisionAddScreen()))
+            .then((value) => onBack()),
+        [onBack]);
 
-    Future setDivisionId(DivisionId divisionId) async {
+    final onPressedEdit = useCallback((DivisionId divisionId) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(
+              builder: (context) => DivisionEditScreen(divisionId: divisionId)))
+          .then((value) => onBack());
+    }, [onBack]);
+
+    final onTapSelect = useCallback((DivisionId divisionId) async {
       await ref.read(divisionIdStateProvider.notifier).set(divisionId);
-    }
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }, []);
 
+    final status = ref.watch(divisionsStatusSelector);
     final error = ref.watch(divisionsErrorSelector);
     final divisions = ref.watch(divisionsSelector);
     final selectedId = ref.watch(divisionIdSelector);
 
-    return DivisionList(
-      initState: initState,
+    return _DivisionList(
+      onPressedReload: initState,
       onRefresh: onRefresh,
-      setDivisionId: setDivisionId,
+      onPressedNew: onPressedNew,
+      onPressedEdit: onPressedEdit,
+      onTapSelect: onTapSelect,
+      status: status,
       error: error,
       divisions: divisions,
       selectedId: selectedId,
@@ -49,99 +80,55 @@ class DivisionListScreen extends ConsumerWidget {
   }
 }
 
-class DivisionList extends StatefulWidget {
-  const DivisionList({
-    super.key,
-    required Function0<Future> initState,
-    required Function0<Future> onRefresh,
-    required Function1<DivisionId, Future> setDivisionId,
-    required StoreError? error,
-    required List<Division> divisions,
-    required DivisionId? selectedId,
-  })  : _initState = initState,
-        _onRefresh = onRefresh,
-        _setDivisionId = setDivisionId,
-        _error = error,
-        _divisions = divisions,
-        _selectedId = selectedId;
+class _DivisionList extends StatelessWidget {
+  const _DivisionList({
+    required this.onPressedReload,
+    required this.onRefresh,
+    required this.onPressedNew,
+    required this.onPressedEdit,
+    required this.onTapSelect,
+    required this.status,
+    required this.error,
+    required this.divisions,
+    required this.selectedId,
+  });
 
-  final Function0<Future> _initState;
-  final Function0<Future> _onRefresh;
-  final Function1<DivisionId, Future> _setDivisionId;
-  final StoreError? _error;
-  final List<Division> _divisions;
-  final DivisionId? _selectedId;
-
-  @override
-  State<DivisionList> createState() => _DivisionListState();
-}
-
-class _DivisionListState extends State<DivisionList> {
-  bool _loading = false;
-
-  Future _initState() async {
-    setState(() {
-      _loading = true;
-    });
-    await widget._initState();
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  void _onPressedNew() {
-    Navigator.of(context)
-        .push(
-            MaterialPageRoute(builder: (context) => const DivisionAddScreen()))
-        .then((value) => _initState());
-  }
-
-  Future _onTapSelect(DivisionId divisionId) async {
-    await widget._setDivisionId(divisionId);
-    Navigator.of(context).popUntil((route) => route.isFirst);
-  }
-
-  void _onPressedEdit(DivisionId divisionId) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(
-            builder: (context) => DivisionEditScreen(divisionId: divisionId)))
-        .then((value) => _initState());
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      _initState();
-    });
-  }
+  final VoidCallback onPressedReload;
+  final Function0<Future> onRefresh;
+  final VoidCallback onPressedNew;
+  final Function1<DivisionId, void> onPressedEdit;
+  final Function1<DivisionId, void> onTapSelect;
+  final StateStatus status;
+  final StoreError? error;
+  final List<Division> divisions;
+  final DivisionId? selectedId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Divisions')),
       floatingActionButton: FloatingActionButton(
-        onPressed: _onPressedNew,
+        onPressed: onPressedNew,
         child: const Icon(Icons.add),
       ),
       body: ErrorWrapper(
-        error: widget._error,
-        onPressedReload: _initState,
+        error: error,
+        onPressedReload: onPressedReload,
         child: Loader(
-          loading: _loading,
+          status: status,
           child: RefreshIndicator(
-            onRefresh: widget._onRefresh,
+            onRefresh: onRefresh,
             child: ListView.builder(
               padding: const EdgeInsets.only(bottom: 60),
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: widget._divisions.length,
+              itemCount: divisions.length,
               itemBuilder: (context, index) {
-                final division = widget._divisions[index];
+                final division = divisions[index];
                 return _ListItem(
                   division: division,
-                  onTapItem: () => _onTapSelect(division.id),
-                  onPressedEdit: () => _onPressedEdit(division.id),
-                  selected: division.id == widget._selectedId,
+                  onTapItem: () => onTapSelect(division.id),
+                  onPressedEdit: () => onPressedEdit(division.id),
+                  selected: division.id == selectedId,
                 );
               },
             ),

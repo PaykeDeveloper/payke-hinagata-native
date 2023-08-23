@@ -1,5 +1,6 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_state.dart';
@@ -36,7 +37,7 @@ class ProjectDetailPage extends Page {
   }
 }
 
-class ProjectDetailScreen extends ConsumerWidget {
+class ProjectDetailScreen extends HookConsumerWidget {
   const ProjectDetailScreen({
     super.key,
     required DivisionId divisionId,
@@ -48,13 +49,17 @@ class ProjectDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void initState() {
-      ref.read(projectsStateProvider.notifier).fetchEntityIfNeeded(
-          url: ProjectUrl(divisionId: _divisionId, slug: _projectSlug),
-          reset: true);
-    }
+    final initState = useCallback(() {
+      ref.read(projectsStateProvider(_divisionId).notifier).fetchEntityIfNeeded(
+          url: ProjectUrl(slug: _projectSlug), reset: true);
+    }, [_divisionId, _projectSlug]);
 
-    void onPressedEdit() {
+    useEffect(() {
+      Future.delayed(Duration.zero, initState);
+      return null;
+    }, [initState]);
+
+    final onPressedEdit = useCallback(() {
       ref.read(routeStateProvider.notifier).push(
             BottomTab.projects,
             ProjectEditParams(
@@ -62,13 +67,13 @@ class ProjectDetailScreen extends ConsumerWidget {
               projectSlug: _projectSlug,
             ),
           );
-    }
+    }, [_divisionId, _projectSlug]);
 
-    final status = ref.watch(projectStatusSelector);
-    final error = ref.watch(projectErrorSelector);
-    final project = ref.watch(projectSelector);
-    return ProjectDetail(
-      initState: initState,
+    final status = ref.watch(projectStatusSelector(_divisionId));
+    final error = ref.watch(projectErrorSelector(_divisionId));
+    final project = ref.watch(projectSelector(_divisionId));
+    return _ProjectDetail(
+      onPressedReload: initState,
       onPressedEdit: onPressedEdit,
       status: status,
       error: error,
@@ -77,37 +82,20 @@ class ProjectDetailScreen extends ConsumerWidget {
   }
 }
 
-class ProjectDetail extends StatefulWidget {
-  const ProjectDetail({
-    super.key,
-    required VoidCallback initState,
-    required VoidCallback onPressedEdit,
-    required StateStatus status,
-    required StoreError? error,
-    required Project? project,
-  })  : _initState = initState,
-        _onPressedEdit = onPressedEdit,
-        _status = status,
-        _error = error,
-        _project = project;
-  final VoidCallback _initState;
-  final VoidCallback _onPressedEdit;
-  final StateStatus _status;
-  final StoreError? _error;
-  final Project? _project;
+class _ProjectDetail extends StatelessWidget {
+  const _ProjectDetail({
+    required this.onPressedReload,
+    required this.onPressedEdit,
+    required this.status,
+    required this.error,
+    required this.project,
+  });
 
-  @override
-  State<ProjectDetail> createState() => _ProjectDetailState();
-}
-
-class _ProjectDetailState extends State<ProjectDetail> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      widget._initState();
-    });
-  }
+  final VoidCallback onPressedReload;
+  final VoidCallback onPressedEdit;
+  final StateStatus status;
+  final StoreError? error;
+  final Project? project;
 
   @override
   Widget build(BuildContext context) {
@@ -118,17 +106,17 @@ class _ProjectDetailState extends State<ProjectDetail> {
           IconButton(
             icon: const Icon(Icons.edit),
             tooltip: 'Edit project',
-            onPressed: widget._project == null ? null : widget._onPressedEdit,
+            onPressed: project == null ? null : onPressedEdit,
           ),
         ],
       ),
       body: ErrorWrapper(
-        error: widget._error,
-        onPressedReload: widget._initState,
+        error: error,
+        onPressedReload: onPressedReload,
         child: Loader(
-          status: widget._status,
+          status: status,
           child: Center(
-            child: Text('Name: ${widget._project?.name}'),
+            child: Text('Name: ${project?.name}'),
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -38,7 +39,7 @@ class ProjectEditPage extends Page {
   }
 }
 
-class ProjectEditScreen extends ConsumerWidget {
+class ProjectEditScreen extends HookConsumerWidget {
   const ProjectEditScreen({
     super.key,
     required DivisionId divisionId,
@@ -50,41 +51,55 @@ class ProjectEditScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final projectUrl = ProjectUrl(divisionId: _divisionId, slug: _projectSlug);
-    Future<StoreResult?> onSubmit(Map<String, dynamic> input) async {
-      final result = await ref
-          .read(projectsStateProvider.notifier)
-          .merge(urlParams: projectUrl, data: input, useFormData: true);
-      if (result is Success) {
-        Navigator.of(context).pop();
+    final initState = useCallback(() {
+      ref.read(projectsStateProvider(_divisionId).notifier).fetchEntityIfNeeded(
+            url: ProjectUrl(slug: _projectSlug),
+            reset: true,
+          );
+    }, [_divisionId, _projectSlug]);
+
+    useEffect(() {
+      Future.delayed(Duration.zero, initState);
+      return null;
+    }, [initState]);
+
+    final onSubmit = useCallback<_OnSubmit>((input) async {
+      final result =
+          await ref.read(projectsStateProvider(_divisionId).notifier).merge(
+                urlParams: ProjectUrl(slug: _projectSlug),
+                data: input,
+                useFormData: true,
+              );
+      switch (result) {
+        case Success():
+          Navigator.of(context).pop();
+        case Failure():
+          break;
       }
       return result;
-    }
+    }, [_divisionId, _projectSlug]);
 
-    void initState() {
-      ref
-          .read(projectsStateProvider.notifier)
-          .fetchEntityIfNeeded(url: projectUrl, reset: true);
-    }
-
-    Future onPressedDelete() async {
+    final onPressedDelete = useCallback(() async {
       final result = await ref
-          .read(projectsStateProvider.notifier)
-          .deleteEntity(urlParams: projectUrl);
-      if (result is Success) {
-        await ref
-            .read(routeStateProvider.notifier)
-            .replace(BottomTab.projects, []);
+          .read(projectsStateProvider(_divisionId).notifier)
+          .deleteEntity(urlParams: ProjectUrl(slug: _projectSlug));
+      switch (result) {
+        case Success():
+          await ref
+              .read(routeStateProvider.notifier)
+              .replace(BottomTab.projects, []);
+        case Failure():
+          break;
       }
-    }
+    }, [_divisionId, _projectSlug]);
 
-    final status = ref.watch(projectStatusSelector);
-    final error = ref.watch(projectErrorSelector);
-    final project = ref.watch(projectSelector);
+    final status = ref.watch(projectStatusSelector(_divisionId));
+    final error = ref.watch(projectErrorSelector(_divisionId));
+    final project = ref.watch(projectSelector(_divisionId));
 
-    return ProjectEdit(
+    return _ProjectEdit(
       onSubmit: onSubmit,
-      initState: initState,
+      onPressedReload: initState,
       onPressedDelete: onPressedDelete,
       status: status,
       error: error,
@@ -93,42 +108,24 @@ class ProjectEditScreen extends ConsumerWidget {
   }
 }
 
-typedef OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
+typedef _OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
-class ProjectEdit extends StatefulWidget {
-  const ProjectEdit({
-    super.key,
-    required OnSubmit onSubmit,
-    required VoidCallback initState,
-    required VoidCallback onPressedDelete,
-    required StateStatus status,
-    required StoreError? error,
-    required Project? project,
-  })  : _onSubmit = onSubmit,
-        _initState = initState,
-        _onPressedDelete = onPressedDelete,
-        _status = status,
-        _error = error,
-        _project = project;
-  final OnSubmit _onSubmit;
-  final VoidCallback _initState;
-  final VoidCallback _onPressedDelete;
-  final StateStatus _status;
-  final StoreError? _error;
-  final Project? _project;
+class _ProjectEdit extends StatelessWidget {
+  const _ProjectEdit({
+    required this.onSubmit,
+    required this.onPressedReload,
+    required this.onPressedDelete,
+    required this.status,
+    required this.error,
+    required this.project,
+  });
 
-  @override
-  State<ProjectEdit> createState() => _ProjectEditState();
-}
-
-class _ProjectEditState extends State<ProjectEdit> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      widget._initState();
-    });
-  }
+  final _OnSubmit onSubmit;
+  final VoidCallback onPressedReload;
+  final VoidCallback onPressedDelete;
+  final StateStatus status;
+  final StoreError? error;
+  final Project? project;
 
   @override
   Widget build(BuildContext context) {
@@ -139,19 +136,19 @@ class _ProjectEditState extends State<ProjectEdit> {
           IconButton(
             icon: const Icon(Icons.delete),
             tooltip: 'Delete project',
-            onPressed: widget._project == null ? null : widget._onPressedDelete,
+            onPressed: project == null ? null : onPressedDelete,
           ),
         ],
       ),
       body: ErrorWrapper(
-        error: widget._error,
-        onPressedReload: widget._initState,
+        error: error,
+        onPressedReload: onPressedReload,
         child: Loader(
-          status: widget._status,
+          status: status,
           child: ProjectForm(
-            project: widget._project,
-            status: widget._status,
-            onSubmit: widget._onSubmit,
+            project: project,
+            status: status,
+            onSubmit: onSubmit,
           ),
         ),
       ),

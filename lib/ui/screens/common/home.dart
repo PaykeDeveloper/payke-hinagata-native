@@ -34,29 +34,22 @@ class HomeScreen extends ConsumerWidget {
       await notifier.replace(BottomTab.projects, []);
     }
 
-    return Home(
+    return _Home(
       openDrawer: _openDrawer,
       onPressedProjectList: onPressedProjectList,
     );
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({
-    super.key,
-    required VoidCallback openDrawer,
-    required Function0<Future> onPressedProjectList,
-  })  : _openDrawer = openDrawer,
-        _onPressedProjectList = onPressedProjectList;
+class _Home extends StatelessWidget {
+  const _Home({
+    required this.openDrawer,
+    required this.onPressedProjectList,
+  });
 
-  final VoidCallback _openDrawer;
-  final Function0<Future> _onPressedProjectList;
+  final VoidCallback openDrawer;
+  final Function0<Future> onPressedProjectList;
 
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +57,7 @@ class _HomeState extends State<Home> {
         title: const Text('Home'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget._openDrawer,
+          onPressed: openDrawer,
         ),
       ),
       body: Center(
@@ -72,7 +65,7 @@ class _HomeState extends State<Home> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: widget._onPressedProjectList,
+              onPressed: onPressedProjectList,
               child: const Text('Project list'),
             ),
           ],

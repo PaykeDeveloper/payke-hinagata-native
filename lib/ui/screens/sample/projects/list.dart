@@ -1,15 +1,14 @@
 // FIXME: SAMPLE CODE
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/projects_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
 import 'package:native_app/ui/navigation/params/projects/add.dart';
@@ -39,7 +38,7 @@ class ProjectListPage extends Page {
   }
 }
 
-class ProjectListScreen extends ConsumerWidget {
+class ProjectListScreen extends HookConsumerWidget {
   const ProjectListScreen({
     super.key,
     required DivisionId divisionId,
@@ -51,36 +50,30 @@ class ProjectListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future initState() async {
-      await ref.read(projectsStateProvider.notifier).fetchEntitiesIfNeeded(
-            url: ProjectsUrl(divisionId: _divisionId),
-            reset: true,
-          );
-    }
-
-    Future onRefresh() async {
+    final initState = useCallback(() async {
       await ref
-          .read(projectsStateProvider.notifier)
-          .fetchEntities(url: ProjectsUrl(divisionId: _divisionId));
-    }
+          .read(projectsStateProvider(_divisionId).notifier)
+          .fetchEntitiesIfNeeded(url: null, reset: true);
+    }, [_divisionId]);
 
-    void onPressedNew() {
+    useEffect(() {
+      Future.delayed(Duration.zero, initState);
+      return null;
+    }, [initState]);
+
+    final onRefresh = useCallback(() async {
+      await ref
+          .read(projectsStateProvider(_divisionId).notifier)
+          .fetchEntities(url: null, silent: true);
+    }, [_divisionId]);
+
+    final onPressedNew = useCallback(() {
       ref
           .read(routeStateProvider.notifier)
           .push(BottomTab.projects, ProjectAddParams(divisionId: _divisionId));
-    }
+    }, [_divisionId]);
 
-    void onTapShow(ProjectSlug projectSlug) {
-      ref.read(routeStateProvider.notifier).push(
-            BottomTab.projects,
-            ProjectDetailParams(
-              divisionId: _divisionId,
-              projectSlug: projectSlug,
-            ),
-          );
-    }
-
-    void onPressedEdit(ProjectSlug projectSlug) {
+    final onPressedEdit = useCallback((ProjectSlug projectSlug) {
       ref.read(routeStateProvider.notifier).push(
             BottomTab.projects,
             ProjectEditParams(
@@ -88,90 +81,54 @@ class ProjectListScreen extends ConsumerWidget {
               projectSlug: projectSlug,
             ),
           );
-    }
+    }, [_divisionId]);
 
-    bool checkRouteEmpty() => ref.read(projectParamsListSelector).isEmpty;
+    final onTapShow = useCallback((ProjectSlug projectSlug) {
+      ref.read(routeStateProvider.notifier).push(
+            BottomTab.projects,
+            ProjectDetailParams(
+              divisionId: _divisionId,
+              projectSlug: projectSlug,
+            ),
+          );
+    }, [_divisionId]);
 
-    final error = ref.watch(projectsErrorSelector);
-    final projects = ref.watch(projectsSelector);
+    final error = ref.watch(projectsErrorSelector(_divisionId));
+    final projects = ref.watch(projectsSelector(_divisionId));
 
-    return ProjectList(
+    return _ProjectList(
       openDrawer: _openDrawer,
-      initState: initState,
+      onPressedReload: initState,
       onRefresh: onRefresh,
       onPressedNew: onPressedNew,
-      onTapShow: onTapShow,
       onPressedEdit: onPressedEdit,
-      checkRouteEmpty: checkRouteEmpty,
+      onTapShow: onTapShow,
       error: error,
       projects: projects,
     );
   }
 }
 
-class ProjectList extends StatefulWidget {
-  const ProjectList({
-    super.key,
-    required VoidCallback openDrawer,
-    required Function0<Future> initState,
-    required Function0<Future> onRefresh,
-    required VoidCallback onPressedNew,
-    required Function1<ProjectSlug, void> onTapShow,
-    required Function1<ProjectSlug, void> onPressedEdit,
-    required Function0<bool> checkRouteEmpty,
-    required StoreError? error,
-    required List<Project> projects,
-  })  : _openDrawer = openDrawer,
-        _initState = initState,
-        _onRefresh = onRefresh,
-        _onPressedNew = onPressedNew,
-        _onTapShow = onTapShow,
-        _onPressedEdit = onPressedEdit,
-        _checkRouteEmpty = checkRouteEmpty,
-        _error = error,
-        _projects = projects;
-  final VoidCallback _openDrawer;
-  final Function0<Future> _initState;
-  final Function0<Future> _onRefresh;
-  final VoidCallback _onPressedNew;
-  final Function1<ProjectSlug, void> _onTapShow;
-  final Function1<ProjectSlug, void> _onPressedEdit;
-  final Function0<bool> _checkRouteEmpty;
-  final StoreError? _error;
-  final List<Project> _projects;
+class _ProjectList extends StatelessWidget {
+  const _ProjectList({
+    required this.openDrawer,
+    required this.onPressedReload,
+    required this.onRefresh,
+    required this.onPressedNew,
+    required this.onPressedEdit,
+    required this.onTapShow,
+    required this.error,
+    required this.projects,
+  });
 
-  @override
-  State<ProjectList> createState() => _ProjectListState();
-}
-
-class _ProjectListState extends State<ProjectList> {
-  bool _loading = false;
-
-  Future _initState() async {
-    setState(() {
-      _loading = true;
-    });
-    await widget._initState();
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      _initState();
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant ProjectList oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget._checkRouteEmpty()) {
-      _initState();
-    }
-  }
+  final VoidCallback openDrawer;
+  final Function0<Future> onPressedReload;
+  final Function0<Future> onRefresh;
+  final VoidCallback onPressedNew;
+  final Function1<ProjectSlug, void> onPressedEdit;
+  final Function1<ProjectSlug, void> onTapShow;
+  final StoreError? error;
+  final List<Project> projects;
 
   @override
   Widget build(BuildContext context) {
@@ -180,30 +137,30 @@ class _ProjectListState extends State<ProjectList> {
         title: const Text('Projects'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget._openDrawer,
+          onPressed: openDrawer,
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: widget._onPressedNew,
+        onPressed: onPressedNew,
         child: const Icon(Icons.add),
       ),
       body: ErrorWrapper(
-        error: widget._error,
-        onPressedReload: _initState,
+        error: error,
+        onPressedReload: onPressedReload,
         child: Loader(
-          loading: _loading,
+          loading: false,
           child: RefreshIndicator(
-            onRefresh: widget._onRefresh,
+            onRefresh: onRefresh,
             child: ListView.builder(
               padding: const EdgeInsets.only(bottom: 60),
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: widget._projects.length,
+              itemCount: projects.length,
               itemBuilder: (context, index) {
-                final project = widget._projects[index];
+                final project = projects[index];
                 return _ListItem(
                   project: project,
-                  onTapItem: () => widget._onTapShow(project.slug),
-                  onPressedEdit: () => widget._onPressedEdit(project.slug),
+                  onTapItem: () => onTapShow(project.slug),
+                  onPressedEdit: () => onPressedEdit(project.slug),
                 );
               },
             ),

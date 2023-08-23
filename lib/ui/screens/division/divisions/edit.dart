@@ -1,6 +1,7 @@
 // FIXME: SAMPLE CODE
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -17,45 +18,56 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 
 import './widgets/form.dart';
 
-class DivisionEditScreen extends ConsumerWidget {
+class DivisionEditScreen extends HookConsumerWidget {
   const DivisionEditScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void initState() {
+    final initState = useCallback(() {
       ref
           .read(divisionsStateProvider.notifier)
           .fetchEntityIfNeeded(url: DivisionUrl(id: _divisionId), reset: true);
-    }
+    }, [_divisionId]);
 
-    Future<StoreResult?> onSubmit(DivisionInput input) async {
+    useEffect(() {
+      Future.delayed(Duration.zero, initState);
+      return null;
+    }, [initState]);
+
+    final onSubmit = useCallback((DivisionInput input) async {
       final result = await ref
           .read(divisionsStateProvider.notifier)
           .mergeEntity(urlParams: DivisionUrl(id: _divisionId), data: input);
-      if (result is Success) {
-        Navigator.of(context).pop();
+      switch (result) {
+        case Success():
+          Navigator.of(context).pop();
+        case Failure():
+          break;
       }
       return result;
-    }
+    }, [_divisionId]);
 
-    Future onPressedDelete() async {
+    final onPressedDelete = useCallback(() async {
       final result = await ref
           .read(divisionsStateProvider.notifier)
           .deleteEntity(urlParams: DivisionUrl(id: _divisionId));
-      if (result is Success) {
-        Navigator.of(context).pop();
+      switch (result) {
+        case Success():
+          Navigator.of(context).pop();
+        case Failure():
+          break;
       }
-    }
+    }, [_divisionId]);
 
     final status = ref.watch(divisionStatusSelector);
     final error = ref.watch(divisionErrorSelector);
     final division = ref.watch(divisionSelector);
     final selectedId = ref.watch(divisionIdSelector);
 
-    return DivisionEdit(
-      initState: initState,
+    return _DivisionEdit(
+      onPressedReload: initState,
       onSubmit: onSubmit,
       onPressedDelete: onPressedDelete,
       status: status,
@@ -66,45 +78,26 @@ class DivisionEditScreen extends ConsumerWidget {
   }
 }
 
-typedef OnSubmit = Future<StoreResult?> Function(DivisionInput input);
+typedef _OnSubmit = Future<StoreResult?> Function(DivisionInput input);
 
-class DivisionEdit extends StatefulWidget {
-  const DivisionEdit({
-    super.key,
-    required VoidCallback initState,
-    required OnSubmit onSubmit,
-    required Function0<Future> onPressedDelete,
-    required StateStatus status,
-    required StoreError? error,
-    required Division? division,
-    required DivisionId? selectedId,
-  })  : _initState = initState,
-        _onSubmit = onSubmit,
-        _onPressedDelete = onPressedDelete,
-        _status = status,
-        _error = error,
-        _division = division,
-        _selectedId = selectedId;
-  final VoidCallback _initState;
-  final OnSubmit _onSubmit;
-  final Function0<Future> _onPressedDelete;
-  final StateStatus _status;
-  final StoreError? _error;
-  final Division? _division;
-  final DivisionId? _selectedId;
+class _DivisionEdit extends StatelessWidget {
+  const _DivisionEdit({
+    required this.onPressedReload,
+    required this.onSubmit,
+    required this.onPressedDelete,
+    required this.status,
+    required this.error,
+    required this.division,
+    required this.selectedId,
+  });
 
-  @override
-  State<DivisionEdit> createState() => _DivisionEditState();
-}
-
-class _DivisionEditState extends State<DivisionEdit> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      widget._initState();
-    });
-  }
+  final VoidCallback onPressedReload;
+  final _OnSubmit onSubmit;
+  final Function0<Future> onPressedDelete;
+  final StateStatus status;
+  final StoreError? error;
+  final Division? division;
+  final DivisionId? selectedId;
 
   @override
   Widget build(BuildContext context) {
@@ -112,24 +105,23 @@ class _DivisionEditState extends State<DivisionEdit> {
       appBar: AppBar(
         title: const Text('Edit division'),
         actions: [
-          if (widget._division?.id != widget._selectedId)
+          if (division?.id != selectedId)
             IconButton(
               icon: const Icon(Icons.delete),
               tooltip: 'Delete division',
-              onPressed:
-                  widget._division != null ? widget._onPressedDelete : null,
+              onPressed: division != null ? onPressedDelete : null,
             ),
         ],
       ),
       body: ErrorWrapper(
-        error: widget._error,
-        onPressedReload: widget._initState,
+        error: error,
+        onPressedReload: onPressedReload,
         child: Loader(
-          status: widget._status,
+          status: status,
           child: DivisionForm(
-            division: widget._division,
-            status: widget._status,
-            onSubmit: widget._onSubmit,
+            division: division,
+            status: status,
+            onSubmit: onSubmit,
           ),
         ),
       ),

@@ -172,10 +172,18 @@ class BackendClient implements i.BackendClient {
       return StoreResult.success(decode(data));
     } catch (error, stackTrace) {
       if (error is Exception) {
-        logger.w('An exception occurred!', error, stackTrace);
+        logger.w(
+          'An exception occurred!',
+          error: error,
+          stackTrace: stackTrace,
+        );
         return StoreResult.failure(getStateError(error));
       } else {
-        logger.e('An unexpected error occurred!', error, stackTrace);
+        logger.e(
+          'An unexpected error occurred!',
+          error: error,
+          stackTrace: stackTrace,
+        );
         return const StoreResult.failure(StoreError.unexpectedError());
       }
     }

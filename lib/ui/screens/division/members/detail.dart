@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_state.dart';
@@ -35,7 +36,7 @@ class MemberDetailPage extends Page {
   }
 }
 
-class MemberDetailScreen extends ConsumerWidget {
+class MemberDetailScreen extends HookConsumerWidget {
   const MemberDetailScreen({
     super.key,
     required DivisionId divisionId,
@@ -47,24 +48,30 @@ class MemberDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void initState() {
-      ref.read(membersStateProvider.notifier).fetchEntityIfNeeded(
-          url: MemberUrl(divisionId: _divisionId, id: _memberId), reset: true);
-    }
+    final initState = useCallback(() {
+      ref
+          .read(membersStateProvider.call(_divisionId).notifier)
+          .fetchEntityIfNeeded(url: MemberUrl(id: _memberId), reset: true);
+    }, [_divisionId, _memberId]);
 
-    void onPressedEdit() {
+    useEffect(() {
+      Future.delayed(Duration.zero, initState);
+      return null;
+    }, [initState]);
+
+    final onPressedEdit = useCallback(() {
       ref.read(routeStateProvider.notifier).push(
             BottomTab.members,
             MemberEditParams(divisionId: _divisionId, memberId: _memberId),
           );
-    }
+    }, [_divisionId, _memberId]);
 
-    final status = ref.watch(memberStatusSelector);
-    final error = ref.watch(memberErrorSelector);
-    final member = ref.watch(memberSelector);
+    final status = ref.watch(memberStatusSelector(_divisionId));
+    final error = ref.watch(memberErrorSelector(_divisionId));
+    final member = ref.watch(memberSelector(_divisionId));
 
-    return MemberDetail(
-      initState: initState,
+    return _MemberDetail(
+      onPressedReload: initState,
       onPressedEdit: onPressedEdit,
       status: status,
       error: error,
@@ -73,37 +80,20 @@ class MemberDetailScreen extends ConsumerWidget {
   }
 }
 
-class MemberDetail extends StatefulWidget {
-  const MemberDetail({
-    super.key,
-    required VoidCallback initState,
-    required VoidCallback onPressedEdit,
-    required StateStatus status,
-    required StoreError? error,
-    required Member? member,
-  })  : _initState = initState,
-        _onPressedEdit = onPressedEdit,
-        _status = status,
-        _error = error,
-        _member = member;
-  final VoidCallback _initState;
-  final VoidCallback _onPressedEdit;
-  final StateStatus _status;
-  final StoreError? _error;
-  final Member? _member;
+class _MemberDetail extends StatelessWidget {
+  const _MemberDetail({
+    required this.onPressedReload,
+    required this.onPressedEdit,
+    required this.status,
+    required this.error,
+    required this.member,
+  });
 
-  @override
-  State<MemberDetail> createState() => _MemberDetailState();
-}
-
-class _MemberDetailState extends State<MemberDetail> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      widget._initState();
-    });
-  }
+  final VoidCallback onPressedReload;
+  final VoidCallback onPressedEdit;
+  final StateStatus status;
+  final StoreError? error;
+  final Member? member;
 
   @override
   Widget build(BuildContext context) {
@@ -114,17 +104,17 @@ class _MemberDetailState extends State<MemberDetail> {
           IconButton(
             icon: const Icon(Icons.edit),
             tooltip: 'Edit member',
-            onPressed: widget._member == null ? null : widget._onPressedEdit,
+            onPressed: member == null ? null : onPressedEdit,
           ),
         ],
       ),
       body: ErrorWrapper(
-        error: widget._error,
-        onPressedReload: widget._initState,
+        error: error,
+        onPressedReload: onPressedReload,
         child: Loader(
-          status: widget._status,
+          status: status,
           child: Center(
-            child: Text('Name: ${widget._member?.id.value}'),
+            child: Text('Name: ${member?.id.value}'),
           ),
         ),
       ),

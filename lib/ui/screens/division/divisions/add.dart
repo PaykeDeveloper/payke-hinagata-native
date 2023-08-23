@@ -1,5 +1,6 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -12,24 +13,27 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 
 import './widgets/form.dart';
 
-class DivisionAddScreen extends ConsumerWidget {
+class DivisionAddScreen extends HookConsumerWidget {
   const DivisionAddScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future<StoreResult?> onSubmit(DivisionInput input) async {
+    final onSubmit = useCallback((DivisionInput input) async {
       final result = await ref
           .read(divisionsStateProvider.notifier)
           .addEntity(urlParams: null, data: input);
-      if (result is Success) {
-        Navigator.of(context).pop();
+      switch (result) {
+        case Success():
+          Navigator.of(context).pop();
+        case Failure():
+          break;
       }
       return result;
-    }
+    }, []);
 
     final status = ref.watch(divisionsStatusSelector);
     final error = ref.watch(divisionsErrorSelector);
-    return DivisionAdd(
+    return _DivisionAdd(
       onSubmit: onSubmit,
       status: status,
       error: error,
@@ -37,26 +41,19 @@ class DivisionAddScreen extends ConsumerWidget {
   }
 }
 
-typedef OnSubmit = Future<StoreResult?> Function(DivisionInput input);
+typedef _OnSubmit = Future<StoreResult?> Function(DivisionInput input);
 
-class DivisionAdd extends StatefulWidget {
-  const DivisionAdd({
-    super.key,
-    required OnSubmit onSubmit,
-    required StateStatus status,
-    required StoreError? error,
-  })  : _onSubmit = onSubmit,
-        _status = status,
-        _error = error;
-  final OnSubmit _onSubmit;
-  final StateStatus _status;
-  final StoreError? _error;
+class _DivisionAdd extends StatelessWidget {
+  const _DivisionAdd({
+    required this.onSubmit,
+    required this.status,
+    required this.error,
+  });
 
-  @override
-  State<DivisionAdd> createState() => _DivisionAddState();
-}
+  final _OnSubmit onSubmit;
+  final StateStatus status;
+  final StoreError? error;
 
-class _DivisionAddState extends State<DivisionAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,13 +61,13 @@ class _DivisionAddState extends State<DivisionAdd> {
         title: const Text('Add division'),
       ),
       body: ErrorWrapper(
-        error: widget._error,
+        error: error,
         child: Loader(
-          status: widget._status,
+          status: status,
           child: DivisionForm(
             division: null,
-            status: widget._status,
-            onSubmit: widget._onSubmit,
+            status: status,
+            onSubmit: onSubmit,
           ),
         ),
       ),

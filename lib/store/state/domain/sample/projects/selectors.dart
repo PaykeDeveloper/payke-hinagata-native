@@ -1,19 +1,32 @@
 // FIXME: SAMPLE CODE
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:native_app/store/base/models/store_error.dart';
+import 'package:native_app/store/base/models/store_state.dart';
+import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
+
+import './models/project.dart';
 import './notifier.dart';
 
-final projectsSelector =
-    projectsStateProvider.select((state) => state.entities);
+ProviderListenable<List<Project>> projectsSelector(DivisionId divisionId) =>
+    projectsStateProvider.call(divisionId).select((state) => state.entities);
 
-final projectsStatusSelector =
-    projectsStateProvider.select((state) => state.entitiesStatus);
+ProviderListenable<StateStatus> projectsStatusSelector(DivisionId divisionId) =>
+    projectsStateProvider
+        .call(divisionId)
+        .select((state) => state.entitiesStatus);
 
-final projectsErrorSelector =
-    projectsStateProvider.select((state) => state.entitiesError);
+ProviderListenable<StoreError?> projectsErrorSelector(DivisionId divisionId) =>
+    projectsStateProvider
+        .call(divisionId)
+        .select((state) => state.entitiesError);
 
-final projectSelector = projectsStateProvider.select((state) => state.entity);
+ProviderListenable<Project?> projectSelector(DivisionId divisionId) =>
+    projectsStateProvider.call(divisionId).select((state) => state.entity);
 
-final projectStatusSelector =
-    projectsStateProvider.select((state) => state.entityStatus);
+ProviderListenable<StateStatus> projectStatusSelector(DivisionId divisionId) =>
+    projectsStateProvider
+        .call(divisionId)
+        .select((state) => state.entityStatus);
 
-final projectErrorSelector =
-    projectsStateProvider.select((state) => state.entityError);
+ProviderListenable<StoreError?> projectErrorSelector(DivisionId divisionId) =>
+    projectsStateProvider.call(divisionId).select((state) => state.entityError);

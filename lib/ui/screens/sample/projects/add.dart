@@ -1,12 +1,11 @@
 // FIXME: SAMPLE CODE
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
 import 'package:native_app/store/base/models/store_state.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
-import 'package:native_app/store/state/domain/sample/projects/models/projects_url.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
@@ -28,50 +27,45 @@ class ProjectAddPage extends Page {
   }
 }
 
-class ProjectAddScreen extends ConsumerWidget {
+class ProjectAddScreen extends HookConsumerWidget {
   const ProjectAddScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final urlParams = ProjectsUrl(divisionId: _divisionId);
-    Future<StoreResult<Project>> onSubmit(Map<String, dynamic> data) async {
+    final onSubmit = useCallback<_OnSubmit>((data) async {
       final result = await ref
-          .read(projectsStateProvider.notifier)
-          .add(urlParams: urlParams, data: data, useFormData: true);
-      if (result is Success) {
-        Navigator.of(context).pop();
+          .read(projectsStateProvider(_divisionId).notifier)
+          .add(urlParams: null, data: data, useFormData: true);
+      switch (result) {
+        case Success():
+          Navigator.of(context).pop();
+        case Failure():
+          break;
       }
       return result;
-    }
+    }, []);
 
-    final status = ref.watch(projectsStatusSelector);
-    final error = ref.watch(projectsErrorSelector);
-    return ProjectAdd(onSubmit: onSubmit, status: status, error: error);
+    final status = ref.watch(projectsStatusSelector(_divisionId));
+    final error = ref.watch(projectsErrorSelector(_divisionId));
+    return _ProjectAdd(onSubmit: onSubmit, status: status, error: error);
   }
 }
 
-typedef OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
+typedef _OnSubmit = Future<StoreResult?> Function(Map<String, dynamic> data);
 
-class ProjectAdd extends StatefulWidget {
-  const ProjectAdd({
-    super.key,
-    required OnSubmit onSubmit,
-    required StateStatus status,
-    required StoreError? error,
-  })  : _onSubmit = onSubmit,
-        _status = status,
-        _error = error;
-  final OnSubmit _onSubmit;
-  final StateStatus _status;
-  final StoreError? _error;
+class _ProjectAdd extends StatelessWidget {
+  const _ProjectAdd({
+    required this.onSubmit,
+    required this.status,
+    required this.error,
+  });
 
-  @override
-  State<ProjectAdd> createState() => _ProjectAddState();
-}
+  final _OnSubmit onSubmit;
+  final StateStatus status;
+  final StoreError? error;
 
-class _ProjectAddState extends State<ProjectAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,13 +73,13 @@ class _ProjectAddState extends State<ProjectAdd> {
         title: const Text('Add project'),
       ),
       body: ErrorWrapper(
-        error: widget._error,
+        error: error,
         child: Loader(
-          status: widget._status,
+          status: status,
           child: ProjectForm(
             project: null,
-            status: widget._status,
-            onSubmit: widget._onSubmit,
+            status: status,
+            onSubmit: onSubmit,
           ),
         ),
       ),
