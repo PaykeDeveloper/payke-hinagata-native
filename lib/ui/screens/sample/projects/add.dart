@@ -45,7 +45,7 @@ class ProjectAddScreen extends HookConsumerWidget {
           break;
       }
       return result;
-    }, []);
+    }, [_divisionId]);
 
     final status = ref.watch(projectsStatusSelector(_divisionId));
     final error = ref.watch(projectsErrorSelector(_divisionId));
