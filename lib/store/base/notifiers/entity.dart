@@ -109,17 +109,18 @@ mixin FetchEntityMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator>
   Future fetchEntityIfNeeded({
     required EntityUrl url,
     EntityQuery? query,
-    bool? reset,
+    bool silent = false,
+    bool reset = false,
   }) async {
     if (!_shouldFetchEntity(url: url, query: query)) {
       return null;
     }
 
-    if (reset == true) {
+    if (reset) {
       await resetEntityIfNeeded();
     }
 
-    return fetchEntity(url: url, query: query);
+    return fetchEntity(url: url, query: query, silent: silent);
   }
 }
 
