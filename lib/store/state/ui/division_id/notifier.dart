@@ -14,7 +14,7 @@ class DivisionIdState extends _$DivisionIdState
   FutureOr<DivisionId?> build() async => buildDefault();
 
   @override
-  Preference<int> getPreference() => divisionId;
+  Preference<int> getPreference() => divisionIdPref;
 
   @override
   int serialize(DivisionId state) => state.value;

@@ -1,17 +1,16 @@
 import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/app/route/selectors.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
-import 'package:native_app/store/state/domain/division/members/models/members_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
 import 'package:native_app/ui/navigation/params/members/add.dart';
@@ -41,7 +40,7 @@ class MemberListPage extends Page {
   }
 }
 
-class MemberListScreen extends ConsumerWidget {
+class MemberListScreen extends HookConsumerWidget {
   const MemberListScreen({
     super.key,
     required DivisionId divisionId,
@@ -53,59 +52,62 @@ class MemberListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final memberUrl = MembersUrl(divisionId: _divisionId);
-    Future initState() async {
+    final initState = useCallback(() async {
       await Future.wait([
         ref
-            .read(membersStateProvider.notifier)
-            .fetchEntitiesIfNeeded(url: memberUrl, reset: true),
+            .read(membersStateProvider.call(_divisionId).notifier)
+            .fetchEntitiesIfNeeded(url: null, reset: true),
         ref.read(usersStateProvider.notifier).fetchEntitiesIfNeeded(url: null)
       ]);
-    }
+    }, [_divisionId]);
 
-    Future onRefresh() async {
+    useEffect(() {
+      Future.delayed(Duration.zero, initState);
+      return null;
+    }, [initState]);
+
+    final onRefresh = useCallback(() async {
       await Future.wait([
-        ref.read(membersStateProvider.notifier).fetchEntities(url: memberUrl),
+        ref
+            .read(membersStateProvider.call(_divisionId).notifier)
+            .fetchEntities(url: null, silent: true),
         ref
             .read(usersStateProvider.notifier)
-            .fetchEntitiesIfNeeded(url: null, reset: true),
+            .fetchEntities(url: null, silent: true),
       ]);
-    }
+    }, [_divisionId]);
 
-    void onPressedNew() {
+    final onPressedNew = useCallback(() {
       ref
           .read(routeStateProvider.notifier)
           .push(BottomTab.members, MemberAddParams(divisionId: _divisionId));
-    }
+    }, [_divisionId]);
 
-    void onTapShow(MemberId memberId) {
-      ref.read(routeStateProvider.notifier).push(
-            BottomTab.members,
-            MemberDetailParams(divisionId: _divisionId, memberId: memberId),
-          );
-    }
-
-    void onPressedEdit(MemberId memberId) {
+    final onPressedEdit = useCallback((MemberId memberId) {
       ref.read(routeStateProvider.notifier).push(
             BottomTab.members,
             MemberEditParams(divisionId: _divisionId, memberId: memberId),
           );
-    }
+    }, [_divisionId]);
 
-    bool checkRouteEmpty() => ref.read(memberParamsListSelector).isEmpty;
+    final onTapShow = useCallback((MemberId memberId) {
+      ref.read(routeStateProvider.notifier).push(
+            BottomTab.members,
+            MemberDetailParams(divisionId: _divisionId, memberId: memberId),
+          );
+    }, [_divisionId]);
 
-    final error = ref.watch(membersErrorSelector);
-    final members = ref.watch(membersSelector);
+    final error = ref.watch(membersErrorSelector(_divisionId));
+    final members = ref.watch(membersSelector(_divisionId));
     final usersMap = ref.watch(usersMapSelector);
 
-    return MemberList(
+    return _MemberList(
       openDrawer: _openDrawer,
-      initState: initState,
+      onPressedReload: initState,
       onRefresh: onRefresh,
       onPressedNew: onPressedNew,
-      onTapShow: onTapShow,
       onPressedEdit: onPressedEdit,
-      checkRouteEmpty: checkRouteEmpty,
+      onTapShow: onTapShow,
       error: error,
       members: members,
       usersMap: usersMap,
@@ -113,72 +115,28 @@ class MemberListScreen extends ConsumerWidget {
   }
 }
 
-class MemberList extends StatefulWidget {
-  const MemberList({
-    super.key,
-    required VoidCallback openDrawer,
-    required Function0<Future> initState,
-    required Function0<Future> onRefresh,
-    required VoidCallback onPressedNew,
-    required Function1<MemberId, void> onTapShow,
-    required Function1<MemberId, void> onPressedEdit,
-    required Function0<bool> checkRouteEmpty,
-    required StoreError? error,
-    required List<Member> members,
-    required Map<int, User> usersMap,
-  })  : _openDrawer = openDrawer,
-        _initState = initState,
-        _onRefresh = onRefresh,
-        _onPressedNew = onPressedNew,
-        _onTapShow = onTapShow,
-        _onPressedEdit = onPressedEdit,
-        _checkRouteEmpty = checkRouteEmpty,
-        _error = error,
-        _members = members,
-        _usersMap = usersMap;
-  final VoidCallback _openDrawer;
-  final Function0<Future> _initState;
-  final Function0<Future> _onRefresh;
-  final VoidCallback _onPressedNew;
-  final Function1<MemberId, void> _onTapShow;
-  final Function1<MemberId, void> _onPressedEdit;
-  final Function0<bool> _checkRouteEmpty;
-  final StoreError? _error;
-  final List<Member> _members;
-  final Map<int, User> _usersMap;
+class _MemberList extends StatelessWidget {
+  const _MemberList({
+    required this.openDrawer,
+    required this.onPressedReload,
+    required this.onRefresh,
+    required this.onPressedNew,
+    required this.onPressedEdit,
+    required this.onTapShow,
+    required this.error,
+    required this.members,
+    required this.usersMap,
+  });
 
-  @override
-  State<MemberList> createState() => _MemberListState();
-}
-
-class _MemberListState extends State<MemberList> {
-  bool _loading = false;
-
-  Future _initState() async {
-    setState(() {
-      _loading = true;
-    });
-    await widget._initState();
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      _initState();
-    });
-  }
-
-  @override
-  void didUpdateWidget(covariant MemberList oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget._checkRouteEmpty()) {
-      _initState();
-    }
-  }
+  final VoidCallback openDrawer;
+  final Function0<Future> onPressedReload;
+  final Function0<Future> onRefresh;
+  final VoidCallback onPressedNew;
+  final Function1<MemberId, void> onTapShow;
+  final Function1<MemberId, void> onPressedEdit;
+  final StoreError? error;
+  final List<Member> members;
+  final Map<int, User> usersMap;
 
   @override
   Widget build(BuildContext context) {
@@ -187,31 +145,31 @@ class _MemberListState extends State<MemberList> {
         title: const Text('Members'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
-          onPressed: widget._openDrawer,
+          onPressed: openDrawer,
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: widget._onPressedNew,
+        onPressed: onPressedNew,
         child: const Icon(Icons.add),
       ),
       body: ErrorWrapper(
-        error: widget._error,
-        onPressedReload: _initState,
+        error: error,
+        onPressedReload: onPressedReload,
         child: Loader(
-          loading: _loading,
+          loading: false,
           child: RefreshIndicator(
-            onRefresh: widget._onRefresh,
+            onRefresh: onRefresh,
             child: ListView.builder(
               padding: const EdgeInsets.only(bottom: 60),
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: widget._members.length,
+              itemCount: members.length,
               itemBuilder: (context, index) {
-                final member = widget._members[index];
-                final user = widget._usersMap[member.userId.value]!;
+                final member = members[index];
+                final user = usersMap[member.userId.value]!;
                 return _ListItem(
                   user: user,
-                  onTapItem: () => widget._onTapShow(member.id),
-                  onPressedEdit: () => widget._onPressedEdit(member.id),
+                  onTapItem: () => onTapShow(member.id),
+                  onPressedEdit: () => onPressedEdit(member.id),
                 );
               },
             ),

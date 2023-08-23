@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -9,7 +10,6 @@ import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
 import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_input.dart';
-import 'package:native_app/store/state/domain/division/members/models/members_url.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
 import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
@@ -31,28 +31,32 @@ class MemberAddPage extends Page {
   }
 }
 
-class MemberAddScreen extends ConsumerWidget {
+class MemberAddScreen extends HookConsumerWidget {
   const MemberAddScreen({super.key, required DivisionId divisionId})
       : _divisionId = divisionId;
   final DivisionId _divisionId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Future<StoreResult?> onSubmit(MemberInput input) async {
-      final result = await ref.read(membersStateProvider.notifier).addEntity(
-          urlParams: MembersUrl(divisionId: _divisionId), data: input);
-      if (result is Success) {
-        Navigator.of(context).pop();
+    final onSubmit = useCallback<_OnSubmit>((input) async {
+      final result = await ref
+          .read(membersStateProvider(_divisionId).notifier)
+          .addEntity(urlParams: null, data: input);
+      switch (result) {
+        case Success():
+          Navigator.of(context).pop();
+        case Failure():
+          break;
       }
       return result;
-    }
+    }, [_divisionId]);
 
-    final status = ref.watch(membersStatusSelector);
-    final error = ref.watch(membersErrorSelector);
+    final status = ref.watch(membersStatusSelector(_divisionId));
+    final error = ref.watch(membersErrorSelector(_divisionId));
     final users = ref.watch(usersSelector);
     final roles = ref.watch(memberRolesSelector);
 
-    return MemberAdd(
+    return _MemberAdd(
       onSubmit: onSubmit,
       status: status,
       error: error,
@@ -62,32 +66,23 @@ class MemberAddScreen extends ConsumerWidget {
   }
 }
 
-typedef OnSubmit = Future<StoreResult?> Function(MemberInput input);
+typedef _OnSubmit = Future<StoreResult?> Function(MemberInput input);
 
-class MemberAdd extends StatefulWidget {
-  const MemberAdd({
-    super.key,
-    required OnSubmit onSubmit,
-    required StateStatus status,
-    required StoreError? error,
-    required List<User> users,
-    required List<Role> roles,
-  })  : _onSubmit = onSubmit,
-        _status = status,
-        _error = error,
-        _users = users,
-        _roles = roles;
-  final OnSubmit _onSubmit;
-  final StateStatus _status;
-  final StoreError? _error;
-  final List<User> _users;
-  final List<Role> _roles;
+class _MemberAdd extends StatelessWidget {
+  const _MemberAdd({
+    required this.onSubmit,
+    required this.status,
+    required this.error,
+    required this.users,
+    required this.roles,
+  });
 
-  @override
-  State<MemberAdd> createState() => _MemberAddState();
-}
+  final _OnSubmit onSubmit;
+  final StateStatus status;
+  final StoreError? error;
+  final List<User> users;
+  final List<Role> roles;
 
-class _MemberAddState extends State<MemberAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,15 +90,15 @@ class _MemberAddState extends State<MemberAdd> {
         title: const Text('Add member'),
       ),
       body: ErrorWrapper(
-        error: widget._error,
+        error: error,
         child: Loader(
-          status: widget._status,
+          status: status,
           child: MemberForm(
             member: null,
-            users: widget._users,
-            roles: widget._roles,
-            status: widget._status,
-            onSubmit: widget._onSubmit,
+            users: users,
+            roles: roles,
+            status: status,
+            onSubmit: onSubmit,
           ),
         ),
       ),

@@ -25,11 +25,11 @@ class LogoutState extends _$LogoutState {
 
     ref.read(backendTokenStateProvider.notifier).remove();
     ref.read(divisionIdStateProvider.notifier).remove();
-    ref.read(routeStateProvider.notifier).resetAll();
-    ref.read(rolesStateProvider.notifier).resetAllIfNeeded();
-    ref.read(usersStateProvider.notifier).resetAllIfNeeded();
-    ref.read(divisionsStateProvider.notifier).resetAllIfNeeded();
-    ref.read(membersStateProvider.notifier).resetAllIfNeeded();
-    ref.read(projectsStateProvider.notifier).resetAllIfNeeded();
+    ref.invalidate(routeStateProvider);
+    ref.invalidate(rolesStateProvider);
+    ref.invalidate(usersStateProvider);
+    ref.invalidate(divisionsStateProvider);
+    ref.invalidate(membersStateProvider);
+    ref.invalidate(projectsStateProvider);
   }
 }

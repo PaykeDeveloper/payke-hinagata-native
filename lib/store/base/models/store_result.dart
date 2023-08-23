@@ -5,7 +5,7 @@ import './store_error.dart';
 part 'store_result.freezed.dart';
 
 @freezed
-class StoreResult<T> with _$StoreResult<T> {
+sealed class StoreResult<T> with _$StoreResult<T> {
   const factory StoreResult.success(T data) = Success<T>;
 
   const factory StoreResult.failure(StoreError error) = Failure;

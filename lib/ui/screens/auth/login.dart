@@ -25,7 +25,7 @@ class LoginScreen extends ConsumerWidget {
     final status = ref.watch(loginStatusSelector);
 
     return Scaffold(
-      body: Login(
+      body: _Login(
         onSubmit: onSubmit,
         status: status,
       ),
@@ -33,28 +33,27 @@ class LoginScreen extends ConsumerWidget {
   }
 }
 
-typedef OnSubmit = Future<StoreResult> Function(String email, String password);
+typedef _OnSubmit = Future<StoreResult> Function(String email, String password);
 
-class Login extends StatefulWidget {
-  const Login({
-    super.key,
-    required OnSubmit onSubmit,
-    required StateStatus status,
-  })  : _onSubmit = onSubmit,
-        _status = status;
-  final OnSubmit _onSubmit;
-  final StateStatus _status;
+class _Login extends StatefulWidget {
+  const _Login({
+    required this.onSubmit,
+    required this.status,
+  });
+
+  final _OnSubmit onSubmit;
+  final StateStatus status;
 
   @override
-  ValidateFormState<Login> createState() => _LoginState();
+  ValidateFormState<_Login> createState() => _LoginState();
 }
 
-class _LoginState extends ValidateFormState<Login> {
+class _LoginState extends ValidateFormState<_Login> {
   @override
   Future<StoreResult> onSubmit() async {
     final email = formKey.currentState!.value['email'] as String;
     final password = formKey.currentState!.value['password'] as String;
-    return widget._onSubmit(email, password);
+    return widget.onSubmit(email, password);
   }
 
   @override
@@ -103,7 +102,7 @@ class _LoginState extends ValidateFormState<Login> {
               Expanded(
                 child: SubmitButton(
                   onPressed: validateAndSubmit,
-                  status: widget._status,
+                  status: widget.status,
                   label: AppLocalizations.of(context)!.login,
                   enabled: !loading,
                 ),

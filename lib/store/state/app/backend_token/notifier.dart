@@ -14,7 +14,7 @@ class BackendTokenState extends _$BackendTokenState
   FutureOr<BackendToken?> build() async => buildDefault();
 
   @override
-  Preference<String> getPreference() => backendToken;
+  Preference<String> getPreference() => backendTokenPref;
 
   @override
   String serialize(BackendToken state) => state.value;

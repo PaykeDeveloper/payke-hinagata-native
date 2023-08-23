@@ -8,7 +8,7 @@ import './error_result.dart';
 part 'store_error.freezed.dart';
 
 @freezed
-class StoreError with _$StoreError {
+sealed class StoreError with _$StoreError {
   const factory StoreError.sendTimeout() = SendTimeout;
 
   const factory StoreError.requestCancelled() = RequestCancelled;

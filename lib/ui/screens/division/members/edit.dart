@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/base/models/store_result.dart';
@@ -42,7 +43,7 @@ class MemberEditPage extends Page {
   }
 }
 
-class MemberEditScreen extends ConsumerWidget {
+class MemberEditScreen extends HookConsumerWidget {
   const MemberEditScreen({
     super.key,
     required DivisionId divisionId,
@@ -54,44 +55,53 @@ class MemberEditScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final memberUrl = MemberUrl(divisionId: _divisionId, id: _memberId);
+    final initState = useCallback(() {
+      ref
+          .read(membersStateProvider.call(_divisionId).notifier)
+          .fetchEntityIfNeeded(url: MemberUrl(id: _memberId), reset: true);
+    }, [_divisionId, _memberId]);
 
-    Future<StoreResult?> onSubmit(MemberInput input) async {
+    useEffect(() {
+      Future.delayed(Duration.zero, initState);
+      return null;
+    }, [initState]);
+
+    final onSubmit = useCallback<_OnSubmit>((input) async {
       final result = await ref
-          .read(membersStateProvider.notifier)
-          .mergeEntity(urlParams: memberUrl, data: input);
-      if (result is Success) {
-        Navigator.of(context).pop();
+          .read(membersStateProvider.call(_divisionId).notifier)
+          .mergeEntity(urlParams: MemberUrl(id: _memberId), data: input);
+      switch (result) {
+        case Success():
+          Navigator.of(context).pop();
+        case Failure():
+          break;
       }
       return result;
-    }
+    }, [_divisionId, _memberId]);
 
-    void initState() {
-      ref
-          .read(membersStateProvider.notifier)
-          .fetchEntityIfNeeded(url: memberUrl, reset: true);
-    }
-
-    Future onPressedDelete() async {
+    final onPressedDelete = useCallback(() async {
       final result = await ref
-          .read(membersStateProvider.notifier)
-          .deleteEntity(urlParams: memberUrl);
-      if (result is Success) {
-        await ref
-            .read(routeStateProvider.notifier)
-            .replace(BottomTab.members, []);
+          .read(membersStateProvider.call(_divisionId).notifier)
+          .deleteEntity(urlParams: MemberUrl(id: _memberId));
+      switch (result) {
+        case Success():
+          await ref
+              .read(routeStateProvider.notifier)
+              .replace(BottomTab.members, []);
+        case Failure():
+          break;
       }
-    }
+    }, [_divisionId, _memberId]);
 
-    final status = ref.watch(memberStatusSelector);
-    final error = ref.watch(memberErrorSelector);
-    final member = ref.watch(memberSelector);
+    final status = ref.watch(memberStatusSelector(_divisionId));
+    final error = ref.watch(memberErrorSelector(_divisionId));
+    final member = ref.watch(memberSelector(_divisionId));
     final users = ref.watch(usersSelector);
     final roles = ref.watch(memberRolesSelector);
 
-    return MemberEdit(
+    return _MemberEdit(
       onSubmit: onSubmit,
-      initState: initState,
+      onPressedReload: initState,
       onPressedDelete: onPressedDelete,
       status: status,
       error: error,
@@ -102,48 +112,28 @@ class MemberEditScreen extends ConsumerWidget {
   }
 }
 
-typedef OnSubmit = Future<StoreResult?> Function(MemberInput input);
+typedef _OnSubmit = Future<StoreResult?> Function(MemberInput input);
 
-class MemberEdit extends StatefulWidget {
-  const MemberEdit({
-    super.key,
-    required OnSubmit onSubmit,
-    required VoidCallback initState,
-    required VoidCallback onPressedDelete,
-    required StateStatus status,
-    required StoreError? error,
-    required Member? member,
-    required List<User> users,
-    required List<Role> roles,
-  })  : _onSubmit = onSubmit,
-        _initState = initState,
-        _onPressedDelete = onPressedDelete,
-        _status = status,
-        _error = error,
-        _member = member,
-        _users = users,
-        _roles = roles;
-  final OnSubmit _onSubmit;
-  final VoidCallback _initState;
-  final VoidCallback _onPressedDelete;
-  final StateStatus _status;
-  final StoreError? _error;
-  final Member? _member;
-  final List<User> _users;
-  final List<Role> _roles;
+class _MemberEdit extends StatelessWidget {
+  const _MemberEdit({
+    required this.onSubmit,
+    required this.onPressedReload,
+    required this.onPressedDelete,
+    required this.status,
+    required this.error,
+    required this.member,
+    required this.users,
+    required this.roles,
+  });
 
-  @override
-  State<MemberEdit> createState() => _MemberEditState();
-}
-
-class _MemberEditState extends State<MemberEdit> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      widget._initState();
-    });
-  }
+  final _OnSubmit onSubmit;
+  final VoidCallback onPressedReload;
+  final VoidCallback onPressedDelete;
+  final StateStatus status;
+  final StoreError? error;
+  final Member? member;
+  final List<User> users;
+  final List<Role> roles;
 
   @override
   Widget build(BuildContext context) {
@@ -154,21 +144,21 @@ class _MemberEditState extends State<MemberEdit> {
           IconButton(
             icon: const Icon(Icons.delete),
             tooltip: 'Delete member',
-            onPressed: widget._member == null ? null : widget._onPressedDelete,
+            onPressed: member == null ? null : onPressedDelete,
           ),
         ],
       ),
       body: ErrorWrapper(
-        error: widget._error,
-        onPressedReload: widget._initState,
+        error: error,
+        onPressedReload: onPressedReload,
         child: Loader(
-          status: widget._status,
+          status: status,
           child: MemberForm(
-            member: widget._member,
-            users: widget._users,
-            roles: widget._roles,
-            status: widget._status,
-            onSubmit: widget._onSubmit,
+            member: member,
+            users: users,
+            roles: roles,
+            status: status,
+            onSubmit: onSubmit,
           ),
         ),
       ),
