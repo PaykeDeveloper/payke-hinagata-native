@@ -34,7 +34,7 @@ void main() {
     });
 
     testWidgets("Existing user", (tester) async {
-      await backendToken.set("test");
+      await backendTokenPref.set("test");
       app.main();
       await tester.pumpAndSettle();
 
