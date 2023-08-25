@@ -182,28 +182,26 @@ class _MemberList extends StatelessWidget {
 
 class _ListItem extends StatelessWidget {
   const _ListItem({
-    required User user,
-    required GestureTapCallback onTapItem,
-    required VoidCallback onPressedEdit,
-  })  : _user = user,
-        _onTapItem = onTapItem,
-        _onPressedEdit = onPressedEdit;
+    required this.user,
+    required this.onTapItem,
+    required this.onPressedEdit,
+  });
 
-  final User _user;
-  final GestureTapCallback _onTapItem;
-  final VoidCallback _onPressedEdit;
+  final User user;
+  final GestureTapCallback onTapItem;
+  final VoidCallback onPressedEdit;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-        onTap: _onTapItem,
-        leading: Text('${_user.id.value}'),
-        title: Text(_user.name),
+        onTap: onTapItem,
+        leading: Text('${user.id.value}'),
+        title: Text(user.name),
         trailing: IconButton(
           icon: const Icon(Icons.edit),
-          onPressed: _onPressedEdit,
+          onPressed: onPressedEdit,
         ),
       ),
     );
