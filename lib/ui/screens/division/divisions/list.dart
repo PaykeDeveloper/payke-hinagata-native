@@ -141,33 +141,30 @@ class _DivisionList extends StatelessWidget {
 
 class _ListItem extends StatelessWidget {
   const _ListItem({
-    required Division division,
-    required GestureTapCallback onTapItem,
-    required VoidCallback onPressedEdit,
-    required bool selected,
-  })  : _division = division,
-        _onTapItem = onTapItem,
-        _onPressedEdit = onPressedEdit,
-        _selected = selected;
+    required this.division,
+    required this.onTapItem,
+    required this.onPressedEdit,
+    required this.selected,
+  });
 
-  final Division _division;
-  final GestureTapCallback _onTapItem;
-  final VoidCallback _onPressedEdit;
-  final bool _selected;
+  final Division division;
+  final GestureTapCallback onTapItem;
+  final VoidCallback onPressedEdit;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-        onTap: _onTapItem,
-        leading: Text('${_division.id.value}'),
-        title: Text(_division.name),
+        onTap: onTapItem,
+        leading: Text('${division.id.value}'),
+        title: Text(division.name),
         trailing: IconButton(
           icon: const Icon(Icons.edit),
-          onPressed: _onPressedEdit,
+          onPressed: onPressedEdit,
         ),
-        selected: _selected,
+        selected: selected,
       ),
     );
   }

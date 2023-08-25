@@ -173,28 +173,26 @@ class _ProjectList extends StatelessWidget {
 
 class _ListItem extends StatelessWidget {
   const _ListItem({
-    required Project project,
-    required GestureTapCallback onTapItem,
-    required VoidCallback onPressedEdit,
-  })  : _project = project,
-        _onTapItem = onTapItem,
-        _onPressedEdit = onPressedEdit;
+    required this.project,
+    required this.onTapItem,
+    required this.onPressedEdit,
+  });
 
-  final Project _project;
-  final GestureTapCallback _onTapItem;
-  final VoidCallback _onPressedEdit;
+  final Project project;
+  final GestureTapCallback onTapItem;
+  final VoidCallback onPressedEdit;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
-        onTap: _onTapItem,
-        leading: Text('${_project.id.value}'),
-        title: Text(_project.name),
+        onTap: onTapItem,
+        leading: Text('${project.id.value}'),
+        title: Text(project.name),
         trailing: IconButton(
           icon: const Icon(Icons.edit),
-          onPressed: _onPressedEdit,
+          onPressed: onPressedEdit,
         ),
       ),
     );
