@@ -6,11 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
-import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project.dart';
 import 'package:native_app/store/state/domain/sample/projects/models/project_slug.dart';
 import 'package:native_app/store/state/domain/sample/projects/notifier.dart';
 import 'package:native_app/store/state/domain/sample/projects/selectors.dart';
+import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/navigation/params/projects/add.dart';
 import 'package:native_app/ui/navigation/params/projects/detail.dart';
 import 'package:native_app/ui/navigation/params/projects/edit.dart';
@@ -19,21 +19,15 @@ import 'package:native_app/ui/widgets/molecules/laoder.dart';
 
 class ProjectListPage extends Page {
   const ProjectListPage({
-    required DivisionId divisionId,
     required VoidCallback openDrawer,
-  })  : _divisionId = divisionId,
-        _openDrawer = openDrawer;
-  final DivisionId _divisionId;
+  }) : _openDrawer = openDrawer;
   final VoidCallback _openDrawer;
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => ProjectListScreen(
-        divisionId: _divisionId,
-        openDrawer: _openDrawer,
-      ),
+      builder: (context) => ProjectListScreen(openDrawer: _openDrawer),
     );
   }
 }
@@ -41,20 +35,18 @@ class ProjectListPage extends Page {
 class ProjectListScreen extends HookConsumerWidget {
   const ProjectListScreen({
     super.key,
-    required DivisionId divisionId,
     required VoidCallback openDrawer,
-  })  : _divisionId = divisionId,
-        _openDrawer = openDrawer;
-  final DivisionId _divisionId;
+  }) : _openDrawer = openDrawer;
   final VoidCallback _openDrawer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final divisionId = ref.watch(divisionIdSelector)!;
     final initState = useCallback(() async {
       await ref
-          .read(projectsStateProvider(_divisionId).notifier)
+          .read(projectsStateProvider(divisionId).notifier)
           .fetchEntitiesIfNeeded(url: null, reset: true);
-    }, [_divisionId]);
+    }, [divisionId]);
 
     useEffect(() {
       Future.delayed(Duration.zero, initState);
@@ -63,38 +55,38 @@ class ProjectListScreen extends HookConsumerWidget {
 
     final onRefresh = useCallback(() async {
       await ref
-          .read(projectsStateProvider(_divisionId).notifier)
+          .read(projectsStateProvider(divisionId).notifier)
           .fetchEntities(url: null, silent: true);
-    }, [_divisionId]);
+    }, [divisionId]);
 
     final onPressedNew = useCallback(() {
       ref
           .read(routeStateProvider.notifier)
-          .push(BottomTab.projects, ProjectAddParams(divisionId: _divisionId));
-    }, [_divisionId]);
+          .push(BottomTab.projects, ProjectAddParams(divisionId: divisionId));
+    }, [divisionId]);
 
     final onPressedEdit = useCallback((ProjectSlug projectSlug) {
       ref.read(routeStateProvider.notifier).push(
             BottomTab.projects,
             ProjectEditParams(
-              divisionId: _divisionId,
+              divisionId: divisionId,
               projectSlug: projectSlug,
             ),
           );
-    }, [_divisionId]);
+    }, [divisionId]);
 
     final onTapShow = useCallback((ProjectSlug projectSlug) {
       ref.read(routeStateProvider.notifier).push(
             BottomTab.projects,
             ProjectDetailParams(
-              divisionId: _divisionId,
+              divisionId: divisionId,
               projectSlug: projectSlug,
             ),
           );
-    }, [_divisionId]);
+    }, [divisionId]);
 
-    final error = ref.watch(projectsErrorSelector(_divisionId));
-    final projects = ref.watch(projectsSelector(_divisionId));
+    final error = ref.watch(projectsErrorSelector(divisionId));
+    final projects = ref.watch(projectsSelector(divisionId));
 
     return _ProjectList(
       openDrawer: _openDrawer,
@@ -141,6 +133,7 @@ class _ProjectList extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "projects",
         onPressed: onPressedNew,
         child: const Icon(Icons.add),
       ),

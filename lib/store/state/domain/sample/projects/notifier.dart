@@ -46,4 +46,11 @@ class ProjectsState extends _$ProjectsState
 
   @override
   Project decodeEntity(Map<String, dynamic> json) => Project.fromJson(json);
+
+  @override
+  Project? convertToEntitiesEntity(Project entity) => entity;
+
+  @override
+  bool isTargetEntitiesEntity(ProjectUrl urlParams, Project entity) =>
+      urlParams.slug == entity.slug;
 }

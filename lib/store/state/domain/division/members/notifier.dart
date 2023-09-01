@@ -46,4 +46,11 @@ class MembersState extends _$MembersState
 
   @override
   Member decodeEntity(Map<String, dynamic> json) => Member.fromJson(json);
+
+  @override
+  Member? convertToEntitiesEntity(Member entity) => entity;
+
+  @override
+  bool isTargetEntitiesEntity(MemberUrl urlParams, Member entity) =>
+      urlParams.id == entity.id;
 }
