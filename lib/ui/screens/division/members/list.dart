@@ -2,7 +2,6 @@ import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:native_app/base/utils.dart';
 import 'package:native_app/store/base/models/store_error.dart';
 import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
@@ -44,7 +43,6 @@ class MemberListScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final divisionId = ref.watch(divisionIdSelector)!;
-    logger.d(divisionId);
 
     final initState = useCallback(() async {
       await Future.wait([
