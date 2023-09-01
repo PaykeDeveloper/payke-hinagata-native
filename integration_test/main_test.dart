@@ -5,7 +5,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:native_app/base/api_client.dart';
 import 'package:native_app/main.dart' as app;
 import 'package:native_app/store/base/utils.dart';
-import 'package:native_app/store/state/app/preference.dart';
+import 'package:native_app/store/state/app/secure_store.dart';
 
 const _divisionName = 'Division1';
 const _projectName = 'Project1';

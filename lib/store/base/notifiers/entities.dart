@@ -73,24 +73,22 @@ mixin FetchEntitiesMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator,
       path: getEntitiesUrl(url),
       queryParameters: query?.toJson(),
     );
-    result.when(
-      success: (data) {
+    switch (result) {
+      case Success(data: final data):
         state = state.copyWith(
           entities: data,
           entitiesStatus: StateStatus.done,
           entitiesTimestamp: DateTime.now(),
           entitiesError: null,
         );
-      },
-      failure: (error) {
+      case Failure(error: final error):
         state = state.copyWith(
           entities: [],
           entitiesStatus: StateStatus.failed,
           entitiesTimestamp: DateTime.now(),
           entitiesError: error,
         );
-      },
-    );
+    }
     return result;
   }
 
@@ -111,24 +109,22 @@ mixin FetchEntitiesMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator,
       path: getEntityUrl(url),
       queryParameters: query?.toJson(),
     );
-    result.when(
-      success: (data) {
+    switch (result) {
+      case Success(data: final data):
         state = state.copyWith(
           entity: data,
           entityStatus: StateStatus.done,
           entityTimestamp: DateTime.now(),
           entityError: null,
         );
-      },
-      failure: (error) {
+      case Failure(error: final error):
         state = state.copyWith(
           entity: null,
           entityStatus: StateStatus.failed,
           entityTimestamp: DateTime.now(),
           entityError: error,
         );
-      },
-    );
+    }
     return result;
   }
 
