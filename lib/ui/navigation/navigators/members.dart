@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:native_app/store/state/app/route/models/router.dart';
 import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/app/route/selectors.dart';
-import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/screens/division/members/list.dart';
 
 class MembersNavigator extends ConsumerWidget {
@@ -21,7 +20,6 @@ class MembersNavigator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paramsList = ref.watch(memberParamsListSelector);
-    final divisionId = ref.watch(divisionIdSelector);
     return Navigator(
       key: _navigatorKey,
       onPopPage: (route, result) {
@@ -34,7 +32,7 @@ class MembersNavigator extends ConsumerWidget {
         return true;
       },
       pages: [
-        MemberListPage(divisionId: divisionId!, openDrawer: _openDrawer),
+        MemberListPage(openDrawer: _openDrawer),
         ...paramsList.map((p) => p.toPage()),
       ],
     );

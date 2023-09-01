@@ -1,4 +1,4 @@
-import 'package:collection/collection.dart';
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,7 +17,7 @@ class MainDrawer extends ConsumerWidget {
     final divisionId = ref.watch(divisionIdSelector);
     final divisions = ref.watch(divisionsSelector);
     final division = divisionId != null
-        ? divisions.firstWhereOrNull((element) => element.id == divisionId)
+        ? divisions.firstOrNullWhere((element) => element.id == divisionId)
         : null;
     return Drawer(
       child: ListView(

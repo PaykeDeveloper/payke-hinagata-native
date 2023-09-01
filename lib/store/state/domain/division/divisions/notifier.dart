@@ -43,4 +43,11 @@ class DivisionsState extends _$DivisionsState
 
   @override
   Division decodeEntity(Map<String, dynamic> json) => Division.fromJson(json);
+
+  @override
+  Division? convertToEntitiesEntity(Division entity) => entity;
+
+  @override
+  bool isTargetEntitiesEntity(DivisionUrl urlParams, Division entity) =>
+      urlParams.id == entity.id;
 }

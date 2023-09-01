@@ -43,6 +43,7 @@ dependencies:
   hooks_riverpod: ^2.3.6
   riverpod_annotation: ^2.1.1
   shared_preferences: ^2.0.5
+  flutter_secure_storage: ^9.0.0
   dio: ^5.0.1
   json_serializable: ^6.2.0
   json_annotation: ^4.7.0
@@ -55,7 +56,6 @@ dependencies:
   logger: ^2.0.1
   uni_links: ^0.5.1
   dartx: ^1.1.0
-  collection: ^1.16.0
   get_it: ^7.2.0
   cross_file: ^0.3.3+1
 
@@ -78,7 +78,7 @@ dev_dependencies:
   riverpod_lint: ^2.0.1
   riverpod_generator: ^2.2.1
   freezed: ^2.0.3+1
-  http_mock_adapter: ^0.4.2
+  http_mock_adapter: ^0.6.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

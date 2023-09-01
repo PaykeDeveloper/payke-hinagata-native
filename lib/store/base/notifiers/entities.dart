@@ -1,4 +1,5 @@
 // ignore_for_file: invalid_use_of_internal_member
+import 'package:dartx/dartx.dart';
 import 'package:native_app/store/base/models/backend_client.dart';
 import 'package:native_app/store/base/models/entities_state.dart';
 import 'package:native_app/store/base/models/json_generator.dart';
@@ -73,24 +74,22 @@ mixin FetchEntitiesMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator,
       path: getEntitiesUrl(url),
       queryParameters: query?.toJson(),
     );
-    result.when(
-      success: (data) {
+    switch (result) {
+      case Success(data: final data):
         state = state.copyWith(
           entities: data,
           entitiesStatus: StateStatus.done,
           entitiesTimestamp: DateTime.now(),
           entitiesError: null,
         );
-      },
-      failure: (error) {
+      case Failure(error: final error):
         state = state.copyWith(
           entities: [],
           entitiesStatus: StateStatus.failed,
           entitiesTimestamp: DateTime.now(),
           entitiesError: error,
         );
-      },
-    );
+    }
     return result;
   }
 
@@ -111,24 +110,22 @@ mixin FetchEntitiesMixin<Entity, EntityUrl, EntityQuery extends JsonGenerator,
       path: getEntityUrl(url),
       queryParameters: query?.toJson(),
     );
-    result.when(
-      success: (data) {
+    switch (result) {
+      case Success(data: final data):
         state = state.copyWith(
           entity: data,
           entityStatus: StateStatus.done,
           entityTimestamp: DateTime.now(),
           entityError: null,
         );
-      },
-      failure: (error) {
+      case Failure(error: final error):
         state = state.copyWith(
           entity: null,
           entityStatus: StateStatus.failed,
           entityTimestamp: DateTime.now(),
           entityError: error,
         );
-      },
-    );
+    }
     return result;
   }
 
@@ -248,6 +245,8 @@ mixin CreateEntitiesMixin<
         CreateQuery extends JsonGenerator>
     on EntitiesMixin<Entity, EntityUrl, EntityQuery, EntitiesEntity,
         EntitiesUrl, EntitiesQuery> {
+  EntitiesEntity? convertToEntitiesEntity(Entity entity);
+
   Future<StoreResult<Entity>> addEntity({
     required EntitiesUrl urlParams,
     required CreateInput data,
@@ -262,9 +261,14 @@ mixin CreateEntitiesMixin<
       useFormData: useFormData,
     );
     switch (result) {
-      case Success():
+      case Success(data: final data):
         if (state.entitiesStatus == StateStatus.done) {
-          await resetEntities();
+          final entity = convertToEntitiesEntity(data);
+          if (entity != null) {
+            state = state.copyWith(
+              entities: [...state.entities, entity],
+            );
+          }
         }
       case Failure():
         break;
@@ -286,9 +290,14 @@ mixin CreateEntitiesMixin<
       useFormData: useFormData,
     );
     switch (result) {
-      case Success():
+      case Success(data: final data):
         if (state.entitiesStatus == StateStatus.done) {
-          await resetEntities();
+          final entity = convertToEntitiesEntity(data);
+          if (entity != null) {
+            state = state.copyWith(
+              entities: [...state.entities, entity],
+            );
+          }
         }
       case Failure():
         break;
@@ -308,6 +317,10 @@ mixin UpdateEntitiesMixin<
         UpdateQuery extends JsonGenerator>
     on EntitiesMixin<Entity, EntityUrl, EntityQuery, EntitiesEntity,
         EntitiesUrl, EntitiesQuery> {
+  EntitiesEntity? convertToEntitiesEntity(Entity entity);
+
+  bool isTargetEntitiesEntity(EntityUrl urlParams, EntitiesEntity entity);
+
   Future<StoreResult<Entity>> mergeEntity({
     required EntityUrl urlParams,
     required UpdateInput data,
@@ -330,7 +343,16 @@ mixin UpdateEntitiesMixin<
           );
         }
         if (state.entitiesStatus == StateStatus.done) {
-          await resetEntities();
+          final newEntity = convertToEntitiesEntity(data);
+          if (newEntity != null) {
+            state = state.copyWith(
+              entities: state.entities
+                  .map((entity) => isTargetEntitiesEntity(urlParams, entity)
+                      ? newEntity
+                      : entity)
+                  .toList(),
+            );
+          }
         }
       case Failure():
         break;
@@ -360,7 +382,16 @@ mixin UpdateEntitiesMixin<
           );
         }
         if (state.entitiesStatus == StateStatus.done) {
-          await resetEntities();
+          final newEntity = convertToEntitiesEntity(data);
+          if (newEntity != null) {
+            state = state.copyWith(
+              entities: state.entities
+                  .map((entity) => isTargetEntitiesEntity(urlParams, entity)
+                      ? newEntity
+                      : entity)
+                  .toList(),
+            );
+          }
         }
       case Failure():
         break;
@@ -379,6 +410,8 @@ mixin DeleteEntitiesMixin<
         DeleteQuery extends JsonGenerator>
     on EntitiesMixin<Entity, EntityUrl, EntityQuery, EntitiesEntity,
         EntitiesUrl, EntitiesQuery> {
+  bool isTargetEntitiesEntity(EntityUrl urlParams, EntitiesEntity entity);
+
   Future<StoreResult<void>> deleteEntity({
     required EntityUrl urlParams,
     DeleteQuery? query,
@@ -397,7 +430,11 @@ mixin DeleteEntitiesMixin<
           );
         }
         if (state.entitiesStatus == StateStatus.done) {
-          await resetEntities();
+          state = state.copyWith(
+            entities: state.entities
+                .filter((entity) => !isTargetEntitiesEntity(urlParams, entity))
+                .toList(),
+          );
         }
       case Failure():
         break;

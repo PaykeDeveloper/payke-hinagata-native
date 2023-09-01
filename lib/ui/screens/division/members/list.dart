@@ -8,11 +8,11 @@ import 'package:native_app/store/state/app/route/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/models/user.dart';
 import 'package:native_app/store/state/domain/common/users/notifier.dart';
 import 'package:native_app/store/state/domain/common/users/selectors.dart';
-import 'package:native_app/store/state/domain/division/divisions/models/division_id.dart';
 import 'package:native_app/store/state/domain/division/members/models/member.dart';
 import 'package:native_app/store/state/domain/division/members/models/member_id.dart';
 import 'package:native_app/store/state/domain/division/members/notifier.dart';
 import 'package:native_app/store/state/domain/division/members/selectors.dart';
+import 'package:native_app/store/state/ui/division_id/selectors.dart';
 import 'package:native_app/ui/navigation/params/members/add.dart';
 import 'package:native_app/ui/navigation/params/members/detail.dart';
 import 'package:native_app/ui/navigation/params/members/edit.dart';
@@ -20,22 +20,15 @@ import 'package:native_app/ui/widgets/molecules/error_wrapper.dart';
 import 'package:native_app/ui/widgets/molecules/laoder.dart';
 
 class MemberListPage extends Page {
-  const MemberListPage({
-    required DivisionId divisionId,
-    required VoidCallback openDrawer,
-  })  : _divisionId = divisionId,
-        _openDrawer = openDrawer;
-  final DivisionId _divisionId;
+  const MemberListPage({required VoidCallback openDrawer})
+      : _openDrawer = openDrawer;
   final VoidCallback _openDrawer;
 
   @override
   Route createRoute(BuildContext context) {
     return MaterialPageRoute(
       settings: this,
-      builder: (context) => MemberListScreen(
-        divisionId: _divisionId,
-        openDrawer: _openDrawer,
-      ),
+      builder: (context) => MemberListScreen(openDrawer: _openDrawer),
     );
   }
 }
@@ -43,23 +36,22 @@ class MemberListPage extends Page {
 class MemberListScreen extends HookConsumerWidget {
   const MemberListScreen({
     super.key,
-    required DivisionId divisionId,
     required VoidCallback openDrawer,
-  })  : _divisionId = divisionId,
-        _openDrawer = openDrawer;
-  final DivisionId _divisionId;
+  }) : _openDrawer = openDrawer;
   final VoidCallback _openDrawer;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final divisionId = ref.watch(divisionIdSelector)!;
+
     final initState = useCallback(() async {
       await Future.wait([
         ref
-            .read(membersStateProvider.call(_divisionId).notifier)
+            .read(membersStateProvider.call(divisionId).notifier)
             .fetchEntitiesIfNeeded(url: null, reset: true),
         ref.read(usersStateProvider.notifier).fetchEntitiesIfNeeded(url: null)
       ]);
-    }, [_divisionId]);
+    }, [divisionId]);
 
     useEffect(() {
       Future.delayed(Duration.zero, initState);
@@ -69,36 +61,36 @@ class MemberListScreen extends HookConsumerWidget {
     final onRefresh = useCallback(() async {
       await Future.wait([
         ref
-            .read(membersStateProvider.call(_divisionId).notifier)
+            .read(membersStateProvider.call(divisionId).notifier)
             .fetchEntities(url: null, silent: true),
         ref
             .read(usersStateProvider.notifier)
             .fetchEntities(url: null, silent: true),
       ]);
-    }, [_divisionId]);
+    }, [divisionId]);
 
     final onPressedNew = useCallback(() {
       ref
           .read(routeStateProvider.notifier)
-          .push(BottomTab.members, MemberAddParams(divisionId: _divisionId));
-    }, [_divisionId]);
+          .push(BottomTab.members, MemberAddParams(divisionId: divisionId));
+    }, [divisionId]);
 
     final onPressedEdit = useCallback((MemberId memberId) {
       ref.read(routeStateProvider.notifier).push(
             BottomTab.members,
-            MemberEditParams(divisionId: _divisionId, memberId: memberId),
+            MemberEditParams(divisionId: divisionId, memberId: memberId),
           );
-    }, [_divisionId]);
+    }, [divisionId]);
 
     final onTapShow = useCallback((MemberId memberId) {
       ref.read(routeStateProvider.notifier).push(
             BottomTab.members,
-            MemberDetailParams(divisionId: _divisionId, memberId: memberId),
+            MemberDetailParams(divisionId: divisionId, memberId: memberId),
           );
-    }, [_divisionId]);
+    }, [divisionId]);
 
-    final error = ref.watch(membersErrorSelector(_divisionId));
-    final members = ref.watch(membersSelector(_divisionId));
+    final error = ref.watch(membersErrorSelector(divisionId));
+    final members = ref.watch(membersSelector(divisionId));
     final usersMap = ref.watch(usersMapSelector);
 
     return _MemberList(
@@ -149,6 +141,7 @@ class _MemberList extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "members",
         onPressed: onPressedNew,
         child: const Icon(Icons.add),
       ),
