@@ -62,7 +62,7 @@ class MemberEditScreen extends HookConsumerWidget {
     }, [_divisionId, _memberId]);
 
     useEffect(() {
-      Future.delayed(Duration.zero, initState);
+      Future.microtask(initState);
       return null;
     }, [initState]);
 

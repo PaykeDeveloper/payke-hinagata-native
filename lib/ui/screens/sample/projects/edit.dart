@@ -59,7 +59,7 @@ class ProjectEditScreen extends HookConsumerWidget {
     }, [_divisionId, _projectSlug]);
 
     useEffect(() {
-      Future.delayed(Duration.zero, initState);
+      Future.microtask(initState);
       return null;
     }, [initState]);
 

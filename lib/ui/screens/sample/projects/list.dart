@@ -49,7 +49,7 @@ class ProjectListScreen extends HookConsumerWidget {
     }, [divisionId]);
 
     useEffect(() {
-      Future.delayed(Duration.zero, initState);
+      Future.microtask(initState);
       return null;
     }, [initState]);
 

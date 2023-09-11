@@ -65,9 +65,7 @@ class AuthRouter extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
-      Future.delayed(Duration.zero, () {
-        _setLocale(context, ref);
-      });
+      Future.microtask(() => _setLocale(context, ref));
       return null;
     }, []);
     useEffect(() {
