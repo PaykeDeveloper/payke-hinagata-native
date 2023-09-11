@@ -26,10 +26,10 @@ class DivisionListScreen extends HookConsumerWidget {
       await ref
           .read(divisionsStateProvider.notifier)
           .fetchEntitiesIfNeeded(url: null, reset: true);
-    }, []);
+    });
 
     useEffect(() {
-      Future.delayed(Duration.zero, initState);
+      Future.microtask(initState);
       return null;
     }, [initState]);
 
@@ -37,11 +37,11 @@ class DivisionListScreen extends HookConsumerWidget {
       await ref
           .read(divisionsStateProvider.notifier)
           .fetchEntities(url: null, silent: true);
-    }, []);
+    });
 
     final onBack = useCallback(() async {
       await ref.read(divisionsStateProvider.notifier).fetchEntities(url: null);
-    }, []);
+    });
     final onPressedNew = useCallback(
         () => Navigator.of(context)
             .push(MaterialPageRoute(
@@ -59,7 +59,7 @@ class DivisionListScreen extends HookConsumerWidget {
     final onTapSelect = useCallback((DivisionId divisionId) async {
       await ref.read(divisionIdStateProvider.notifier).set(divisionId);
       Navigator.of(context).popUntil((route) => route.isFirst);
-    }, []);
+    });
 
     final status = ref.watch(divisionsStatusSelector);
     final error = ref.watch(divisionsErrorSelector);

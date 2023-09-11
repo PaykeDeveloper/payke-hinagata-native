@@ -83,23 +83,19 @@ class _Main extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scaffoldKey = useMemoized(() => GlobalKey<ScaffoldState>(), []);
+    final scaffoldKey = useMemoized(() => GlobalKey<ScaffoldState>());
 
-    final navigatorKeys = useMemoized(
-        () => [
-              GlobalKey<NavigatorState>(),
-              GlobalKey<NavigatorState>(),
-              GlobalKey<NavigatorState>(),
-            ],
-        []);
+    final navigatorKeys = useMemoized(() => [
+          GlobalKey<NavigatorState>(),
+          GlobalKey<NavigatorState>(),
+          GlobalKey<NavigatorState>(),
+        ]);
 
-    final children = useMemoized<List<Widget>>(
-        () => [
-              const LoadingScreen(),
-              const LoadingScreen(),
-              const LoadingScreen(),
-            ],
-        []);
+    final children = useMemoized<List<Widget>>(() => [
+          const LoadingScreen(),
+          const LoadingScreen(),
+          const LoadingScreen(),
+        ]);
 
     final index = tab.getIndex();
     if (children[index] is LoadingScreen) {

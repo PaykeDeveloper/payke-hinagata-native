@@ -25,9 +25,7 @@ class MainRouter extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(() {
-      Future.delayed(Duration.zero, () {
-        _initState(context, ref);
-      });
+      Future.microtask(() => _initState(context, ref));
       return null;
     }, []);
 

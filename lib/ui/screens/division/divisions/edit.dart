@@ -32,7 +32,7 @@ class DivisionEditScreen extends HookConsumerWidget {
     }, [_divisionId]);
 
     useEffect(() {
-      Future.delayed(Duration.zero, initState);
+      Future.microtask(initState);
       return null;
     }, [initState]);
 

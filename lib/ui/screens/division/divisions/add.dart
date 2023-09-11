@@ -29,7 +29,7 @@ class DivisionAddScreen extends HookConsumerWidget {
           break;
       }
       return result;
-    }, []);
+    });
 
     final status = ref.watch(divisionsStatusSelector);
     final error = ref.watch(divisionsErrorSelector);
